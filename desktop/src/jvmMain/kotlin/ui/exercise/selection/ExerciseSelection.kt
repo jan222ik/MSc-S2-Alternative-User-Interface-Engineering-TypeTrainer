@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ui.dashboard.BaseDashboardCard
+import ui.util.i18n.KeyI18N
+import ui.util.i18n.i18n
 
 @ExperimentalLayout
 @Composable
@@ -62,6 +64,9 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     selected = textMode,
                     onSelectionChanged = setTextMode
                 )
+                TextModeSelectionBody(
+                    selected = textMode
+                )
                 Spacer(Modifier.height(50.dp))
                 MultiSelectionHeader(
                     modifier = Modifier,
@@ -75,13 +80,58 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
     }
 }
 
+@Composable
+private fun TextModeSelectionBody(
+    selected: Int
+) {
+    val roundedCornerDp = 15.dp
+    val mainCardShape = RoundedCornerShape(
+        bottomStart = roundedCornerDp,
+        bottomEnd = roundedCornerDp,
+    )
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 0.dp,
+                color = MaterialTheme.colors.primary,
+                shape = mainCardShape
+            ),
+        shape = mainCardShape,
+        elevation = 0.dp,
+        backgroundColor = MaterialTheme.colors.background
+    ) {
+        Column(Modifier.padding(all = 16.dp)) {
+            when (selected) {
+                0 -> LiteratureSelectionBody()
+                1 -> WordRngSelectionBody()
+                2 -> CharRngSelectionBody()
+            }
+        }
+    }
+}
+
+@Composable
+private fun LiteratureSelectionBody() {
+    Text(text = +i18n.str.exercise.selection.textMode.literatureDescription)
+}
+
+@Composable
+private fun CharRngSelectionBody() {
+    Text(text = +i18n.str.exercise.selection.textMode.randomChars)
+}
+
+@Composable
+private fun WordRngSelectionBody() {
+    Text(text = +i18n.str.exercise.selection.textMode.randomWords)
+}
 
 @ExperimentalLayout
 @Composable
 private fun MultiSelectionHeader(
     modifier: Modifier = Modifier,
     label: String,
-    options: List<String>,
+    options: List<KeyI18N>,
     selected: Int,
     onSelectionChanged: (Int) -> Unit
 ) {
@@ -165,7 +215,7 @@ private fun MultiSelectionHeader(
                 ) {
                     Row {
                         OptionText(
-                            text = it,
+                            text = +it,
                             color = colorCombi.second
                         )
                         VDivider()

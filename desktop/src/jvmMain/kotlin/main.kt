@@ -4,6 +4,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.IntSize
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
 import ui.exercise.selection.ExerciseSelection
@@ -20,7 +21,7 @@ fun main() {
         primary = Color(0xFF839AD3),
         onPrimary = Color.White
     )
-    Window {
+    Window(size = IntSize(width = 1280, height = 720)) {
         MaterialTheme(colors = dark) {
             LanguageConfiguration {
                 WindowRouter(
