@@ -6,6 +6,8 @@ import androidx.compose.material.darkColors
 import androidx.compose.ui.graphics.Color
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
+import ui.exercise.selection.ExerciseSelection
+import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowContainer
 import ui.general.WindowRouter
 import ui.util.i18n.LanguageConfiguration
@@ -39,7 +41,7 @@ fun main() {
                             ApplicationRoutes.Pictures -> Text(+current.title)
                             ApplicationRoutes.Compose -> Text(+current.title)
                             ApplicationRoutes.Logbook -> Text(+current.title)
-                            ApplicationRoutes.ExerciseSelection -> Text(+current.title)
+                            ApplicationRoutes.ExerciseSelection -> ExerciseSelection(ExerciseSelectionIntent())
                         }
                     }
                 }
