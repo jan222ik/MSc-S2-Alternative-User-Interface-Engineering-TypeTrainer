@@ -53,17 +53,14 @@ fun TrainingScreen() {
                 contentAlignment = Alignment.Center
             ) {
                 Column {
-
                     val errorState = training.errorFlow.collectAsState()
                     Row {
                         val scrollingAheadText: State<TextFieldValue> = training.textStateFlow.collectAsState()
                         val scrollingBehindText: State<String> = training.behindTextStateFlow.collectAsState()
-                        println("LocalTextStyle.current = ${LocalTextStyle.current}")
                         TextField(
-                            textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.End, textIndent = TextIndent(firstLine = 200.sp, restLine = 600.sp)),
                             value = "",
                             onValueChange = {},
-                            trailingIcon = { Text(text = scrollingBehindText.value) },
+                            trailingIcon = { Text(text = scrollingBehindText.value, textAlign = TextAlign.End) },
                             readOnly = true,
                         )
 
