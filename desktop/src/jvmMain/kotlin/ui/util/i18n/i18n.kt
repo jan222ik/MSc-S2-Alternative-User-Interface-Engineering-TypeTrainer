@@ -3,6 +3,8 @@ package ui.util.i18n
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import java.util.*
+import kotlin.reflect.KClass
+import kotlin.reflect.typeOf
 
 
 open class KeyI18N(val key: String) {
@@ -46,7 +48,7 @@ private operator fun ResourceBundle.get(key: String): String? {
     } catch (npe: NullPointerException) {
         null
     } catch (e: MissingResourceException) {
-        System.err.println("MissingResourceException: Can't find resource for bundle java.util.PropertyResourceBundle, key $key")
+        //System.err.println("MissingResourceException: Can't find resource for bundle java.util.PropertyResourceBundle, key $key")
         null
     }
 }
@@ -70,6 +72,27 @@ sealed class i18n {
 
             object self : navigation() {
                 val settings: KeyI18N = "settings".i18Key()
+            }
+        }
+
+        sealed class settings : str() {
+            override val path = "settings"
+
+            object quickies : settings() {
+                override val path = super.path + ".quickies"
+                val action_open_settings = "action_open_settings".i18Key()
+                val title = "quick_settings".i18Key()
+            }
+
+            /**
+             * Known Languages to the program
+             */
+            object languages : settings() {
+                override val path = super.path + ".languages"
+                val language = "language_label".i18Key()
+                val eng = "english".i18Key()
+                val ger = "german".i18Key()
+
             }
         }
 
@@ -98,6 +121,38 @@ sealed class i18n {
             }
         }
 
+    }
+}
+
+/**
+ * Execute to extract missing resource paths.
+ */
+@ExperimentalStdlibApi
+fun main() {
+    // Set root resource set
+    ResolverI18n.changeLang(LanguageDefinition.English)
+    exploreClasses(kClass = i18n::class) {
+        try {
+            it.resolve()
+        } catch (e: IllegalStateException) {
+            println(it.key + "=")
+        }
+    }
+}
+
+@ExperimentalStdlibApi
+fun exploreClasses(kClass: KClass<*>, onPath: (KeyI18N) -> Unit) {
+    when {
+        kClass.isSealed -> {
+            kClass.nestedClasses.forEach { exploreClasses(kClass = it, onPath = onPath) }
+        }
+        kClass.objectInstance != null -> {
+            val instance = kClass.objectInstance
+            kClass.members
+                .filter { it.returnType == typeOf<KeyI18N>() && it.name != "i18Key" }
+                .map { it.call(instance) as KeyI18N }
+                .forEach(onPath)
+        }
     }
 }
 

@@ -57,7 +57,7 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
             ) {
                 val (textMode, setTextMode) = remember { selectionIntent.textModeSelection }
                 val (exerciseMode, setExerciseMode) = remember { selectionIntent.exerciseModeSelection }
-                MultiSelectionHeader(
+                OutlinedRadioSelection(
                     modifier = Modifier,
                     label = "Text Mode:",
                     options = ExerciseSelectionIntent.textModeSelectionOptions,
@@ -68,7 +68,7 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     selected = textMode
                 )
                 Spacer(Modifier.height(50.dp))
-                MultiSelectionHeader(
+                OutlinedRadioSelection(
                     modifier = Modifier,
                     label = "Exercise Mode:",
                     options = ExerciseSelectionIntent.exerciseModeSelectionOptions,
@@ -79,6 +79,8 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
         }
     }
 }
+
+
 
 @Composable
 private fun TextModeSelectionBody(
@@ -128,7 +130,7 @@ private fun WordRngSelectionBody() {
 
 @ExperimentalLayout
 @Composable
-private fun MultiSelectionHeader(
+fun OutlinedRadioSelection(
     modifier: Modifier = Modifier,
     label: String,
     options: List<KeyI18N>,

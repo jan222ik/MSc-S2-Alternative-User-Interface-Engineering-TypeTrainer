@@ -3,6 +3,7 @@ import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntSize
 import ui.dashboard.ApplicationRoutes
@@ -15,14 +16,8 @@ import ui.util.i18n.LanguageConfiguration
 
 @OptIn(ExperimentalLayout::class)
 fun main() {
-    val dark = darkColors(
-        background = Color(0xFF303747),
-        surface = Color(0xFF31445F),
-        primary = Color(0xFF839AD3),
-        onPrimary = Color.White
-    )
     Window(size = IntSize(width = 1280, height = 720)) {
-        MaterialTheme(colors = dark) {
+        TypeTrainerTheme {
             LanguageConfiguration {
                 WindowRouter(
                     initialRoute = ApplicationRoutes.Dashboard
@@ -53,4 +48,16 @@ fun main() {
 
 
 
+@Composable
+fun TypeTrainerTheme(content: @Composable () -> Unit) {
+    val dark = darkColors(
+        background = Color(0xFF303747),
+        surface = Color(0xFF31445F),
+        primary = Color(0xFF839AD3),
+        onPrimary = Color.White
+    )
 
+    MaterialTheme(colors = dark) {
+        content.invoke()
+    }
+}
