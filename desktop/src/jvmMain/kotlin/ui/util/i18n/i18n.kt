@@ -1,62 +1,10 @@
 package ui.util.i18n
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import java.util.*
-import kotlin.reflect.KClass
-import kotlin.reflect.typeOf
-
-
-open class KeyI18N(val key: String) {
-
-    open fun resolve(): String = ResolverI18n.resolve(this) ?: error("Missing Resource for key: $key")
-
-    @Composable
-    fun observedString() = remember(LanguageAmbient.current) { resolve() }
-
-    @Composable
-    fun observedString(vararg keys: Any?) = remember(LanguageAmbient.current, *keys) { resolve() }
-
-    @Composable
-    operator fun unaryPlus() = observedString()
-
-}
-
-//@Deprecated("Should not be used in product but useful during development")
-data class RequiresTranslationI18N(val value: String) : KeyI18N("") {
-    override fun resolve(): String = value
-}
-
-object ResolverI18n {
-    var currentLang: LanguageDefinition = LanguageDefinition.English
-    var currentLangBuild = currentLang.buildMap()
-
-    fun resolve(key: KeyI18N): String? {
-        return currentLangBuild[key.key]
-    }
-
-    fun changeLang(languageDefinition: LanguageDefinition) {
-        if (languageDefinition == currentLang) return
-        currentLang = languageDefinition
-        currentLangBuild = languageDefinition.buildMap()
-    }
-}
-
-private operator fun ResourceBundle.get(key: String): String? {
-    return try {
-        this.getString(key)
-    } catch (npe: NullPointerException) {
-        null
-    } catch (e: MissingResourceException) {
-        //System.err.println("MissingResourceException: Can't find resource for bundle java.util.PropertyResourceBundle, key $key")
-        null
-    }
-}
-
 
 @Suppress("ClassName", "MemberVisibilityCanBePrivate")
 sealed class i18n {
     fun String.i18Key() = KeyI18N("$path.$this")
+
     abstract val path: String
 
     sealed class str : i18n() {
@@ -122,50 +70,4 @@ sealed class i18n {
         }
 
     }
-}
-
-/**
- * Execute to extract missing resource paths.
- */
-@ExperimentalStdlibApi
-fun main() {
-    // Set root resource set
-    ResolverI18n.changeLang(LanguageDefinition.English)
-    exploreClasses(kClass = i18n::class) {
-        try {
-            it.resolve()
-        } catch (e: IllegalStateException) {
-            println(it.key + "=")
-        }
-    }
-}
-
-@ExperimentalStdlibApi
-fun exploreClasses(kClass: KClass<*>, onPath: (KeyI18N) -> Unit) {
-    when {
-        kClass.isSealed -> {
-            kClass.nestedClasses.forEach { exploreClasses(kClass = it, onPath = onPath) }
-        }
-        kClass.objectInstance != null -> {
-            val instance = kClass.objectInstance
-            kClass.members
-                .filter { it.returnType == typeOf<KeyI18N>() && it.name != "i18Key" }
-                .map { it.call(instance) as KeyI18N }
-                .forEach(onPath)
-        }
-    }
-}
-
-sealed class LanguageDefinition(private val locale: Locale) {
-    fun buildMap(): ResourceBundle {
-        return ResourceBundle.getBundle("strings", locale) ?: defaultLang
-    }
-
-    companion object {
-        val defaultLang: ResourceBundle = ResourceBundle.getBundle("strings", Locale.ROOT)
-    }
-
-    object English : LanguageDefinition(Locale.ROOT)
-
-    object German : LanguageDefinition(Locale.GERMAN)
 }

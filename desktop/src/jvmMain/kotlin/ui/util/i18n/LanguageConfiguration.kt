@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package ui.util.i18n
 
 import androidx.compose.runtime.Composable
@@ -18,7 +20,7 @@ fun LanguageConfiguration(
         ResolverI18n.changeLang(languageDefault)
         mutableStateOf(AppLangConfig(languageDefault))
     }
-    langConfig._changeLanguage = setLangConfig
+    langConfig.internalChangeLanguage = setLangConfig
     CompositionLocalProvider(
         LanguageAmbient provides langConfig
     ) {
@@ -27,10 +29,10 @@ fun LanguageConfiguration(
 }
 
 data class AppLangConfig(val language: LanguageDefinition) {
-    internal lateinit var _changeLanguage: ((AppLangConfig) -> Unit)
+    internal lateinit var internalChangeLanguage: ((AppLangConfig) -> Unit)
 
     fun changeLanguage(language: LanguageDefinition) {
         ResolverI18n.changeLang(language)
-        _changeLanguage.invoke(this.copy(language = language))
+        internalChangeLanguage.invoke(this.copy(language = language))
     }
 }
