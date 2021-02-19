@@ -28,8 +28,7 @@ import androidx.compose.ui.unit.dp
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.BaseDashboardCard
 import ui.general.WindowRouterAmbient
-import ui.util.i18n.English
-import ui.util.i18n.German
+import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.i18n
 import kotlin.math.max
@@ -85,7 +84,7 @@ private fun TopRow(rowItemModifier: Modifier) {
                 )
             },
             text = {
-                Text(+i18n.str.navigation.settings)
+                Text(+i18n.str.navigation.self.settings)
             }
         )
         IconDashboardCard(
@@ -108,10 +107,10 @@ private fun TopRow(rowItemModifier: Modifier) {
         val currentLang = LanguageAmbient.current
         BaseDashboardCard(
             modifier = rowItemModifier.clickable {
-                currentLang.changeLanguage(German.takeIf { currentLang.language != German } ?: English)
+                currentLang.changeLanguage(LanguageDefinition.German.takeIf { currentLang.language != LanguageDefinition.German } ?: LanguageDefinition.English)
             }
         ) {
-            Text(text = "Change Language to " + ("German".takeUnless { currentLang.language == German } ?: "English"))
+            Text(text = "Change Language to " + ("German".takeUnless { currentLang.language == LanguageDefinition.German } ?: "English"))
         }
 
         BaseDashboardCard(
