@@ -11,7 +11,7 @@ val LanguageAmbient = compositionLocalOf<AppLangConfig> { error("No language def
 
 @Composable
 fun LanguageConfiguration(
-    languageDefault: LanguageDefinition = English,
+    languageDefault: LanguageDefinition = LanguageDefinition.English,
     content: @Composable () -> Unit
 ) {
     val (langConfig, setLangConfig) = remember(languageDefault) {
