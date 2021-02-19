@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import ui.dashboard.ApplicationRoutes
-import ui.exercise.selection.OutlinedRadioSelection
+import ui.components.OutlinedRadioSelection
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.LanguageDefinition
@@ -81,6 +81,7 @@ internal fun QuickSettingsPopup(
                                 label = +i18n.str.settings.languages.language + ":",
                                 selected = 0.takeIf { current.language == LanguageDefinition.English } ?: 1,
                                 options = listOf(i18n.str.settings.languages.eng, i18n.str.settings.languages.ger),
+                                optionTransform = { +it },
                                 onSelectionChanged = {
                                     current.changeLanguage(LanguageDefinition.English.takeIf { current.language == LanguageDefinition.German }
                                         ?: LanguageDefinition.German)

@@ -2,24 +2,16 @@
 
 package ui.exercise.selection
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayout
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -28,12 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ui.components.OutlinedRadioSelection
 import ui.dashboard.BaseDashboardCard
-import ui.util.i18n.KeyI18N
 import ui.util.i18n.i18n
 
 @ExperimentalLayout
@@ -57,12 +46,20 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
             ) {
                 val (textMode, setTextMode) = remember { selectionIntent.textModeSelection }
                 val (exerciseMode, setExerciseMode) = remember { selectionIntent.exerciseModeSelection }
+                val roundedCornerDp = 15.dp
+                val shape = RoundedCornerShape(
+                    topStart = roundedCornerDp,
+                    topEnd = roundedCornerDp
+                )
                 OutlinedRadioSelection(
                     modifier = Modifier,
                     label = "Text Mode:",
+                    forceLabelUnclipped = false,
                     options = ExerciseSelectionIntent.textModeSelectionOptions,
+                    optionTransform = @Composable { +it },
                     selected = textMode,
-                    onSelectionChanged = setTextMode
+                    onSelectionChanged = setTextMode,
+                    shape = shape
                 )
                 TextModeSelectionBody(
                     selected = textMode
@@ -71,9 +68,12 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                 OutlinedRadioSelection(
                     modifier = Modifier,
                     label = "Exercise Mode:",
+                    forceLabelUnclipped = false,
                     options = ExerciseSelectionIntent.exerciseModeSelectionOptions,
+                    optionTransform = @Composable { +it },
                     selected = exerciseMode,
-                    onSelectionChanged = setExerciseMode
+                    onSelectionChanged = setExerciseMode,
+                    shape = shape
                 )
             }
         }
