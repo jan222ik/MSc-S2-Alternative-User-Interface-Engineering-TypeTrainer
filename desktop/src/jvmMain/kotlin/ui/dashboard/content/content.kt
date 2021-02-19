@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package ui.dashboard.content
 
 import androidx.compose.foundation.clickable
@@ -28,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.BaseDashboardCard
 import ui.general.WindowRouterAmbient
-import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.LanguageAmbient
+import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
 import kotlin.math.max
 
@@ -37,10 +39,14 @@ import kotlin.math.max
 @Composable
 fun DashboardContent() {
     Column(
-        modifier = Modifier.padding(16.dp).fillMaxSize()
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
     ) {
-        val modIntrinsicMin =
-            Modifier.padding(horizontal = 4.dp).preferredWidth(IntrinsicSize.Min).preferredHeight(IntrinsicSize.Min)
+        val modIntrinsicMin = Modifier
+            .padding(horizontal = 4.dp)
+            .preferredWidth(IntrinsicSize.Min)
+            .preferredHeight(IntrinsicSize.Min)
         TopRow(
             rowItemModifier = modIntrinsicMin
         )
@@ -52,7 +58,9 @@ fun DashboardContent() {
 private fun TopRow(rowItemModifier: Modifier) {
     val router = WindowRouterAmbient.current
     Row {
-        val iconCardModifier = Modifier.padding(horizontal = 4.dp).size(150.dp)
+        val iconCardModifier = Modifier
+            .padding(horizontal = 4.dp)
+            .size(150.dp)
         IconDashboardCard(
             modifier = iconCardModifier,
             onClick = {
@@ -107,10 +115,13 @@ private fun TopRow(rowItemModifier: Modifier) {
         val currentLang = LanguageAmbient.current
         BaseDashboardCard(
             modifier = rowItemModifier.clickable {
-                currentLang.changeLanguage(LanguageDefinition.German.takeIf { currentLang.language != LanguageDefinition.German } ?: LanguageDefinition.English)
+                val language = LanguageDefinition.German
+                    .takeIf { currentLang.language != LanguageDefinition.German } ?: LanguageDefinition.English
+                currentLang.changeLanguage(language)
             }
         ) {
-            Text(text = "Change Language to " + ("German".takeUnless { currentLang.language == LanguageDefinition.German } ?: "English"))
+            Text(text = "Change Language to " + ("German".takeUnless { currentLang.language == LanguageDefinition.German }
+                ?: "English"))
         }
 
         BaseDashboardCard(
@@ -160,18 +171,24 @@ fun IconDashboardCard(
         modifier = modifier.clickable(onClick = onClick)
     ) {
         Box(
-            modifier = modifier.padding(all = 16.dp).fillMaxSize(),
+            modifier = modifier
+                .padding(all = 16.dp)
+                .fillMaxSize(),
         ) {
             Layout(
                 content = {
                     Box(
-                        modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
                         text.invoke(this)
                     }
                     Box(
-                        modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth(),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
                         icon.invoke(this)

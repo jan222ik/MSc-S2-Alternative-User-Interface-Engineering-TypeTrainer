@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.material.MaterialTheme
@@ -10,7 +12,7 @@ import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
 import ui.exercise.selection.ExerciseSelection
 import ui.exercise.selection.ExerciseSelectionIntent
-import ui.general.WindowContainer
+import ui.general.window.container.WindowContainer
 import ui.general.WindowRouter
 import ui.util.i18n.LanguageConfiguration
 
@@ -23,16 +25,10 @@ fun main() {
                     initialRoute = ApplicationRoutes.Dashboard
                 ) { current, router ->
                     WindowContainer(
-                        enableBackBtn = router.hasBackDestination(),
-                        backHoverBtnText = router.previous?.current?.title?.observedString(router)?.let { "To $it" }
-                            ?: "",
-                        onBackBtnAction = router::back,
                         title = router.current.title.observedString(router)
                     ) {
                         when (current) {
-                            ApplicationRoutes.Dashboard -> {
-                                DashboardContent()
-                            }
+                            ApplicationRoutes.Dashboard -> DashboardContent()
                             ApplicationRoutes.Settings -> Text(+current.title)
                             ApplicationRoutes.Pictures -> Text(+current.title)
                             ApplicationRoutes.Compose -> Text(+current.title)

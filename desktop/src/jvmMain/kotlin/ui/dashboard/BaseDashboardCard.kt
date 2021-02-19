@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package ui.dashboard
 
 import androidx.compose.foundation.layout.Box
