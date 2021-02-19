@@ -133,9 +133,11 @@ private fun TopRow(rowItemModifier: Modifier) {
         }
 
         BaseDashboardCard(
-            modifier = rowItemModifier
+            modifier = rowItemModifier.clickable {
+                router.navTo(ApplicationRoutes.Training)
+            }
         ) {
-            Text(text = "Statistics")
+            Text(text = "Open Training")
         }
 
         BaseDashboardCard(

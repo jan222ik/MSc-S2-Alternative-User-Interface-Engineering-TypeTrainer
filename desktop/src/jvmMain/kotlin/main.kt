@@ -12,6 +12,7 @@ import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
 import ui.exercise.selection.ExerciseSelection
 import ui.exercise.selection.ExerciseSelectionIntent
+import ui.exercise.training.TrainingScreen
 import ui.general.window.container.WindowContainer
 import ui.general.WindowRouter
 import ui.util.i18n.LanguageConfiguration
@@ -34,6 +35,7 @@ fun main() {
                             ApplicationRoutes.Compose -> Text(+current.title)
                             ApplicationRoutes.Logbook -> Text(+current.title)
                             ApplicationRoutes.ExerciseSelection -> ExerciseSelection(ExerciseSelectionIntent())
+                            ApplicationRoutes.Training -> TrainingScreen()
                         }
                     }
                 }
