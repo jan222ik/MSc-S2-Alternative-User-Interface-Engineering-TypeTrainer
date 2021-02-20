@@ -19,8 +19,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -64,18 +64,18 @@ private fun TopRow(rowItemModifier: Modifier) {
         IconDashboardCard(
             modifier = iconCardModifier,
             onClick = {
-                router.navTo(ApplicationRoutes.Pictures)
+                router.navTo(ApplicationRoutes.Exercise.ExerciseSelection)
             },
             icon = {
                 Icon(
                     modifier = Modifier.fillMaxSize(0.75f),
-                    imageVector = Icons.Filled.Image,
-                    contentDescription = "Browse Pictures",
+                    imageVector = Icons.Filled.Keyboard,
+                    contentDescription = "Start Practice",
                     tint = MaterialTheme.colors.onBackground
                 )
             },
             text = {
-                Text("Pictures")
+                Text("Start Practice")
             }
         )
         IconDashboardCard(
@@ -98,18 +98,18 @@ private fun TopRow(rowItemModifier: Modifier) {
         IconDashboardCard(
             modifier = iconCardModifier,
             onClick = {
-                router.navTo(ApplicationRoutes.Logbook)
+                router.navTo(ApplicationRoutes.History)
             },
             icon = {
                 Icon(
                     modifier = Modifier.fillMaxSize(0.75f),
-                    imageVector = Icons.Filled.Book,
-                    contentDescription = "Open Logbook",
+                    imageVector = Icons.Filled.History,
+                    contentDescription = "Open History",
                     tint = MaterialTheme.colors.onBackground
                 )
             },
             text = {
-                Text("My Logbook")
+                Text("History")
             }
         )
         val currentLang = LanguageAmbient.current
@@ -126,10 +126,10 @@ private fun TopRow(rowItemModifier: Modifier) {
 
         BaseDashboardCard(
             modifier = rowItemModifier.clickable {
-                router.navTo(ApplicationRoutes.ExerciseSelection)
+                router.navTo(ApplicationRoutes.Goals.Overview)
             }
         ) {
-            Text(text = "Open Exercise Selection")
+            Text(text = "Open Goals")
         }
 
         BaseDashboardCard(
@@ -151,9 +151,11 @@ private fun TopRow(rowItemModifier: Modifier) {
         }
 
         BaseDashboardCard(
-            modifier = rowItemModifier
+            modifier = rowItemModifier.clickable {
+                router.navTo(ApplicationRoutes.Debug)
+            }
         ) {
-            Text(text = "My Sightings")
+            Text(text = "Debug")
         }
     }
 }

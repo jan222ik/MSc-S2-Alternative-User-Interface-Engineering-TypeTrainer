@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package ui.general
 
 import androidx.compose.runtime.Composable
