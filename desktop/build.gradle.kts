@@ -26,6 +26,7 @@ kotlin {
                 api(compose.runtime)
                 api(compose.ui)
                 api(compose.materialIconsExtended)
+                implementation(kotlin("reflect"))
             }
         }
         val jvmTest by getting
