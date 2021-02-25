@@ -1,7 +1,6 @@
 @file:Suppress("FunctionName")
 
 import androidx.compose.desktop.Window
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
@@ -16,7 +15,6 @@ import ui.general.window.container.WindowContainer
 import ui.general.WindowRouter
 import ui.util.i18n.LanguageConfiguration
 
-@OptIn(ExperimentalLayout::class)
 fun main() {
     Window(size = IntSize(width = 1280, height = 720)) {
         TypeTrainerTheme {

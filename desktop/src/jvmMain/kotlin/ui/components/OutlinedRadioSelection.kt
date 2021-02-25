@@ -7,16 +7,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,7 +31,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 
-@ExperimentalLayout
 @Composable
 fun <T> OutlinedRadioSelection(
     modifier: Modifier = Modifier,
@@ -63,7 +60,7 @@ fun <T> OutlinedRadioSelection(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             val labelWidthModifier = when {
-                forceLabelUnclipped -> Modifier.preferredWidth(IntrinsicSize.Min)
+                forceLabelUnclipped -> Modifier.width(IntrinsicSize.Min)
                 else -> Modifier.fillMaxWidth(1f / (options.size + 1))
             }
             Card(
@@ -130,14 +127,13 @@ private fun OptionText(text: String, color: Color, textModifier: Modifier = Modi
     }
 }
 
-@ExperimentalLayout
 @Composable
 private fun VDivider(additionalHeight: Dp) {
     Box(
         modifier = Modifier
             .background(color = MaterialTheme.colors.primary)
             .width(3.dp)
-            .preferredHeight(IntrinsicSize.Max)
+            .height(IntrinsicSize.Max)
             .background(color = MaterialTheme.colors.primary)
     ) {
         Spacer(Modifier.fillMaxHeight().width(3.dp).background(color = MaterialTheme.colors.primary))

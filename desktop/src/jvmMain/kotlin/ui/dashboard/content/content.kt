@@ -6,15 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -35,7 +34,6 @@ import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
 import kotlin.math.max
 
-@ExperimentalLayout
 @Composable
 fun DashboardContent() {
     Column(
@@ -45,15 +43,14 @@ fun DashboardContent() {
     ) {
         val modIntrinsicMin = Modifier
             .padding(horizontal = 4.dp)
-            .preferredWidth(IntrinsicSize.Min)
-            .preferredHeight(IntrinsicSize.Min)
+            .width(IntrinsicSize.Min)
+            .height(IntrinsicSize.Min)
         TopRow(
             rowItemModifier = modIntrinsicMin
         )
     }
 }
 
-@ExperimentalLayout
 @Composable
 private fun TopRow(rowItemModifier: Modifier) {
     val router = WindowRouterAmbient.current
@@ -159,7 +156,6 @@ private fun TopRow(rowItemModifier: Modifier) {
 }
 
 
-@ExperimentalLayout
 @Composable
 fun IconDashboardCard(
     modifier: Modifier = Modifier,
