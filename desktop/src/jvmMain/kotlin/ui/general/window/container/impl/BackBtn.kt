@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package ui.general.window.container.impl
 
 import androidx.compose.foundation.clickable
@@ -21,6 +23,18 @@ import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * The back button shows an icon based on the state of enableBackBtn.
+ * On Click the onBackButtonAction is invoked.
+ * Additionally, the button shows the backHoverBtnText on hover.
+ *
+ * @param height defines the maximum height of the component
+ * @param enableBackBtn if true -> the button is enabled and the Arrow Icon is shown
+ *                      otherwise -> the Dashboard icon is shown
+ * @param onBackBtnAction Invoked if button was clicked
+ * @param backHoverBtnText Text shown when Arrow Icon is hovered
+ * @param surface Color of button surface
+ */
 @Composable
 internal fun BackBtn(
     height: Dp,

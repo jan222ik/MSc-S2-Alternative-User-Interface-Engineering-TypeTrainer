@@ -159,6 +159,14 @@ private fun TopRow(rowItemModifier: Modifier) {
 }
 
 
+/**
+ * Specialized clickable BaseDashboardCard with designated text and icon slot.
+ *
+ * @param modifier Modifier for BaseDashboardCard
+ * @param onClick invoked on click
+ * @param text lambda for composable content defining the text
+ * @param icon lambda for composable content defining the icon
+ */
 @ExperimentalLayout
 @Composable
 fun IconDashboardCard(

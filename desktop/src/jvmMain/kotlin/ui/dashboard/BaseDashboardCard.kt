@@ -15,7 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
-
+/**
+ * Basic material card with content slot.
+ * @param modifier Modifier for Card
+ * @param bgColor Background Color of Card
+ * @param shape Shape of card
+ * @param content Scoped lambda (BoxScope) for composable content
+ */
 @Composable
 fun BaseDashboardCard(
     modifier: Modifier = Modifier,
