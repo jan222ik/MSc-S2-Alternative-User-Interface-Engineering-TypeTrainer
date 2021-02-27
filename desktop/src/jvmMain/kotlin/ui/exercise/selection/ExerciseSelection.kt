@@ -21,7 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ui.components.OutlinedRadioSelection
+import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.dashboard.BaseDashboardCard
 import ui.util.i18n.i18n
 
@@ -51,35 +51,34 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     topStart = roundedCornerDp,
                     topEnd = roundedCornerDp
                 )
-                OutlinedRadioSelection(
+                LabeledOutlinedRadioButtonGroup(
                     modifier = Modifier,
                     label = "Text Mode:",
                     forceLabelUnclipped = false,
                     options = ExerciseSelectionIntent.textModeSelectionOptions,
                     optionTransform = @Composable { +it },
                     selected = textMode,
-                    onSelectionChanged = setTextMode,
+                    onSelectionChange = setTextMode,
                     shape = shape
                 )
                 TextModeSelectionBody(
                     selected = textMode
                 )
                 Spacer(Modifier.height(50.dp))
-                OutlinedRadioSelection(
+                LabeledOutlinedRadioButtonGroup(
                     modifier = Modifier,
                     label = "Exercise Mode:",
                     forceLabelUnclipped = false,
                     options = ExerciseSelectionIntent.exerciseModeSelectionOptions,
                     optionTransform = @Composable { +it },
                     selected = exerciseMode,
-                    onSelectionChanged = setExerciseMode,
+                    onSelectionChange = setExerciseMode,
                     shape = shape
                 )
             }
         }
     }
 }
-
 
 
 @Composable
