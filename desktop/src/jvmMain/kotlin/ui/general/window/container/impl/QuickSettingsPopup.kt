@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import ui.dashboard.ApplicationRoutes
-import ui.components.outlined_radio_button.LabeledOutlinedRadioSelection
+import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.LanguageDefinition
@@ -76,15 +76,18 @@ internal fun QuickSettingsPopup(
                         }
                         Row {
                             val current = LanguageAmbient.current
-                            LabeledOutlinedRadioSelection(
+                            val langOptions = listOf(
+                                i18n.str.settings.languages.eng to LanguageDefinition.English,
+                                i18n.str.settings.languages.ger to LanguageDefinition.German
+                            )
+                            LabeledOutlinedRadioButtonGroup(
                                 modifier = Modifier.preferredWidth(IntrinsicSize.Min),
                                 label = +i18n.str.settings.languages.language + ":",
-                                selected = 0.takeIf { current.language == LanguageDefinition.English } ?: 1,
-                                options = listOf(i18n.str.settings.languages.eng, i18n.str.settings.languages.ger),
-                                optionTransform = { +it },
+                                selected = langOptions.indexOfFirst { current.language == it.second },
+                                options = langOptions,
+                                optionTransform = { +it.first },
                                 onSelectionChange = {
-                                    current.changeLanguage(LanguageDefinition.English.takeIf { current.language == LanguageDefinition.German }
-                                        ?: LanguageDefinition.German)
+                                    current.changeLanguage(langOptions[it].second)
                                 }
                             )
                         }

@@ -22,7 +22,7 @@ import ui.components.outlined_radio_button.internal.VDivider
 
 @ExperimentalLayout
 @Composable
-fun <T> LabeledOutlinedRadioSelection(
+fun <T> LabeledOutlinedRadioButtonGroup(
     modifier: Modifier = Modifier,
     label: String,
     forceLabelUnclipped: Boolean = true,
