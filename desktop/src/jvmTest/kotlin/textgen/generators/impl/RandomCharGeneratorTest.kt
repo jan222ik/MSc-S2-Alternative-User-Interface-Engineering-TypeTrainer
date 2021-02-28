@@ -37,7 +37,7 @@ class RandomCharGeneratorTest {
     }
 
     @Test
-    fun stableGenerationWithDifferntMinimumSegmentLength() {
+    fun stableGenerationWithDifferentMinimumSegmentLength() {
         val options = RandomCharGenerator.RandomCharOptions(
             seed = 1L,
             segmentMinimumLength = 20,
@@ -76,6 +76,6 @@ fun main() {
         println("Test 1")
         repeatedInvocationProducesSameResult()
         println("Test 2")
-        stableGenerationWithDifferntMinimumSegmentLength()
+        stableGenerationWithDifferentMinimumSegmentLength()
     }
 }
