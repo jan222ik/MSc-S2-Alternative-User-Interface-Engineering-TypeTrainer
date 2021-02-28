@@ -29,7 +29,13 @@ kotlin {
                 implementation(kotlin("reflect"))
             }
         }
-        val jvmTest by getting
+        val jvmTest by getting {
+            dependencies {
+                implementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
+
+            }
+        }
         all {
             languageSettings.enableLanguageFeature("InlineClasses")
         }
