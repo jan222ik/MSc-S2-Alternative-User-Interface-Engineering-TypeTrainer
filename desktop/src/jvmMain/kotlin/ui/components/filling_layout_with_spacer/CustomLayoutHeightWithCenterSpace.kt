@@ -3,6 +3,7 @@
 package ui.components.filling_layout_with_spacer
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -10,6 +11,7 @@ import kotlin.math.max
 
 @Composable
 fun CustomLayoutHeightWithCenterSpace(
+    modifier: Modifier = Modifier,
     centralPadding: Dp,
     top: @Composable () -> Unit,
     bottom: @Composable () -> Unit
@@ -17,6 +19,7 @@ fun CustomLayoutHeightWithCenterSpace(
     val centralPaddingPx: Float = with(LocalDensity.current) { centralPadding.toPx() }
     println(centralPaddingPx)
     Layout(
+        modifier = modifier,
         content = {
             top.invoke()
             bottom.invoke()

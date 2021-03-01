@@ -3,6 +3,7 @@
 package ui.components.filling_layout_with_spacer
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -10,12 +11,14 @@ import kotlin.math.max
 
 @Composable
 fun CustomLayoutWidthWithCenterSpace(
+    modifier: Modifier = Modifier,
     centralPadding: Dp,
     start: @Composable () -> Unit,
     end: @Composable () -> Unit
 ) {
     val centralPaddingPx: Float = with(LocalDensity.current) { centralPadding.toPx() }
     Layout(
+        modifier = modifier,
         content = {
             start.invoke()
             end.invoke()
