@@ -9,6 +9,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import kotlin.math.max
 
+/**
+ * Component takes all horizontal space and distributes it to
+ * its two composition children equally after subtraction
+ * the central padding value.
+ *
+ * @param modifier to modify the Layout
+ * @param centralPadding defines the padding between start and end composables
+ * @param start Lambda for start composable content
+ * @param end Lambda for end composable content
+ */
 @Composable
 fun CustomLayoutWidthWithCenterSpace(
     modifier: Modifier = Modifier,

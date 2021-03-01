@@ -9,6 +9,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import kotlin.math.max
 
+/**
+ * Component takes all vertical space and distributes it to
+ * its two composition children equally after subtraction
+ * the central padding value.
+ *
+ * @param modifier to modify the Layout
+ * @param centralPadding defines the padding between top and bottom composables
+ * @param top Lambda for top composable content
+ * @param bottom Lambda for bottom composable content
+ */
 @Composable
 fun CustomLayoutHeightWithCenterSpace(
     modifier: Modifier = Modifier,
@@ -17,7 +27,6 @@ fun CustomLayoutHeightWithCenterSpace(
     bottom: @Composable () -> Unit
 ) {
     val centralPaddingPx: Float = with(LocalDensity.current) { centralPadding.toPx() }
-    println(centralPaddingPx)
     Layout(
         modifier = modifier,
         content = {
