@@ -27,6 +27,17 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import kotlin.math.min
 
+/**
+ * Defines a base progress bar for variety of uses.
+ * @param modifier Modifier for canvas
+ * @param value the current value
+ * @param max the maximal value
+ * @param movingRow Scoped lambda (RowScope) for composable content that
+ * moves with the header of the progress bar
+ * @param endIcon Lambda for composable content for endIcon place
+ * @param trackColor defines the color of the track indicating the progress
+ * @param backgroundColor defines the color of the background of the progress bar
+ */
 @ExperimentalLayout
 @Composable
 fun BaseProgressBar(
