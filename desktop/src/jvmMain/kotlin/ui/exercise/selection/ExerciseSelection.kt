@@ -111,16 +111,16 @@ private fun ExerciseSelectionBodyWithSlot(
     container: @Composable () -> Unit
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(
                 width = 0.dp,
-                color = MaterialTheme.colors.primary,
+                color = primaryColor,
                 shape = shape
             ),
         shape = shape,
         elevation = 0.dp,
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = cardBackgroundColor
     ) {
         Column(Modifier.padding(all = 16.dp)) {
             container.invoke()
