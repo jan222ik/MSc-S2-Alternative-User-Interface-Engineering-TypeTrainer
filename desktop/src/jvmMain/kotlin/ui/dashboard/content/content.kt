@@ -6,21 +6,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +34,6 @@ import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
 import kotlin.math.max
 
-@ExperimentalLayout
 @Composable
 fun DashboardContent() {
     Column(
@@ -45,15 +43,14 @@ fun DashboardContent() {
     ) {
         val modIntrinsicMin = Modifier
             .padding(horizontal = 4.dp)
-            .preferredWidth(IntrinsicSize.Min)
-            .preferredHeight(IntrinsicSize.Min)
+            .width(IntrinsicSize.Min)
+            .height(IntrinsicSize.Min)
         TopRow(
             rowItemModifier = modIntrinsicMin
         )
     }
 }
 
-@ExperimentalLayout
 @Composable
 private fun TopRow(rowItemModifier: Modifier) {
     val router = WindowRouterAmbient.current
@@ -64,18 +61,18 @@ private fun TopRow(rowItemModifier: Modifier) {
         IconDashboardCard(
             modifier = iconCardModifier,
             onClick = {
-                router.navTo(ApplicationRoutes.Pictures)
+                router.navTo(ApplicationRoutes.Exercise.ExerciseSelection)
             },
             icon = {
                 Icon(
                     modifier = Modifier.fillMaxSize(0.75f),
-                    imageVector = Icons.Filled.Image,
-                    contentDescription = "Browse Pictures",
+                    imageVector = Icons.Filled.Keyboard,
+                    contentDescription = "Start Practice",
                     tint = MaterialTheme.colors.onBackground
                 )
             },
             text = {
-                Text("Pictures")
+                Text("Start Practice")
             }
         )
         IconDashboardCard(
@@ -98,18 +95,18 @@ private fun TopRow(rowItemModifier: Modifier) {
         IconDashboardCard(
             modifier = iconCardModifier,
             onClick = {
-                router.navTo(ApplicationRoutes.Logbook)
+                router.navTo(ApplicationRoutes.History)
             },
             icon = {
                 Icon(
                     modifier = Modifier.fillMaxSize(0.75f),
-                    imageVector = Icons.Filled.Book,
-                    contentDescription = "Open Logbook",
+                    imageVector = Icons.Filled.History,
+                    contentDescription = "Open History",
                     tint = MaterialTheme.colors.onBackground
                 )
             },
             text = {
-                Text("My Logbook")
+                Text("History")
             }
         )
         val currentLang = LanguageAmbient.current
@@ -126,10 +123,10 @@ private fun TopRow(rowItemModifier: Modifier) {
 
         BaseDashboardCard(
             modifier = rowItemModifier.clickable {
-                router.navTo(ApplicationRoutes.ExerciseSelection)
+                router.navTo(ApplicationRoutes.Goals.Overview)
             }
         ) {
-            Text(text = "Open Exercise Selection")
+            Text(text = "Open Goals")
         }
 
         BaseDashboardCard(
@@ -151,9 +148,11 @@ private fun TopRow(rowItemModifier: Modifier) {
         }
 
         BaseDashboardCard(
-            modifier = rowItemModifier
+            modifier = rowItemModifier.clickable {
+                router.navTo(ApplicationRoutes.Debug)
+            }
         ) {
-            Text(text = "My Sightings")
+            Text(text = "Debug")
         }
     }
 }
@@ -167,7 +166,6 @@ private fun TopRow(rowItemModifier: Modifier) {
  * @param text lambda for composable content defining the text
  * @param icon lambda for composable content defining the icon
  */
-@ExperimentalLayout
 @Composable
 fun IconDashboardCard(
     modifier: Modifier = Modifier,
@@ -179,9 +177,8 @@ fun IconDashboardCard(
         modifier = modifier.clickable(onClick = onClick)
     ) {
         Box(
-            modifier = modifier
-                .padding(all = 16.dp)
-                .fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             Layout(
                 content = {

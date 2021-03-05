@@ -5,7 +5,6 @@ package ui.exercise.selection
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,12 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.dashboard.BaseDashboardCard
 import ui.util.i18n.i18n
 
-@ExperimentalLayout
 @Composable
 fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
     Box(
@@ -47,9 +46,13 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                 val (textMode, setTextMode) = remember { selectionIntent.textModeSelection }
                 val (exerciseMode, setExerciseMode) = remember { selectionIntent.exerciseModeSelection }
                 val roundedCornerDp = 15.dp
-                val shape = RoundedCornerShape(
+                val headerShape = RoundedCornerShape(
                     topStart = roundedCornerDp,
                     topEnd = roundedCornerDp
+                )
+                val bodyShape = RoundedCornerShape(
+                    bottomStart = roundedCornerDp,
+                    bottomEnd = roundedCornerDp
                 )
                 LabeledOutlinedRadioButtonGroup(
                     modifier = Modifier,
@@ -59,11 +62,20 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     optionTransform = @Composable { +it },
                     selected = textMode,
                     onSelectionChange = setTextMode,
-                    shape = shape
+                    shape = headerShape
                 )
-                TextModeSelectionBody(
-                    selected = textMode
-                )
+                //TextModeSelectionBody(
+                //    selected = textMode
+                //)
+                ExerciseSelectionBodyWithSlot(
+                    shape = bodyShape
+                ) {
+                    when (textMode) {
+                        0 -> LiteratureSelectionBody()
+                        1 -> WordRngSelectionBody()
+                        2 -> CharRngSelectionBody()
+                    }
+                }
                 Spacer(Modifier.height(50.dp))
                 LabeledOutlinedRadioButtonGroup(
                     modifier = Modifier,
@@ -73,44 +85,47 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     optionTransform = @Composable { +it },
                     selected = exerciseMode,
                     onSelectionChange = setExerciseMode,
-                    shape = shape
+                    shape = headerShape
                 )
             }
         }
     }
 }
 
-
+/**
+ * //TODO
+ *
+ * @param shape defines the outer shape of the card and its border
+ * @param primaryColor defines the border color
+ * @param cardBackgroundColor defines the color used for the background of the card
+ * @param container Lambda for composable content
+ */
 @Composable
-private fun TextModeSelectionBody(
-    selected: Int
+private fun ExerciseSelectionBodyWithSlot(
+    modifier: Modifier = Modifier,
+    shape: RoundedCornerShape = RoundedCornerShape(0.dp),
+    primaryColor: Color = MaterialTheme.colors.primary,
+    cardBackgroundColor: Color = MaterialTheme.colors.background,
+    container: @Composable () -> Unit
 ) {
-    val roundedCornerDp = 15.dp
-    val mainCardShape = RoundedCornerShape(
-        bottomStart = roundedCornerDp,
-        bottomEnd = roundedCornerDp,
-    )
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(
                 width = 0.dp,
-                color = MaterialTheme.colors.primary,
-                shape = mainCardShape
+                color = primaryColor,
+                shape = shape
             ),
-        shape = mainCardShape,
+        shape = shape,
         elevation = 0.dp,
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = cardBackgroundColor
     ) {
         Column(Modifier.padding(all = 16.dp)) {
-            when (selected) {
-                0 -> LiteratureSelectionBody()
-                1 -> WordRngSelectionBody()
-                2 -> CharRngSelectionBody()
-            }
+            container.invoke()
         }
     }
 }
+
 
 @Composable
 private fun LiteratureSelectionBody() {
