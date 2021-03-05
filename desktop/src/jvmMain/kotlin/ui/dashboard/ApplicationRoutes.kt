@@ -1,5 +1,6 @@
 package ui.dashboard
 
+import ui.exercise.results.ResultsRoutes
 import ui.util.i18n.KeyI18N
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
@@ -32,7 +33,7 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
 
         data class ExerciseResults(
             val exerciseResults: Any,
-            val initialPage: Int = 0
+            val initialPage: ResultsRoutes = ResultsRoutes.OVERVIEW
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Results"))
     }
 

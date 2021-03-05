@@ -67,6 +67,15 @@ sealed class i18n {
                     fun getAll() = listOf(speed, accuracy, noTimeLimit)
                 }
             }
+
+            sealed class results : exercise() {
+                override val path: String = super.path + ".results"
+
+                object base : results() {
+                    override val path: String = super.path + ".base"
+                    val returnToDashboard = "returnToDashboard".i18Key()
+                }
+            }
         }
 
     }
