@@ -5,7 +5,6 @@ package ui.components.outlined_radio_button
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,7 +39,6 @@ import ui.components.outlined_radio_button.internal.VDivider
  * @param optionTextPadding defines the padding of the option's text
  * @param labelProvider Optional lambda to provide a label on the start side of the component inside the border
  */
-@ExperimentalLayout
 @Composable
 fun <T> OutlinedRadioButtonGroup(
     modifier: Modifier = Modifier,

@@ -3,16 +3,21 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.4.0-build168"
+    id("org.jetbrains.compose") version "0.3.2"
 }
 
 group = "com.github.jan222ik"
 version = "1.0"
 
+
 kotlin {
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "11"
+        }
+        withJava()
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
         }
     }
     sourceSets {
@@ -40,9 +45,9 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
-
+                implementation(kotlin("test-junit5"))
+                implementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
             }
         }
         all {
@@ -50,6 +55,7 @@ kotlin {
         }
     }
 }
+
 
 compose.desktop {
     application {
