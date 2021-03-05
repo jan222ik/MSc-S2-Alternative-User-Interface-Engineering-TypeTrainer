@@ -177,9 +177,8 @@ fun IconDashboardCard(
         modifier = modifier.clickable(onClick = onClick)
     ) {
         Box(
-            modifier = modifier
-                .padding(all = 16.dp)
-                .fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             Layout(
                 content = {
