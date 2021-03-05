@@ -2,11 +2,12 @@
 
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
-import androidx.compose.foundation.layout.ExperimentalLayout
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
@@ -24,7 +25,6 @@ import ui.general.window.container.WindowContainer
 import ui.util.i18n.LanguageConfiguration
 import kotlin.reflect.KClass
 
-@OptIn(ExperimentalLayout::class)
 fun main() {
     Window(size = IntSize(width = 1280, height = 720)) {
         TypeTrainerTheme {
@@ -82,7 +82,6 @@ fun TypeTrainerTheme(content: @Composable () -> Unit) {
     }
 }
 
-//@Composable
 private fun <T : Any> getDebugPaths(kClass: KClass<T>): List<KClass<out T>> {
     return when {
         kClass.isSealed -> kClass.sealedSubclasses.map { getDebugPaths(it) }.flatten()
@@ -94,12 +93,15 @@ private fun <T : Any> getDebugPaths(kClass: KClass<T>): List<KClass<out T>> {
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AllRoutes() {
     val router = WindowRouterAmbient.current
     LazyColumn {
-        item {
-            Text("Routes:")
+        stickyHeader {
+            Surface {
+                Text("Routes:")
+            }
         }
         items(getDebugPaths(ApplicationRoutes::class)) {
             when (it.objectInstance) {

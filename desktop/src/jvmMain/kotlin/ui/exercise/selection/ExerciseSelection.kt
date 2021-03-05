@@ -5,7 +5,6 @@ package ui.exercise.selection
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +25,6 @@ import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.dashboard.BaseDashboardCard
 import ui.util.i18n.i18n
 
-@ExperimentalLayout
 @Composable
 fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
     Box(

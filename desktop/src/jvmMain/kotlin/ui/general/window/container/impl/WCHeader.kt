@@ -6,7 +6,6 @@ import androidx.compose.desktop.AppWindow
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ui.general.WindowRouterAmbient
 
-@ExperimentalLayout
 @Composable
 internal fun WCHeader(
     height: Dp,
@@ -71,7 +69,6 @@ internal fun WCHeader(
     }
 }
 
-@ExperimentalLayout
 @Composable
 private fun BoxScope.EndGroup(
     modifier: Modifier,

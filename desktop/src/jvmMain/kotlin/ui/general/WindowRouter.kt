@@ -7,6 +7,7 @@ import androidx.compose.runtime.compositionLocalOf
 import ui.dashboard.ApplicationRoutes
 import ui.util.router.BaseRouter
 import ui.util.router.Router
+import ui.util.router.RouterImpl
 
 val WindowRouterAmbient = compositionLocalOf<Router<ApplicationRoutes>> { error("No active router found!") }
 

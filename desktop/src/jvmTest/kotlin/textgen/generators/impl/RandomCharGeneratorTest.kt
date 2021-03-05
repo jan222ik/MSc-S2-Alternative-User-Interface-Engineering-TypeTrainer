@@ -70,12 +70,3 @@ class RandomCharGeneratorTest {
 
 
 }
-
-fun main() {
-    RandomCharGeneratorTest().apply {
-        println("Test 1")
-        repeatedInvocationProducesSameResult()
-        println("Test 2")
-        stableGenerationWithDifferentMinimumSegmentLength()
-    }
-}
