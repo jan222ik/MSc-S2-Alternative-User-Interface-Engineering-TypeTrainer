@@ -6,12 +6,11 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -38,7 +37,6 @@ import kotlin.math.min
  * @param trackColor defines the color of the track indicating the progress
  * @param backgroundColor defines the color of the background of the progress bar
  */
-@ExperimentalLayout
 @Composable
 fun BaseProgressBar(
     modifier: Modifier = Modifier,
@@ -67,7 +65,7 @@ fun BaseProgressBar(
                 )
             }
             Canvas(
-                modifier = modifier.preferredWidth(IntrinsicSize.Min),
+                modifier = modifier.width(IntrinsicSize.Min),
             ) {
                 val maxWidth = this.drawContext.size.width
                 val progression = maxWidth * anim.value
@@ -79,7 +77,7 @@ fun BaseProgressBar(
                 )
             }
             Row(
-                modifier = Modifier.preferredHeight(IntrinsicSize.Max),
+                modifier = Modifier.height(IntrinsicSize.Max),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 movingRow.invoke(this@Row, progress)
