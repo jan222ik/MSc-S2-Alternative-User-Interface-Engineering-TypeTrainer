@@ -3,16 +3,9 @@
 package ui.exercise.selection
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -24,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.dashboard.BaseDashboardCard
+import ui.util.i18n.ResolverI18n
 import ui.util.i18n.i18n
 
 @ExperimentalLayout
@@ -58,7 +52,7 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                 )
                 LabeledOutlinedRadioButtonGroup(
                     modifier = Modifier,
-                    label = "Text Mode:",
+                    label = +i18n.str.exercise.selection.textMode.textMode + ":",
                     forceLabelUnclipped = false,
                     options = ExerciseSelectionIntent.textModeSelectionOptions,
                     optionTransform = @Composable { +it },
@@ -81,7 +75,7 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                 Spacer(Modifier.height(50.dp))
                 LabeledOutlinedRadioButtonGroup(
                     modifier = Modifier,
-                    label = "Exercise Mode:",
+                    label = +i18n.str.exercise.selection.exerciseMode.exerciseMode + ":",
                     forceLabelUnclipped = false,
                     options = ExerciseSelectionIntent.exerciseModeSelectionOptions,
                     optionTransform = @Composable { +it },
@@ -131,7 +125,14 @@ private fun ExerciseSelectionBodyWithSlot(
 
 @Composable
 private fun LiteratureSelectionBody() {
-    Text(text = +i18n.str.exercise.selection.textMode.literatureDescription)
+    val language = ResolverI18n.currentLang
+    Column {
+        Text(text = +i18n.str.exercise.selection.textMode.literatureDescription)
+        Spacer(modifier = Modifier.height(25.dp))
+        Row {
+            Spacer(modifier = Modifier.width(15.dp))
+        }
+    }
 }
 
 @Composable
