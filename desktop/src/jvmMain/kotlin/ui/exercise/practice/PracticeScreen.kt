@@ -4,15 +4,17 @@ import TypeTrainerTheme
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,13 +26,14 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import textgen.generators.impl.RandomKnownWordGenerator
 import ui.components.progress.practice.CountDownProgressBar
+import ui.dashboard.BaseDashboardCard
 import ui.exercise.TypingOptions
 import ui.exercise.TypingType
 import ui.util.i18n.LanguageDefinition
 
 @Composable
 fun PracticeScreen() {
-    val intend = PracticeIntend(
+    val intend = PracticeIntendImpl(
         typingOptions = TypingOptions(
             generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(
                 seed = 1L,
@@ -45,10 +48,12 @@ fun PracticeScreen() {
 }
 
 @Composable
-private fun PracticeScreenContent(intend: PracticeIntend) {
+private fun PracticeScreenContent(intend: IPracticeIntend) {
     val localWindow = LocalAppWindow.current
     LaunchedEffect(intend) {
-        if (System.getProperty("debug") == "true") PracticeScreenDebugable(intend, IntOffset(localWindow.x, localWindow.y), localWindow.width)
+        if (System.getProperty("debug") == "true") {
+            PracticeScreenDebugable(intend as IDebugPracticeIntend, IntOffset(localWindow.x, localWindow.y), localWindow.width)
+        }
     }
     val max = intend.typingOptions.durationMillis.div(1000).toFloat()
     Column(
@@ -73,8 +78,7 @@ private fun PracticeScreenContent(intend: PracticeIntend) {
 
 
 @OptIn(ExperimentalFoundationApi::class)
-fun PracticeScreenDebugable(intend: PracticeIntend, parentWindowLocation: IntOffset, parentWindowWidth: Int) {
-    println("intend = [${intend}], parentWindowLocation = [${parentWindowLocation}], parentWindowWidth = [${parentWindowWidth}]")
+fun PracticeScreenDebugable(intend: IDebugPracticeIntend, parentWindowLocation: IntOffset, parentWindowWidth: Int) {
     Window(
         title = "PracticeScreenDebugable",
         location = parentWindowLocation.copy(x = parentWindowLocation.x.plus(parentWindowWidth)),
@@ -95,9 +99,7 @@ fun PracticeScreenDebugable(intend: PracticeIntend, parentWindowLocation: IntOff
                             "DurationMillis:" to intend.typingOptions.durationMillis,
                             "Type:" to intend.typingOptions.type
                         )
-                        Card(
-                            backgroundColor = MaterialTheme.colors.background
-                        ) {
+                        BaseDashboardCard {
                             Column {
                                 list.forEach {
                                     Box(modifier = Modifier.fillMaxWidth()) {
@@ -109,6 +111,71 @@ fun PracticeScreenDebugable(intend: PracticeIntend, parentWindowLocation: IntOff
                                             modifier = Modifier.align(Alignment.TopEnd),
                                             text = it.second.toString()
                                         )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    item {
+                        BaseDashboardCard {
+                            Column {
+                                Text(text = "Clock:")
+                                Column(modifier = Modifier.padding(start = 8.dp)) {
+                                    Row {
+                                        Text("Actions:")
+                                        OutlinedButton(
+                                            onClick = {
+                                                intend.modifyRemainingTimeByAmount(5000)
+                                            }
+                                        ) {
+                                            Text("+5s")
+                                        }
+                                        OutlinedButton(
+                                            onClick = {
+                                                intend.modifyRemainingTimeByAmount(-5000)
+                                            }
+                                        ) {
+                                            Text("-5s")
+                                        }
+                                    }
+                                    Row {
+                                        val clock = intend.typingClockStateStateFlow.collectAsState()
+                                        Text("State: ")
+                                        Text(text = clock.value.toString())
+                                    }
+
+                                    val timer = intend.timerStateFlow.collectAsState()
+                                    Row {
+                                        Text("Time: ")
+                                        Text(text = timer.value.toString())
+                                    }
+                                    val timerUpdateCycles = intend.timerUpdateCycleCountStateFlow.collectAsState()
+                                    val timeRem = (intend.typingOptions.durationMillis - timer.value).coerceAtLeast(1)
+                                    Column {
+                                        Row {
+                                            Text("Update Cycles: ")
+                                            Text(text = timerUpdateCycles.value.toString())
+                                        }
+                                        Text(text = "Average Cycles:" + ("".takeUnless { intend.timeSkip.value } ?: " [Values not accurate due to time skip]"))
+                                        Column(modifier = Modifier.padding(start = 8.dp)) {
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                            ) {
+                                                Text(text = "cycles / ms:")
+                                                Text(
+                                                    text = timerUpdateCycles.value.div(timeRem).toString()
+                                                )
+                                            }
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                            ) {
+                                                Text(text = "cycles / ns:")
+                                                Text(
+                                                    text = timerUpdateCycles.value.div(timeRem)
+                                                        .div(1000f).toString()
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
