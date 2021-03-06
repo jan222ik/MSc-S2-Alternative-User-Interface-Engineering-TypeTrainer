@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.dashboard.BaseDashboardCard
@@ -60,16 +61,13 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     onSelectionChange = setTextMode,
                     shape = headerShape
                 )
-                //TextModeSelectionBody(
-                //    selected = textMode
-                //)
                 ExerciseSelectionBodyWithSlot(
                     shape = bodyShape
                 ) {
                     when (textMode) {
-                        0 -> LiteratureSelectionBody()
-                        1 -> WordRngSelectionBody()
-                        2 -> CharRngSelectionBody()
+                        0 -> LiteratureSelectionBody(selectionIntent = selectionIntent)
+                        1 -> WordRngSelectionBody(selectionIntent = selectionIntent)
+                        2 -> CharRngSelectionBody(selectionIntent = selectionIntent)
                     }
                 }
                 Spacer(Modifier.height(50.dp))
@@ -83,9 +81,48 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     onSelectionChange = setExerciseMode,
                     shape = headerShape
                 )
+                ExerciseSelectionBodyWithSlot(shape = bodyShape){
+                    when(exerciseMode){
+                        0 -> SpeedSelectionBody(selectionIntent = selectionIntent)
+                        1 -> AccuracySelectionBody(selectionIntent = selectionIntent)
+                        2 -> NoTimelimitSelectionBody(selectionIntent = selectionIntent)
+                    }
+                }
+                Spacer(Modifier.height(50.dp))
+                Row(modifier = Modifier.align(Alignment.End)){
+                    Button(onClick = {
+
+                    }){
+                        Text(text = "start exercise")
+                    }
+                }
             }
         }
     }
+}
+
+@Composable
+@ExperimentalLayout
+private fun SpeedSelectionBody(selectionIntent: ExerciseSelectionIntent){
+    ExerciseModeSubCard(selectionIntent = selectionIntent,
+                        descriptionText = +i18n.str.exercise.selection.exerciseMode.speedDescription,
+                        timeLimit = true)
+}
+
+@Composable
+@ExperimentalLayout
+private fun AccuracySelectionBody(selectionIntent: ExerciseSelectionIntent){
+    ExerciseModeSubCard(selectionIntent = selectionIntent,
+                        descriptionText = +i18n.str.exercise.selection.exerciseMode.accuracyDescription,
+                        timeLimit = true)
+}
+
+@Composable
+@ExperimentalLayout
+private fun NoTimelimitSelectionBody(selectionIntent: ExerciseSelectionIntent){
+    ExerciseModeSubCard(selectionIntent = selectionIntent,
+                        descriptionText = +i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription,
+                        timeLimit = false)
 }
 
 /**
@@ -124,25 +161,90 @@ private fun ExerciseSelectionBodyWithSlot(
 
 
 @Composable
-private fun LiteratureSelectionBody() {
-    val language = ResolverI18n.currentLang
+@ExperimentalLayout
+private fun LiteratureSelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    TextModeSubCard(selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.textMode.literatureDescription)
+}
+
+@Composable
+@ExperimentalLayout
+private fun CharRngSelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    TextModeSubCard(selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.textMode.randomCharsDescription)
+}
+
+@Composable
+@ExperimentalLayout
+private fun WordRngSelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    TextModeSubCard(selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.textMode.randomWordsDescription)
+}
+
+
+@Composable
+@ExperimentalLayout
+private fun TextModeSubCard(selectionIntent: ExerciseSelectionIntent,
+                            descriptionText: String,
+){
     Column {
-        Text(text = +i18n.str.exercise.selection.textMode.literatureDescription)
+        Text(text = descriptionText)
         Spacer(modifier = Modifier.height(25.dp))
         Row {
+            val (language, setLanguage) = remember { selectionIntent.languageSelection }
+            val roundedCornerDp = 15.dp
+            val shape = RoundedCornerShape(
+                topStart = roundedCornerDp,
+                bottomStart = roundedCornerDp,
+                topEnd = roundedCornerDp,
+                bottomEnd = roundedCornerDp,
+            )
             Spacer(modifier = Modifier.width(15.dp))
+            LabeledOutlinedRadioButtonGroup(
+                modifier = Modifier,
+                label = +i18n.str.settings.languages.language + ":",
+                forceLabelUnclipped = false,
+                options = ExerciseSelectionIntent.languageSelectionOptions,
+                optionTransform = @Composable { +it },
+                selected = language,
+                onSelectionChange = setLanguage,
+                shape = shape
+            )
         }
     }
 }
 
 @Composable
-private fun CharRngSelectionBody() {
-    Text(text = +i18n.str.exercise.selection.textMode.randomChars)
+@ExperimentalLayout
+private fun ExerciseModeSubCard(selectionIntent: ExerciseSelectionIntent,
+                                descriptionText: String,
+                                timeLimit: Boolean){
+    Column {
+        Text(text = descriptionText)
+        Spacer(modifier = Modifier.height(25.dp))
+        Row {
+            val (duration, setDuration) = remember { selectionIntent.durationSelection }
+            val roundedCornerDp = 15.dp
+            val shape = RoundedCornerShape(
+                topStart = roundedCornerDp,
+                bottomStart = roundedCornerDp,
+                topEnd = roundedCornerDp,
+                bottomEnd = roundedCornerDp,
+            )
+            Spacer(modifier = Modifier.width(15.dp))
+            if(timeLimit) {
+                LabeledOutlinedRadioButtonGroup(
+                    modifier = Modifier,
+                    label = +i18n.str.exercise.selection.exerciseMode.duration + ":",
+                    forceLabelUnclipped = false,
+                    options = ExerciseSelectionIntent.durationSelectionOptions,
+                    optionTransform = @Composable { +it },
+                    selected = duration,
+                    onSelectionChange = setDuration,
+                    shape = shape
+                )
+            }
+        }
+    }
 }
-
-@Composable
-private fun WordRngSelectionBody() {
-    Text(text = +i18n.str.exercise.selection.textMode.randomWords)
-}
-
 
