@@ -5,28 +5,34 @@ package ui.exercise.selection
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
+import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
+import ui.dashboard.ApplicationRoutes
 import ui.dashboard.BaseDashboardCard
-import ui.util.i18n.ResolverI18n
+import ui.general.WindowRouterAmbient
 import ui.util.i18n.i18n
+import kotlin.math.absoluteValue
 
 @Composable
 fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
@@ -87,18 +93,19 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     onSelectionChange = setExerciseMode,
                     shape = headerShape
                 )
-                ExerciseSelectionBodyWithSlot(shape = bodyShape){
-                    when(exerciseMode){
+                ExerciseSelectionBodyWithSlot(shape = bodyShape) {
+                    when (exerciseMode) {
                         0 -> SpeedSelectionBody(selectionIntent = selectionIntent)
                         1 -> AccuracySelectionBody(selectionIntent = selectionIntent)
                         2 -> NoTimelimitSelectionBody(selectionIntent = selectionIntent)
                     }
                 }
                 Spacer(Modifier.height(50.dp))
-                Row(modifier = Modifier.align(Alignment.End)){
+                Row(modifier = Modifier.align(Alignment.End)) {
+                    val router = WindowRouterAmbient.current
                     Button(onClick = {
-
-                    }){
+                        router.navTo(ApplicationRoutes.Exercise.Training(Any()))
+                    }) {
                         Text(text = "start exercise")
                     }
                 }
@@ -108,27 +115,30 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
 }
 
 @Composable
-@ExperimentalLayout
-private fun SpeedSelectionBody(selectionIntent: ExerciseSelectionIntent){
-    ExerciseModeSubCard(selectionIntent = selectionIntent,
-                        descriptionText = +i18n.str.exercise.selection.exerciseMode.speedDescription,
-                        timeLimit = true)
+private fun SpeedSelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    ExerciseModeSubCard(
+        selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.exerciseMode.speedDescription,
+        timeLimit = true
+    )
 }
 
 @Composable
-@ExperimentalLayout
-private fun AccuracySelectionBody(selectionIntent: ExerciseSelectionIntent){
-    ExerciseModeSubCard(selectionIntent = selectionIntent,
-                        descriptionText = +i18n.str.exercise.selection.exerciseMode.accuracyDescription,
-                        timeLimit = true)
+private fun AccuracySelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    ExerciseModeSubCard(
+        selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.exerciseMode.accuracyDescription,
+        timeLimit = true
+    )
 }
 
 @Composable
-@ExperimentalLayout
-private fun NoTimelimitSelectionBody(selectionIntent: ExerciseSelectionIntent){
-    ExerciseModeSubCard(selectionIntent = selectionIntent,
-                        descriptionText = +i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription,
-                        timeLimit = false)
+private fun NoTimelimitSelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    ExerciseModeSubCard(
+        selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription,
+        timeLimit = false
+    )
 }
 
 /**
@@ -167,31 +177,38 @@ private fun ExerciseSelectionBodyWithSlot(
 
 
 @Composable
-@ExperimentalLayout
 private fun LiteratureSelectionBody(selectionIntent: ExerciseSelectionIntent) {
-    TextModeSubCard(selectionIntent = selectionIntent,
-        descriptionText = +i18n.str.exercise.selection.textMode.literatureDescription)
+    TextModeSubCard(
+        selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.textMode.literatureDescription,
+        languageSelection = true
+    )
 }
 
 @Composable
-@ExperimentalLayout
 private fun CharRngSelectionBody(selectionIntent: ExerciseSelectionIntent) {
-    TextModeSubCard(selectionIntent = selectionIntent,
-        descriptionText = +i18n.str.exercise.selection.textMode.randomCharsDescription)
+    TextModeSubCard(
+        selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.textMode.randomCharsDescription,
+        languageSelection = false
+    )
 }
 
 @Composable
-@ExperimentalLayout
 private fun WordRngSelectionBody(selectionIntent: ExerciseSelectionIntent) {
-    TextModeSubCard(selectionIntent = selectionIntent,
-        descriptionText = +i18n.str.exercise.selection.textMode.randomWordsDescription)
+    TextModeSubCard(
+        selectionIntent = selectionIntent,
+        descriptionText = +i18n.str.exercise.selection.textMode.randomWordsDescription,
+        languageSelection = true
+    )
 }
 
-
 @Composable
-private fun TextModeSubCard(selectionIntent: ExerciseSelectionIntent,
-                            descriptionText: String,
-){
+private fun TextModeSubCard(
+    selectionIntent: ExerciseSelectionIntent,
+    descriptionText: String,
+    languageSelection: Boolean
+) {
     Column {
         Text(text = descriptionText)
         Spacer(modifier = Modifier.height(25.dp))
@@ -205,24 +222,39 @@ private fun TextModeSubCard(selectionIntent: ExerciseSelectionIntent,
                 bottomEnd = roundedCornerDp,
             )
             Spacer(modifier = Modifier.width(15.dp))
-            LabeledOutlinedRadioButtonGroup(
-                modifier = Modifier,
-                label = +i18n.str.settings.languages.language + ":",
-                forceLabelUnclipped = false,
-                options = ExerciseSelectionIntent.languageSelectionOptions,
-                optionTransform = @Composable { +it },
-                selected = language,
-                onSelectionChange = setLanguage,
-                shape = shape
-            )
+            if (languageSelection) {
+                LabeledOutlinedRadioButtonGroup(
+                    modifier = Modifier,
+                    label = +i18n.str.settings.languages.language + ":",
+                    forceLabelUnclipped = false,
+                    options = ExerciseSelectionIntent.languageSelectionOptions,
+                    optionTransform = @Composable { +it },
+                    selected = language,
+                    onSelectionChange = setLanguage,
+                    shape = shape
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun ExerciseModeSubCard(selectionIntent: ExerciseSelectionIntent,
-                                descriptionText: String,
-                                timeLimit: Boolean){
+private fun CustomDurationInput() : String{
+    var (customDuration, setCustomDuration) = remember { mutableStateOf(String()) }
+    TextField(value = customDuration,
+        placeholder = {+i18n.str.exercise.selection.exerciseMode.customDuration},
+        onValueChange = {
+            setCustomDuration.invoke(it)
+        })
+    return "test"
+}
+
+@Composable
+private fun ExerciseModeSubCard(
+    selectionIntent: ExerciseSelectionIntent,
+    descriptionText: String,
+    timeLimit: Boolean
+) {
     Column {
         Text(text = descriptionText)
         Spacer(modifier = Modifier.height(25.dp))
@@ -236,17 +268,29 @@ private fun ExerciseModeSubCard(selectionIntent: ExerciseSelectionIntent,
                 bottomEnd = roundedCornerDp,
             )
             Spacer(modifier = Modifier.width(15.dp))
-            if(timeLimit) {
-                LabeledOutlinedRadioButtonGroup(
-                    modifier = Modifier,
-                    label = +i18n.str.exercise.selection.exerciseMode.duration + ":",
-                    forceLabelUnclipped = false,
-                    options = ExerciseSelectionIntent.durationSelectionOptions,
-                    optionTransform = @Composable { +it },
-                    selected = duration,
-                    onSelectionChange = setDuration,
-                    shape = shape
-                )
+            if (timeLimit) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = +i18n.str.exercise.selection.exerciseMode.duration + ":")
+                    Spacer(modifier = Modifier.width(15.dp))
+                    OutlinedRadioButtonGroup(
+                        modifier = Modifier.fillMaxWidth(0.6f),//.width(IntrinsicSize.Min),
+                        options = ExerciseSelectionIntent.durationSelectionOptions,
+                        optionTransform = @Composable {
+                            if (it.key == i18n.str.exercise.selection.exerciseMode.customDuration.key){
+                               CustomDurationInput()
+                            }
+                            else{
+                                +it
+                            }
+
+                        },
+                        selected = duration,
+                        onSelectionChange = setDuration,
+                        shape = shape
+                    )
+                }
             }
         }
     }
