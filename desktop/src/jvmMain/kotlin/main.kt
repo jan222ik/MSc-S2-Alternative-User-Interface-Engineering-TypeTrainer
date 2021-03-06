@@ -17,6 +17,7 @@ import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
+import ui.exercise.practice.PracticeScreen
 import ui.exercise.selection.ExerciseSelection
 import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowRouter
@@ -26,6 +27,7 @@ import ui.util.i18n.LanguageConfiguration
 import kotlin.reflect.KClass
 
 fun main() {
+    System.setProperty("debug", "true")
     Window(size = IntSize(width = 1280, height = 720)) {
         TypeTrainerTheme {
             LanguageConfiguration {
@@ -52,7 +54,7 @@ fun main() {
                             )
                             ApplicationRoutes.Exercise.Connection.QRCode -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
-                            is ApplicationRoutes.Exercise.Training -> Text("Missing Screen: " + +current.title)
+                            is ApplicationRoutes.Exercise.Training -> PracticeScreen()
                             is ApplicationRoutes.Exercise.ExerciseResults -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Goals.Compose -> Text("Missing Screen: " + +current.title)
