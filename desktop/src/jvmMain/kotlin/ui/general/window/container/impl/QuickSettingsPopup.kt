@@ -6,12 +6,11 @@ import TypeTrainerTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -36,7 +35,6 @@ import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
 
 @Composable
-@ExperimentalLayout
 internal fun QuickSettingsPopup(
     height: Dp,
     windowControlsGroupPadding: Dp,
@@ -51,7 +49,7 @@ internal fun QuickSettingsPopup(
     ) {
         TypeTrainerTheme {
             Card(
-                modifier = Modifier.preferredWidth(IntrinsicSize.Min),
+                modifier = Modifier.width(IntrinsicSize.Min),
                 backgroundColor = MaterialTheme.colors.background,
                 shape = RoundedCornerShape(16.dp),
                 elevation = 0.dp
@@ -63,7 +61,7 @@ internal fun QuickSettingsPopup(
                     elevation = 0.dp
                 ) {
                     val router = WindowRouterAmbient.current
-                    Column(modifier = Modifier.padding(8.dp).preferredWidth(IntrinsicSize.Min)) {
+                    Column(modifier = Modifier.padding(8.dp).width(IntrinsicSize.Min)) {
                         Box(modifier = Modifier.fillMaxWidth()) {
                             Text(modifier = Modifier.align(Alignment.CenterStart), text = +i18n.str.settings.quickies.title)
                             Icon(
@@ -81,7 +79,7 @@ internal fun QuickSettingsPopup(
                                 i18n.str.settings.languages.ger to LanguageDefinition.German
                             )
                             LabeledOutlinedRadioButtonGroup(
-                                modifier = Modifier.preferredWidth(IntrinsicSize.Min),
+                                modifier = Modifier.width(IntrinsicSize.Min),
                                 label = +i18n.str.settings.languages.language + ":",
                                 selected = langOptions.indexOfFirst { current.language == it.second },
                                 options = langOptions,

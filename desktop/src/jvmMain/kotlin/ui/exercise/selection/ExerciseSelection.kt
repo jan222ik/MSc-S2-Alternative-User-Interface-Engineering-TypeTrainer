@@ -3,7 +3,14 @@
 package ui.exercise.selection
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -21,7 +28,6 @@ import ui.dashboard.BaseDashboardCard
 import ui.util.i18n.ResolverI18n
 import ui.util.i18n.i18n
 
-@ExperimentalLayout
 @Composable
 fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
     Box(
@@ -183,7 +189,6 @@ private fun WordRngSelectionBody(selectionIntent: ExerciseSelectionIntent) {
 
 
 @Composable
-@ExperimentalLayout
 private fun TextModeSubCard(selectionIntent: ExerciseSelectionIntent,
                             descriptionText: String,
 ){
@@ -215,7 +220,6 @@ private fun TextModeSubCard(selectionIntent: ExerciseSelectionIntent,
 }
 
 @Composable
-@ExperimentalLayout
 private fun ExerciseModeSubCard(selectionIntent: ExerciseSelectionIntent,
                                 descriptionText: String,
                                 timeLimit: Boolean){
