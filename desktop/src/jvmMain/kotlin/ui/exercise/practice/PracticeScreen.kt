@@ -20,6 +20,7 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -47,6 +48,11 @@ fun PracticeScreen() {
             type = TypingType.PRACTICE_SPEED_ACCURACY
         )
     )
+    DisposableEffect(intend) {
+       onDispose {
+           intend.cancelRunningJobs()
+       }
+    }
     PracticeScreenContent(intend)
 }
 
