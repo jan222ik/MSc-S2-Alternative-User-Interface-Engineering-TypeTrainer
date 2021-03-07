@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="desktop-jvm-1.0">
-    <output-path>Z:\Users\jan22\CodeProjects\TypeTrainerMultiplatform\desktop\build\libs</output-path>
+    <output-path>C:\Users\Melanie\Documents\GitHub\MSc-S2-Alternative-User-Interface-Engineering-TypeTrainer\desktop\build\libs</output-path>
     <root id="archive" name="desktop-jvm-1.0.jar">
       <element id="module-output" name="TypeTrainerMultiplatform.desktop.jvmMain" />
     </root>
