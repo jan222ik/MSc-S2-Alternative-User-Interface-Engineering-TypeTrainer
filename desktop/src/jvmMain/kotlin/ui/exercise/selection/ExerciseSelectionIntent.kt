@@ -8,6 +8,7 @@ class ExerciseSelectionIntent {
     val exerciseModeSelection = mutableStateOf(0)
     val languageSelection = mutableStateOf(0)
     val durationSelection = mutableStateOf(0)
+    val customDurationSelection = mutableStateOf("")
 
     companion object {
         val textModeSelectionOptions = i18n.str.exercise.selection.textMode.getAll()

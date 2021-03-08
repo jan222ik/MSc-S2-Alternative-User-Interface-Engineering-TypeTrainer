@@ -104,7 +104,9 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                 Row(modifier = Modifier.align(Alignment.End)) {
                     val router = WindowRouterAmbient.current
                     Button(onClick = {
-                        router.navTo(ApplicationRoutes.Exercise.Training(Any()))
+                        val options = ExerciseSelectionOptions(selectionIntent)
+                        router.navTo(ApplicationRoutes.Exercise.Training(options))
+
                     }) {
                         Text(text = "start exercise")
                     }
@@ -239,14 +241,18 @@ private fun TextModeSubCard(
 }
 
 @Composable
-private fun CustomDurationInput() : String{
-    var (customDuration, setCustomDuration) = remember { mutableStateOf(String()) }
+private fun CustomDurationInput(selectionIntent: ExerciseSelectionIntent) : String{
+    var (customDuration, setCustomDuration) = remember { selectionIntent.customDurationSelection }
     TextField(value = customDuration,
         placeholder = {+i18n.str.exercise.selection.exerciseMode.customDuration},
+        singleLine = true,
+        trailingIcon = {
+                       Text(text=" min")
+        },
         onValueChange = {
             setCustomDuration.invoke(it)
         })
-    return "test"
+    return customDuration
 }
 
 @Composable
@@ -279,7 +285,7 @@ private fun ExerciseModeSubCard(
                         options = ExerciseSelectionIntent.durationSelectionOptions,
                         optionTransform = @Composable {
                             if (it.key == i18n.str.exercise.selection.exerciseMode.customDuration.key){
-                               CustomDurationInput()
+                               CustomDurationInput(selectionIntent = selectionIntent)
                             }
                             else{
                                 +it
