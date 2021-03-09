@@ -19,7 +19,14 @@ sealed class i18n {
             override val path: String = "navigation"
 
             object self : navigation() {
+                val dashboard: KeyI18N = "dashboard".i18Key()
                 val settings: KeyI18N = "settings".i18Key()
+                val practice: KeyI18N = "practice".i18Key()
+                val competition: KeyI18N = "competition".i18Key()
+                val history: KeyI18N = "history".i18Key()
+                val achievements: KeyI18N = "achievements".i18Key()
+                val app_benefits: KeyI18N = "app_benefits".i18Key()
+                val camera_setup: KeyI18N = "camera_setup".i18Key()
             }
         }
 
