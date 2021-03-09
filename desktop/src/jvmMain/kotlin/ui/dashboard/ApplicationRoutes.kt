@@ -6,7 +6,7 @@ import ui.util.i18n.i18n
 
 sealed class ApplicationRoutes(val title: KeyI18N) {
 
-    object Dashboard : ApplicationRoutes(title = RequiresTranslationI18N("Dashboard"))
+    object Dashboard : ApplicationRoutes(title = i18n.str.navigation.self.dashboard)
 
     object Settings : ApplicationRoutes(title = i18n.str.navigation.self.settings)
 
@@ -19,7 +19,6 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
     sealed class Exercise(title: KeyI18N) : ApplicationRoutes(title) {
 
         object ExerciseSelection : Exercise(title = RequiresTranslationI18N("Exercise - Selection"))
-
 
         sealed class Connection(title: KeyI18N) : Exercise(title) {
             object QRCode : Connection(title = RequiresTranslationI18N("Connection with Companion"))
@@ -48,6 +47,8 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
     }
 
     object History : ApplicationRoutes(title = RequiresTranslationI18N("History"))
+
+    object AppBenefits : ApplicationRoutes(title = i18n.str.navigation.self.app_benefits)
 
     object Debug : ApplicationRoutes(title = RequiresTranslationI18N("Debug"))
 }

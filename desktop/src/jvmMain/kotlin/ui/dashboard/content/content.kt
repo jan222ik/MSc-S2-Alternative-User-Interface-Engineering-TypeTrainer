@@ -2,215 +2,187 @@
 
 package ui.dashboard.content
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Keyboard
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
+import ui.components.filling_layout_with_spacer.CustomLayoutHeightWithCenterSpace
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.BaseDashboardCard
+import ui.dashboard.IconDashboardCard
 import ui.general.WindowRouterAmbient
-import ui.util.i18n.LanguageAmbient
-import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
-import kotlin.math.max
+import ui.util.router.Router
 
+private const val iconFraction = .75f
+private const val halfIconFraction = .5f
+private val padding = 5.dp
+private val size = 200.dp
+private val halfSize = size.div(2).minus(padding.times(2))
+private val standardCard = Modifier.size(size).padding(padding)
+private val halfCard = Modifier.size(size, halfSize)
+private val doubleCard = Modifier.size(size.times(2)).padding(padding)
+
+/**
+ * Content of the dashboard screen featuring two columns and two rows
+ */
 @Composable
 fun DashboardContent() {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize()
+    val router = WindowRouterAmbient.current
+
+    Row(
+        modifier = Modifier.padding(all = padding)
     ) {
-        val modIntrinsicMin = Modifier
-            .padding(horizontal = 4.dp)
-            .width(IntrinsicSize.Min)
-            .height(IntrinsicSize.Min)
-        TopRow(
-            rowItemModifier = modIntrinsicMin
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth(fraction = .5f)
+        ) {
+            LeftColumn(router = router)
+        }
+        Column {
+            RightColumn(router = router)
+        }
     }
 }
 
+/**
+ * Left column of dashboard content
+ */
 @Composable
-private fun TopRow(rowItemModifier: Modifier) {
-    val router = WindowRouterAmbient.current
-    Row {
-        val iconCardModifier = Modifier
-            .padding(horizontal = 4.dp)
-            .size(150.dp)
+private fun LeftColumn(router: Router<ApplicationRoutes>) {
+    Row(modifier = Modifier.height(size)) {
         IconDashboardCard(
-            modifier = iconCardModifier,
-            onClick = {
-                router.navTo(ApplicationRoutes.Exercise.ExerciseSelection)
-            },
+            modifier = standardCard,
+            onClick = { router.navTo(ApplicationRoutes.Exercise.Connection.SetupInstructions) },
             icon = {
                 Icon(
-                    modifier = Modifier.fillMaxSize(0.75f),
+                    modifier = Modifier.fillMaxSize(fraction = iconFraction),
                     imageVector = Icons.Filled.Keyboard,
                     contentDescription = "Start Practice",
                     tint = MaterialTheme.colors.onBackground
                 )
             },
             text = {
-                Text("Start Practice")
+                Text(+i18n.str.navigation.self.practice)
             }
         )
         IconDashboardCard(
-            modifier = iconCardModifier,
-            onClick = {
-                router.navTo(ApplicationRoutes.Settings)
-            },
+            modifier = standardCard,
+            onClick = { router.navTo(ApplicationRoutes.Competitions.Overview) },
             icon = {
                 Icon(
-                    modifier = Modifier.fillMaxSize(0.75f),
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Open Settings",
+                    modifier = Modifier.fillMaxSize(fraction = iconFraction),
+                    imageVector = Icons.Filled.Group,
+                    contentDescription = "Start Competition",
                     tint = MaterialTheme.colors.onBackground
                 )
             },
             text = {
-                Text(+i18n.str.navigation.self.settings)
+                Text(+i18n.str.navigation.self.competition)
             }
         )
-        IconDashboardCard(
-            modifier = iconCardModifier,
-            onClick = {
-                router.navTo(ApplicationRoutes.History)
-            },
-            icon = {
-                Icon(
-                    modifier = Modifier.fillMaxSize(0.75f),
-                    imageVector = Icons.Filled.History,
-                    contentDescription = "Open History",
-                    tint = MaterialTheme.colors.onBackground
+        CustomLayoutHeightWithCenterSpace(
+            modifier = Modifier.padding(padding),
+            centralPadding = padding.times(2),
+            top = {
+                IconDashboardCard(
+                    modifier = halfCard,
+                    onClick = { router.navTo(ApplicationRoutes.History) },
+                    icon = {
+                        Icon(
+                            modifier = Modifier.fillMaxSize(fraction = halfIconFraction),
+                            imageVector = Icons.Filled.History,
+                            contentDescription = "Open History",
+                            tint = MaterialTheme.colors.onBackground
+                        )
+                    },
+                    text = {
+                        Text(+i18n.str.navigation.self.history)
+                    }
                 )
             },
-            text = {
-                Text("History")
+            bottom = {
+                IconDashboardCard(
+                    modifier = halfCard,
+                    onClick = { router.navTo(ApplicationRoutes.Achievements) },
+                    icon = {
+                        Icon(
+                            modifier = Modifier.fillMaxSize(fraction = halfIconFraction),
+                            imageVector = Icons.Filled.Stars,
+                            contentDescription = "Open Achievements",
+                            tint = MaterialTheme.colors.onBackground
+                        )
+                    },
+                    text = {
+                        Text(+i18n.str.navigation.self.achievements)
+                    }
+                )
             }
         )
-        val currentLang = LanguageAmbient.current
-        BaseDashboardCard(
-            modifier = rowItemModifier.clickable {
-                val language = LanguageDefinition.German
-                    .takeIf { currentLang.language != LanguageDefinition.German } ?: LanguageDefinition.English
-                currentLang.changeLanguage(language)
-            }
-        ) {
-            Text(text = "Change Language to " + ("German".takeUnless { currentLang.language == LanguageDefinition.German }
-                ?: "English"))
-        }
-
-        BaseDashboardCard(
-            modifier = rowItemModifier.clickable {
-                router.navTo(ApplicationRoutes.Goals.Overview)
-            }
-        ) {
-            Text(text = "Open Goals")
-        }
-
-        BaseDashboardCard(
-            modifier = rowItemModifier
-        ) {
-            Text(text = "Statistics")
-        }
-
-        BaseDashboardCard(
-            modifier = rowItemModifier
-        ) {
-            Text(text = "My Locations")
-        }
-
-        BaseDashboardCard(
-            modifier = rowItemModifier
-        ) {
-            Text(text = "Pictures")
-        }
-
-        BaseDashboardCard(
-            modifier = rowItemModifier.clickable {
-                router.navTo(ApplicationRoutes.Debug)
-            }
-        ) {
-            Text(text = "Debug")
+    }
+    Row(modifier = Modifier.padding(all = padding)) {
+        BaseDashboardCard {
+            Text("Last Week's Statistics Placeholder")
         }
     }
 }
 
-
 /**
- * Specialized clickable BaseDashboardCard with designated text and icon slot.
- *
- * @param modifier Modifier for BaseDashboardCard
- * @param onClick invoked on click
- * @param text lambda for composable content defining the text
- * @param icon lambda for composable content defining the icon
+ * Right column of dashboard screen
  */
 @Composable
-fun IconDashboardCard(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    text: @Composable BoxScope.() -> Unit,
-    icon: @Composable BoxScope.() -> Unit
-) {
-    BaseDashboardCard(
-        modifier = modifier.clickable(onClick = onClick)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Layout(
-                content = {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        text.invoke(this)
-                    }
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        icon.invoke(this)
-                    }
-                }
-            ) { measurables, constraints ->
-                val placeable1 = measurables[1].measure(constraints)
-                val heightConstraint = constraints.copy(maxHeight = constraints.maxHeight - placeable1.height)
-                val placeable2 = measurables[0].measure(heightConstraint)
-                layout(
-                    width = max(max(placeable1.width, placeable2.width), 0),
-                    height = placeable1.height + placeable2.height
-                ) {
-                    placeable1.placeRelative(x = 0, y = 0)
-                    placeable2.placeRelative(x = 0, y = placeable1.height)
-                }
-            }
+private fun RightColumn(router: Router<ApplicationRoutes>) {
+    Row(modifier = Modifier.height(size).padding(all = padding)) {
+        BaseDashboardCard {
+            Text("Goals Placeholder")
         }
+    }
+    Row(modifier = Modifier.padding(all = padding)) {
+        BaseDashboardCard(
+            modifier = doubleCard
+        ) {
+            Text("Calendar Placeholder")
+        }
+        CustomLayoutHeightWithCenterSpace(
+            centralPadding = padding.div(2),
+            top = {
+                IconDashboardCard(
+                    modifier = standardCard,
+                    onClick = { router.navTo(ApplicationRoutes.Exercise.Connection.SetupInstructions) },
+                    icon = {
+                        Icon(
+                            modifier = Modifier.fillMaxSize(fraction = iconFraction),
+                            imageVector = Icons.Filled.PhotoCamera,
+                            contentDescription = "Open Camera Setup",
+                            tint = MaterialTheme.colors.onBackground
+                        )
+                    },
+                    text = {
+                        Text(+i18n.str.navigation.self.camera_setup)
+                    }
+                )
+            },
+            bottom = {
+                IconDashboardCard(
+                    modifier = standardCard,
+                    onClick = { router.navTo(ApplicationRoutes.AppBenefits) },
+                    icon = {
+                        Icon(
+                            modifier = Modifier.fillMaxSize(fraction = iconFraction),
+                            imageVector = Icons.Filled.SentimentVerySatisfied,
+                            contentDescription = "Open AppBenefits",
+                            tint = MaterialTheme.colors.onBackground
+                        )
+                    },
+                    text = {
+                        Text(+i18n.str.navigation.self.app_benefits)
+                    }
+                )
+            }
+        )
     }
 }
