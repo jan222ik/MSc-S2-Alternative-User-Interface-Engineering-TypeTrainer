@@ -2,6 +2,7 @@ package ui.util.i18n
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import ui.util.debug.ifDebug
 
 open class KeyI18N(val key: String) {
 
@@ -20,5 +21,10 @@ open class KeyI18N(val key: String) {
 
 //@Deprecated("Should not be used in product but useful during development")
 data class RequiresTranslationI18N(val value: String) : KeyI18N("") {
-    override fun resolve(): String = value
+    override fun resolve(): String {
+        ifDebug {
+            System.err.println("i18n > Requires Translation - \"$value\"")
+        }
+        return value
+    }
 }
