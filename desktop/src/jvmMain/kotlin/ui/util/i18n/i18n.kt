@@ -47,7 +47,7 @@ sealed class i18n {
                 val language = "language_label".i18Key()
                 val eng = "english".i18Key()
                 val ger = "german".i18Key()
-
+                fun getAll() = listOf(eng, ger)
             }
         }
 
@@ -57,21 +57,35 @@ sealed class i18n {
             sealed class selection : exercise() {
                 override val path: String = super.path + ".selection"
 
+                val te = "".i18Key()
+
                 object textMode : selection() {
                     override val path: String = super.path + ".textMode"
+                    val textMode = "text_mode".i18Key()
                     val literature = "literature".i18Key()
                     val literatureDescription = "literature_description".i18Key()
                     val randomWords = "rng_words".i18Key()
+                    val randomWordsDescription = "rng_words_description".i18Key()
                     val randomChars = "rng_chars".i18Key()
+                    val randomCharsDescription = "rng_chars_description".i18Key()
                     fun getAll() = listOf(literature, randomWords, randomChars)
                 }
 
                 object exerciseMode : selection() {
                     override val path: String = super.path + ".exerciseMode"
+                    val exerciseMode = "exercise_mode".i18Key()
+                    val duration = "duration".i18Key()
+                    val oneMin = "one_min".i18Key()
+                    val twoMin = "two_min".i18Key()
+                    val customDuration = "custom_duration".i18Key()
                     val speed = "speed".i18Key()
+                    val speedDescription = "speed_description".i18Key()
                     val accuracy = "accuracy".i18Key()
+                    val accuracyDescription = "accuracy_description".i18Key()
                     val noTimeLimit = "no_time_limit".i18Key()
+                    val noTimeLimitDescription = "no_time_limit_description".i18Key()
                     fun getAll() = listOf(speed, accuracy, noTimeLimit)
+                    fun getDurations() = listOf(oneMin, twoMin, customDuration)
                 }
             }
         }
