@@ -22,10 +22,19 @@ import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowRouter
 import ui.general.WindowRouterAmbient
 import ui.general.window.container.WindowContainer
+import ui.util.debug.ifDebug
 import ui.util.i18n.LanguageConfiguration
 import kotlin.reflect.KClass
 
+@ExperimentalStdlibApi
 fun main() {
+    System.setProperty("debug", "true")
+    ifDebug {
+        println("Debug Pre Checks")
+        println("Check for translation keys:")
+        ui.util.i18n.main()
+        println("-".repeat(80))
+    }
     Window(size = IntSize(width = 1280, height = 720)) {
         TypeTrainerTheme {
             LanguageConfiguration {

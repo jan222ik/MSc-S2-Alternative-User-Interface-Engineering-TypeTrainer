@@ -57,8 +57,6 @@ sealed class i18n {
             sealed class selection : exercise() {
                 override val path: String = super.path + ".selection"
 
-                val te = "".i18Key()
-
                 object textMode : selection() {
                     override val path: String = super.path + ".textMode"
                     val textMode = "text_mode".i18Key()
