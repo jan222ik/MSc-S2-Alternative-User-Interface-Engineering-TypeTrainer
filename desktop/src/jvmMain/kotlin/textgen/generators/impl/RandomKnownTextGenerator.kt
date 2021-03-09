@@ -3,6 +3,7 @@ package textgen.generators.impl
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import textgen.database.DatabaseFactory
 import textgen.database.DbTextsEnglish
 import textgen.database.DbTextsGerman
 import textgen.generators.ContinuousGenerator
@@ -13,7 +14,9 @@ import util.RandomUtil
 
 object RandomKnownTextGenerator : IGenerator<RandomKnownTextGenerator.RandomKnownTextOptions> {
     override fun create(options: RandomKnownTextOptions): ContinuousGenerator {
-        val table = when(options.language) {
+        DatabaseFactory.initWithDemoData()
+
+        val table = when (options.language) {
             LanguageDefinition.English -> DbTextsEnglish
             LanguageDefinition.German -> DbTextsGerman
         }

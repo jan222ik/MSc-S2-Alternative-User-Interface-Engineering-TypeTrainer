@@ -14,21 +14,9 @@ import textgen.generators.impl.RandomKnownTextGenerator
 import textgen.generators.impl.RandomKnownWordGenerator
 import ui.exercise.ITypingOptions
 
-interface IPracticeIntend {
-    val typingOptions: ITypingOptions
-    val textStateFlow: StateFlow<String>
-    val timerStateFlow: StateFlow<Long>
-    val typingClockStateStateFlow: StateFlow<TypingClockState>
-    val timerUpdateCycleCountStateFlow: StateFlow<Long>
 
-    fun start()
-    fun cancelRunningJobs()
-}
 
-interface IDebugPracticeIntend : IPracticeIntend {
-    fun modifyRemainingTimeByAmount(amountMs: Long)
-    val timeSkip: State<Boolean>
-}
+
 
 class PracticeIntendImpl(
     override val typingOptions: ITypingOptions
@@ -55,8 +43,8 @@ class PracticeIntendImpl(
     override val timerStateFlow: StateFlow<Long>
         get() = _timerStateFlow
 
-    private val _typingClockStateStateFlow = MutableStateFlow(TypingClockState.PREVIEW)
-    override val typingClockStateStateFlow: StateFlow<TypingClockState>
+    private val _typingClockStateStateFlow = MutableStateFlow(IPracticeIntend.TypingClockState.PREVIEW)
+    override val typingClockStateStateFlow: StateFlow<IPracticeIntend.TypingClockState>
         get() = _typingClockStateStateFlow
 
     private val _timerUpdateCycleCountStateFlow = MutableStateFlow(0L)
@@ -71,14 +59,14 @@ class PracticeIntendImpl(
         var i: Long = 0L
         _startTimeMillis = System.currentTimeMillis()
         typingClockJob = GlobalScope.launch(Dispatchers.IO) {
-            _typingClockStateStateFlow.emit(TypingClockState.ACTIVE)
+            _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.ACTIVE)
             while (typingClockJob?.isActive == true && timerUpdateCycle()) { /* Nothing to do here */
                 if (isDebug) {
                     i += 1L
                     _timerUpdateCycleCountStateFlow.emit(i)
                 }
             }
-            _typingClockStateStateFlow.emit(TypingClockState.FINISHED)
+            _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.FINISHED)
             println("Iterations $i")
         }
     }
@@ -106,8 +94,8 @@ class PracticeIntendImpl(
     override val timeSkip: State<Boolean>
         get() = _timeSkip
 
-}
+    override suspend fun forceNextText() {
+        _textStateFlow.emit(generator.generateSegment())
+    }
 
-enum class TypingClockState {
-    PREVIEW, ACTIVE, FINISHED
 }

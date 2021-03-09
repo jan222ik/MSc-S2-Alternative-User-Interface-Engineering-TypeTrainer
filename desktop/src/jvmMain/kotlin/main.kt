@@ -11,12 +11,17 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
+import textgen.generators.impl.RandomKnownWordGenerator
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
+import ui.exercise.ExerciseMode
+import ui.exercise.TypingOptions
 import ui.exercise.practice.PracticeScreen
 import ui.exercise.selection.ExerciseSelection
 import ui.exercise.selection.ExerciseSelectionIntent
@@ -25,6 +30,7 @@ import ui.general.WindowRouterAmbient
 import ui.general.window.container.WindowContainer
 import ui.util.debug.ifDebug
 import ui.util.i18n.LanguageConfiguration
+import ui.util.i18n.LanguageDefinition
 import kotlin.reflect.KClass
 
 @ExperimentalStdlibApi
@@ -42,11 +48,18 @@ fun main() {
                 WindowRouter(
                     initialRoute = ApplicationRoutes.Dashboard
                 ) { current, router ->
-                    LocalAppWindow.current.apply {
-                        keyboard.setShortcut(KeysSet(setOf(Key.CtrlRight))) {
-                            router.navTo(ApplicationRoutes.Debug)
+                    val window = LocalAppWindow.current
+                    LaunchedEffect(window, current) {
+                        window.apply {
+                            keyboard.setShortcut(Key.CtrlRight) {
+                                router.navTo(ApplicationRoutes.Debug)
+                            }
+                            if (current is ApplicationRoutes.Exercise.Training) {
+                                keyboard.removeShortcut(KeysSet(Key.CtrlLeft))
+                            } else {
+                                keyboard.setShortcut(Key.CtrlLeft, router::back)
+                            }
                         }
-                        keyboard.setShortcut(Key.CtrlLeft, router::back)
                     }
                     WindowContainer(
                         title = router.current.title.observedString(router)
@@ -62,13 +75,14 @@ fun main() {
                             )
                             ApplicationRoutes.Exercise.Connection.QRCode -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
-                            is ApplicationRoutes.Exercise.Training -> PracticeScreen()
+                            is ApplicationRoutes.Exercise.Training -> PracticeScreen(current.trainingOptions)
                             is ApplicationRoutes.Exercise.ExerciseResults -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Goals.Compose -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.History -> Text("Missing Screen: " + +current.title)
+                            ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
                         }
                     }
                 }
@@ -140,7 +154,13 @@ private fun AllRoutes() {
                         }
                     }
                     ApplicationRoutes.Exercise.Training::class -> {
-                        val dest = ApplicationRoutes.Exercise.Training(Any())
+                        val dest = ApplicationRoutes.Exercise.Training(
+                            TypingOptions(
+                                generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(seed =1L, minimalSegmentLength = 300, language = LanguageDefinition.German),
+                                durationMillis = 1 * 60_000,
+                                type = ExerciseMode.Speed
+                            )
+                        )
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)
                         }

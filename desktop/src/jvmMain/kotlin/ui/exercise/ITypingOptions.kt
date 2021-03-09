@@ -6,5 +6,5 @@ interface ITypingOptions {
     val generatorOptions: IGeneratorOptions
 
     val durationMillis: Long
-    val type: TypingType
+    val type: ExerciseMode
 }
