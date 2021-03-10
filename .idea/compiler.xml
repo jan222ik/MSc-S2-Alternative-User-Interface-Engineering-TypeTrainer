@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="13">
+    <bytecodeTargetLevel target="11">
       <module name="DiveLoggerMultiplatform.common.androidAndroidTest" target="1.8" />
       <module name="DiveLoggerMultiplatform.common.androidAndroidTestDebug" target="1.8" />
       <module name="DiveLoggerMultiplatform.common.androidDebug" target="1.8" />
