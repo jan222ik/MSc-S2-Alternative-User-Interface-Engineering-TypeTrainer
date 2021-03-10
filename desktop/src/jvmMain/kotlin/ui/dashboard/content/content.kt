@@ -57,7 +57,7 @@ private fun LeftColumn(router: Router<ApplicationRoutes>) {
     Row(modifier = Modifier.height(size)) {
         IconDashboardCard(
             modifier = standardCard,
-            onClick = { router.navTo(ApplicationRoutes.Exercise.Connection.SetupInstructions) },
+            onClick = { router.navTo(ApplicationRoutes.Exercise.ExerciseSelection) },
             icon = {
                 Icon(
                     modifier = Modifier.fillMaxSize(fraction = iconFraction),

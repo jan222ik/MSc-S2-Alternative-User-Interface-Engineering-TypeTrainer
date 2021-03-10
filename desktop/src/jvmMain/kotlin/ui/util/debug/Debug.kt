@@ -1,5 +1,7 @@
 package ui.util.debug
 
+import androidx.compose.runtime.Composable
+
 object Debug {
     private const val debugPropName = "debug"
     private const val debugPropTrueValue = "true"
@@ -7,6 +9,13 @@ object Debug {
 }
 
 fun ifDebug(content: () -> Unit) {
+    if (Debug.isDebug) {
+        content.invoke()
+    }
+}
+
+@Composable
+fun ifDebugCompose(content: @Composable () -> Unit) {
     if (Debug.isDebug) {
         content.invoke()
     }
