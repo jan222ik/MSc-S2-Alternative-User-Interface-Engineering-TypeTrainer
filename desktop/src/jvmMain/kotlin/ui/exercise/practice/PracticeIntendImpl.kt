@@ -90,9 +90,13 @@ class PracticeIntendImpl(
     }
 
 
-    val _timeSkip =  mutableStateOf(false)
+    private val _timeSkip =  mutableStateOf(false)
     override val timeSkip: State<Boolean>
         get() = _timeSkip
+
+    override val _isCameraEnabled =  mutableStateOf(typingOptions.isCameraEnabled)
+    override val isCameraEnabled: State<Boolean>
+        get() = _isCameraEnabled
 
     override suspend fun forceNextText() {
         _textStateFlow.emit(generator.generateSegment())

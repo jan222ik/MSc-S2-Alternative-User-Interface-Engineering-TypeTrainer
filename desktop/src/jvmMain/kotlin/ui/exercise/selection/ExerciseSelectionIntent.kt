@@ -54,7 +54,8 @@ class ExerciseSelectionIntent {
                 1 -> ExerciseMode.Accuracy
                 2 -> ExerciseMode.NoTimelimit
                 else -> throw RuntimeException("Invalid option in exercise-mode while selecting an exercise")
-            }
+            },
+            isCameraEnabled = false
         )
     }
 

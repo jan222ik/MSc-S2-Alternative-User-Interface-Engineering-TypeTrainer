@@ -158,7 +158,8 @@ private fun AllRoutes() {
                             TypingOptions(
                                 generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(seed =1L, minimalSegmentLength = 300, language = LanguageDefinition.German),
                                 durationMillis = 1 * 60_000,
-                                type = ExerciseMode.Speed
+                                type = ExerciseMode.Speed,
+                                isCameraEnabled = true
                             )
                         )
                         Button(onClick = { router.navTo(dest) }) {

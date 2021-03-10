@@ -7,4 +7,6 @@ interface ITypingOptions {
 
     val durationMillis: Long
     val type: ExerciseMode
+
+    val isCameraEnabled: Boolean
 }

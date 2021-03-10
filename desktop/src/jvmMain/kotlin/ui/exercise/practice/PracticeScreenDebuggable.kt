@@ -194,6 +194,32 @@ fun PracticeScreenDebuggable(
                             }
                         }
                     }
+                    stickyHeader {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.surface
+                        ) {
+                            Text(text = "UI:")
+                        }
+                    }
+                    item {
+                        BaseDashboardCard {
+                            Column {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text("Actions:")
+                                    OutlinedButton(
+                                        onClick = { intend._isCameraEnabled.value = !intend.isCameraEnabled.value }
+                                    ) {
+                                        Text("Toggle CameraPreview")
+                                    }
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -2,27 +2,21 @@
 
 package ui.exercise.practice
 
-import TypeTrainerTheme
-import androidx.compose.desktop.AppWindow
 import androidx.compose.desktop.LocalAppWindow
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -40,7 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import ui.components.progress.practice.CountDownProgressBar
 import ui.dashboard.BaseDashboardCard
@@ -95,43 +88,44 @@ fun PracticeScreen(typingOptions: ITypingOptions) {
 private fun PracticeScreenContent(intend: IPracticeIntend) {
     val max = intend.typingOptions.durationMillis.div(1000).toFloat()
 
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(25.dp)
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(25.dp)
+    ) {
+        //progress bar
+        val timer = intend.timerStateFlow.collectAsState()
+        CountDownProgressBar(
+            modifier = Modifier.fillMaxWidth(),
+            value = max - timer.value.div(1000).toFloat(),
+            max = max,
+            trackColor = MaterialTheme.colors.background
+        )
+        // text in base dashboard card
+        // TODO adjust to fit generated text -> all test on screen or just one row etc.
+        BaseDashboardCard(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(0.7f)
+                .padding(vertical = 8.dp)
+                .fillMaxHeight(0.5f)
         ) {
-            //progress bar
-            val timer = intend.timerStateFlow.collectAsState()
-            CountDownProgressBar(
-                modifier = Modifier.fillMaxWidth(),
-                value = max - timer.value.div(1000).toFloat(),
-                max = max,
-                trackColor = MaterialTheme.colors.background
-            )
-            // text in base dashboard card
-            // TODO adjust to fit generated text -> all test on screen or just one row etc.
-            BaseDashboardCard(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth(0.7f)
-                    .padding(vertical = 8.dp)
-                    .fillMaxHeight(0.5f)
+            Column(
+                modifier = Modifier.align(Alignment.Center).fillMaxSize()
             ) {
-                Column(
-                    modifier = Modifier.align(Alignment.Center).fillMaxSize()
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(50.dp),
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(50.dp),
-                    )
-                    {
-                        Text(text = "Generated text:")
-                        val text = intend.textStateFlow.collectAsState()
-                        Text(text = text.value)
-                    }
+                    Text(text = "Generated text:")
+                    val text = intend.textStateFlow.collectAsState()
+                    Text(text = text.value)
                 }
             }
-            // collapsable video feed
-            VideoFeedExpanding("Video Feed")
         }
+        if (intend.isCameraEnabled.value) {
+            // collapsable video feed
+            VideoFeedExpanding(title = "Video Feed")
+        }
+    }
 
 }
 
@@ -140,29 +134,34 @@ private fun PracticeScreenContent(intend: IPracticeIntend) {
  * TODO
  */
 @Composable
-private fun VideoFeedExpanding(
+private fun ColumnScope.VideoFeedExpanding(
     title: String,
     bgColor: Color = MaterialTheme.colors.background,
     shape: Shape = RoundedCornerShape(16.dp) //TODO change to fit bottom of screen
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Card(
-        //modifier = Modifier.padding(50.dp).fillMaxWidth()
-        shape = shape,
-        backgroundColor = bgColor,
-        elevation = 16.dp
+    Box(modifier = Modifier
+        .align(Alignment.CenterHorizontally)
+        .fillMaxHeight()
     ) {
-        Column {
-            Text(text = title, textAlign = TextAlign.Center)
-            if (expanded) {
-                //Text(text = body)
-                VideoFeedLive()
-                IconButton(onClick = { expanded = false }) {
-                    Icon(Icons.Default.ExpandLess, contentDescription = "Collapse")
-                }
-            } else {
-                IconButton(onClick = { expanded = true }) {
-                    Icon(Icons.Default.ExpandMore, contentDescription = "Expand")
+        Card(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            shape = shape,
+            backgroundColor = bgColor,
+            elevation = 16.dp
+        ) {
+            Column(modifier = Modifier.padding(all = 5.dp)) {
+                Text(text = title, textAlign = TextAlign.Center)
+                if (expanded) {
+                    //Text(text = body)
+                    VideoFeedLive()
+                    IconButton(onClick = { expanded = false }) {
+                        Icon(Icons.Default.ExpandLess, contentDescription = "Collapse")
+                    }
+                } else {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(Icons.Default.ExpandMore, contentDescription = "Expand")
+                    }
                 }
             }
         }
