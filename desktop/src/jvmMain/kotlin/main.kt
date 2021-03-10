@@ -11,7 +11,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
@@ -156,7 +155,11 @@ private fun AllRoutes() {
                     ApplicationRoutes.Exercise.Training::class -> {
                         val dest = ApplicationRoutes.Exercise.Training(
                             TypingOptions(
-                                generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(seed =1L, minimalSegmentLength = 300, language = LanguageDefinition.German),
+                                generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(
+                                    seed = 1L,
+                                    minimalSegmentLength = 300,
+                                    language = LanguageDefinition.German
+                                ),
                                 durationMillis = 1 * 60_000,
                                 type = ExerciseMode.Speed,
                                 isCameraEnabled = true

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,8 +13,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -26,22 +25,27 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Functions
 import androidx.compose.material.icons.filled.Phonelink
+import androidx.compose.material.icons.filled.SentimentSatisfied
+import androidx.compose.material.icons.filled.Summarize
+import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ui.components.Logo
+import ui.components.filling_layout_with_spacer.CustomLayoutWidthWithCenterSpace
 import ui.dashboard.BaseDashboardCard
-import ui.dashboard.content.IconDashboardCard
+import ui.dashboard.IconDashboardCard
 import ui.temp_mobile.router.MobileRouterAmbient
 import ui.temp_mobile.router.MobileRoutes
 import kotlin.math.max
 import kotlin.math.min
 
-@ExperimentalLayout
 @Composable
 fun MobileMenu() {
     val router = MobileRouterAmbient.current
@@ -73,13 +77,13 @@ fun MobileMenu() {
                     .padding(horizontal = 16.dp)
                     .padding(top = 16.dp)
                     .fillMaxWidth()
-                    .preferredHeight(IntrinsicSize.Max),
+                    .height(IntrinsicSize.Max),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 BaseDashboardCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .preferredHeight(IntrinsicSize.Min)
+                        .height(IntrinsicSize.Min)
                 ) {
                     Spacer(Modifier.height(200.dp))
                     Text(text = "Weeks Stats")
@@ -87,14 +91,59 @@ fun MobileMenu() {
                 BaseDashboardCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .preferredHeight(IntrinsicSize.Min)
+                        .height(IntrinsicSize.Min)
                 ) {
+
                     Row {
-                        Text(
-                            modifier = Modifier.fillMaxSize(0.5f),
-                            text = "Streak"
+                        @Composable
+                        fun item(
+                            widthFraction: Float,
+                            imageVector: ImageVector,
+                            text: String,
+                            title: String
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(widthFraction)
+                                    .fillMaxHeight()
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .align(Alignment.TopCenter)
+                                        .fillMaxHeight()
+                                        .offset(y = (-10).dp, x = (-10).dp),
+                                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.fillMaxHeight(0.75f).fillMaxWidth(0.5f),
+                                        imageVector = imageVector,
+                                        contentDescription = null
+                                    )
+                                    Text(
+                                        text = text
+                                    )
+                                }
+                                Text(
+                                    modifier = Modifier.align(Alignment.BottomCenter),
+                                    text = title
+                                )
+                            }
+                        }
+
+                        item(
+                            title = "Streak",
+                            imageVector = Icons.Filled.Whatshot,
+                            text = "13 Days",
+                            widthFraction = 0.5f
                         )
-                        Text(text = "Total Exercises")
+                        item(
+                            title = "Total Exercises",
+                            imageVector = Icons.Filled.Functions,
+                            text = "4711",
+                            widthFraction = 1f
+                        )
+
                     }
                 }
                 Row {
@@ -106,15 +155,18 @@ fun MobileMenu() {
                     ) {
                         IconDashboardCard(
                             modifier = Modifier.fillMaxSize(),
-                            onClick = {},
+                            onClick = {
+                                router.navTo(MobileRoutes.CameraSetup)
+                            },
                             icon = {
                                 Icon(
+                                    modifier = Modifier.align(Alignment.Center).fillMaxSize(0.75f),
                                     imageVector = Icons.Filled.CameraAlt,
                                     contentDescription = null
                                 )
                             },
                             text = {
-                                Text("Cam Setup")
+                                Text("Camera Setup")
                             }
                         )
                     }
@@ -123,11 +175,22 @@ fun MobileMenu() {
                             .padding(start = interPaddingHalf)
                             .fillMaxWidth()
                     ) {
-                        BaseDashboardCard(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Text("App benefits")
-                        }
+                        IconDashboardCard(
+                            modifier = Modifier.fillMaxSize(),
+                            onClick = {
+                                router.navTo(MobileRoutes.AppBenefits)
+                            },
+                            icon = {
+                                Icon(
+                                    modifier = Modifier.align(Alignment.Center).fillMaxSize(0.75f),
+                                    imageVector = Icons.Filled.SentimentSatisfied,
+                                    contentDescription = null
+                                )
+                            },
+                            text = {
+                                Text("App benefits")
+                            }
+                        )
                     }
                 }
                 Box(
@@ -188,7 +251,7 @@ fun BoxScope.Wave(cornerSize: Dp) {
 }
 
 @Composable
-fun EFabWithBackground(onClick: () -> Unit, backgroundShape: @Composable() () -> Unit) {
+fun EFabWithBackground(onClick: () -> Unit, backgroundShape: @Composable () -> Unit) {
     Layout(content = {
         backgroundShape.invoke()
         ExtendedFloatingActionButton(

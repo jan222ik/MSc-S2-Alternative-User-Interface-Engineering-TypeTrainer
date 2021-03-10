@@ -6,7 +6,6 @@ import TypeTrainerTheme
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -20,7 +19,6 @@ import ui.temp_mobile.router.MobileRouterAmbient
 import ui.temp_mobile.router.MobileRoutes
 import ui.temp_mobile.screens.menu.MobileMenu
 
-@ExperimentalLayout
 fun main() {
     val base = 40
     Window(size = IntSize(width = base * 9, height = base * 19)) {
@@ -35,6 +33,8 @@ fun main() {
                             MobileRoutes.Menu -> MobileMenu()
                             MobileRoutes.Scanner -> CurrentlyMissing("Scanner")
                             is MobileRoutes.Exercise -> CurrentlyMissing("Exercise active")
+                            MobileRoutes.CameraSetup -> CurrentlyMissing("Camera Setup")
+                            MobileRoutes.AppBenefits -> CurrentlyMissing("App Benefits")
                         }
                     }
                 }
