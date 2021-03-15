@@ -2,17 +2,7 @@
 
 package ui.exercise.results
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayout
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
@@ -23,11 +13,9 @@ import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
 import ui.dashboard.ApplicationRoutes
@@ -57,7 +45,12 @@ fun BaseResultScreen(
                 modifier = Modifier.fillMaxSize(),
                 content = {
                     val router = ResultsSubRouterAmbient.current
-                    Row {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
                         OutlinedRadioButtonGroup(
                             modifier = Modifier.fillMaxWidth(0.6f),
                             cardBackgroundColor = MaterialTheme.colors.surface,
@@ -70,10 +63,13 @@ fun BaseResultScreen(
                     }
                     Column(
                         modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(top = 15.dp)
                     ) {
                         screenImpls.invoke(this, current)
                     }
-                    Row(modifier = Modifier.preferredHeight(IntrinsicSize.Min)) {
+                    Row(modifier = Modifier.padding(bottom = 16.dp, top = 32.dp)) {
                         ExtendedFloatingActionButton(
                             onClick = {
                                 globalRouter.setRoot(ApplicationRoutes.Dashboard)
