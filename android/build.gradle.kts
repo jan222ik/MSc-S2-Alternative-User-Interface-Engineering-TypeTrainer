@@ -13,14 +13,15 @@ repositories {
 
 dependencies {
     implementation(project(":common"))
+    implementation("androidx.activity:activity-compose:1.3.0-alpha04")
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     defaultConfig {
         applicationId = "com.github.jan222ik.TypeTrainerMultiplatform"
         minSdkVersion(24)
-        targetSdkVersion(29)
+        targetSdkVersion(30)
         versionCode = 1
         versionName = "1.0"
     }

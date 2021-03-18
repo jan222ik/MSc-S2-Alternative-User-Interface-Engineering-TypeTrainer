@@ -1,4 +1,4 @@
-package ui.util.router
+package com.github.jan222ik.common.ui.util.router
 
 interface Router<T> {
     val current: T

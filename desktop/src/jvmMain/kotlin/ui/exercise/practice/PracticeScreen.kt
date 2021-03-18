@@ -35,8 +35,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.components.progress.practice.CountDownProgressBar
-import ui.dashboard.BaseDashboardCard
 import ui.exercise.ITypingOptions
 import ui.util.debug.ifDebugCompose
 

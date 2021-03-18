@@ -2,7 +2,6 @@
 
 package ui.components.progress.practice
 
-import TypeTrainerTheme
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import kotlinx.coroutines.delay
 
 

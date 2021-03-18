@@ -1,9 +1,13 @@
 @file:Suppress("FunctionName")
 
-package ui.dashboard
+package com.github.jan222ik.common.ui.dashboard
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -11,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
@@ -21,7 +24,6 @@ import kotlin.math.max
  *
  * @param modifier Modifier for BaseDashboardCard
  * @param bgColor background color
- * @param hoverColor color change on mouse hover
  * @param onClick invoked on click
  * @param text lambda for composable content defining the text
  * @param icon lambda for composable content defining the icon
@@ -30,7 +32,6 @@ import kotlin.math.max
 fun IconDashboardCard(
     modifier: Modifier = Modifier,
     bgColor: Color = MaterialTheme.colors.background,
-    hoverColor: Color = MaterialTheme.colors.primary,
     onClick: () -> Unit,
     text: @Composable BoxScope.() -> Unit,
     icon: @Composable BoxScope.() -> Unit
@@ -38,19 +39,8 @@ fun IconDashboardCard(
     val hover = remember { mutableStateOf(false) }
 
     BaseDashboardCard(
-        modifier = modifier
-            .clickable(onClick = onClick)
-            .pointerMoveFilter(
-                onEnter = {
-                    hover.value = true
-                    false
-                },
-                onExit = {
-                    hover.value = false
-                    false
-                }
-            ),
-        bgColor = hoverColor.takeIf { hover.value } ?: bgColor,
+        modifier = modifier.clickable(onClick = onClick),
+        bgColor = bgColor,
     ) {
         Box(
             modifier = modifier

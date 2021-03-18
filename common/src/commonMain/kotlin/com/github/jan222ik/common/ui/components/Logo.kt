@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package ui.components
+package com.github.jan222ik.common.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable

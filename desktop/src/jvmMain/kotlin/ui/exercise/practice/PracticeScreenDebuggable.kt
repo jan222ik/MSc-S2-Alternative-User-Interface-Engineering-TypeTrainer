@@ -2,7 +2,6 @@
 
 package ui.exercise.practice
 
-import TypeTrainerTheme
 import androidx.compose.desktop.AppWindow
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -23,9 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.ui.components.TypeTrainerTheme
+import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import ui.dashboard.BaseDashboardCard
 
 @OptIn(ExperimentalFoundationApi::class)
 fun PracticeScreenDebuggable(

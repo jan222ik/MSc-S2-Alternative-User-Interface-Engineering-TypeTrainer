@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package ui.dashboard
+package com.github.jan222ik.common.ui.dashboard
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope

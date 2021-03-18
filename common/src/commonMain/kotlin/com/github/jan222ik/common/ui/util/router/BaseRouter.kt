@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package ui.util.router
+package com.github.jan222ik.common.ui.util.router
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider

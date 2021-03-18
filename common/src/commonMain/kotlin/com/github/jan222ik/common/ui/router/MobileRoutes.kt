@@ -1,4 +1,4 @@
-package ui.temp_mobile.router
+package com.github.jan222ik.common.ui.router
 
 sealed class MobileRoutes {
     object Menu : MobileRoutes()

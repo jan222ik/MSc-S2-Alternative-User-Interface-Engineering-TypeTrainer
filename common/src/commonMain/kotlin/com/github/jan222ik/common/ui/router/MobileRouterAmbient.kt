@@ -1,13 +1,14 @@
 @file:Suppress("FunctionName")
 
-package ui.temp_mobile.router
+package com.github.jan222ik.common.ui.router
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
-import ui.util.router.BaseRouter
-import ui.util.router.Router
+import com.github.jan222ik.common.ui.util.router.BaseRouter
+import com.github.jan222ik.common.ui.util.router.Router
 
-val MobileRouterAmbient = compositionLocalOf<Router<MobileRoutes>> { error("No active router found!") }
+val MobileRouterAmbient =
+    compositionLocalOf<Router<MobileRoutes>> { error("No active router found!") }
 
 @Composable
 fun MobileRouter(

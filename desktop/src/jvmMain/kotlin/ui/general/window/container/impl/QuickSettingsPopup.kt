@@ -2,7 +2,6 @@
 
 package ui.general.window.container.impl
 
-import TypeTrainerTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import ui.dashboard.ApplicationRoutes
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.general.WindowRouterAmbient

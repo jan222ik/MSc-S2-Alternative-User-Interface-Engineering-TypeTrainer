@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package ui.temp_mobile.screens.menu
+package com.github.jan222ik.common.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,7 +28,6 @@ import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Functions
 import androidx.compose.material.icons.filled.Phonelink
 import androidx.compose.material.icons.filled.SentimentSatisfied
-import androidx.compose.material.icons.filled.Summarize
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,12 +36,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ui.components.Logo
-import ui.components.filling_layout_with_spacer.CustomLayoutWidthWithCenterSpace
-import ui.dashboard.BaseDashboardCard
-import ui.dashboard.IconDashboardCard
-import ui.temp_mobile.router.MobileRouterAmbient
-import ui.temp_mobile.router.MobileRoutes
+import com.github.jan222ik.common.ui.components.Logo
+import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
+import com.github.jan222ik.common.ui.dashboard.IconDashboardCard
+import com.github.jan222ik.common.ui.router.MobileRouterAmbient
+import com.github.jan222ik.common.ui.router.MobileRoutes
 import kotlin.math.max
 import kotlin.math.min
 

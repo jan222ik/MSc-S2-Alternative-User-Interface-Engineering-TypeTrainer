@@ -41,6 +41,15 @@ kotlin {
                 implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
                 implementation("com.zaxxer:HikariCP:$hikariCpVersion")
+
+                // Ktor Server & REST & Websocket
+                val ktorVersion = "1.3.2"
+                implementation("io.ktor:ktor-server-netty:$ktorVersion")
+                implementation("io.ktor:ktor-websockets:$ktorVersion")
+
+                // Logger
+                val logbackVersion = "1.2.3"
+                implementation("ch.qos.logback:logback-classic:$logbackVersion")
             }
         }
         val jvmTest by getting {
@@ -56,10 +65,10 @@ kotlin {
     }
 }
 
-
 compose.desktop {
     application {
         mainClass = "MainKt"
+
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb)
             packageName = "jvm"
