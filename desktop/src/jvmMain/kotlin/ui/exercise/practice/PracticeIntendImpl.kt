@@ -18,8 +18,8 @@ import ui.exercise.ITypingOptions
 
 
 
-class PracticeIntendImpl(
-    override val typingOptions: ITypingOptions
+abstract class PracticeIntendImpl(
+    final override val typingOptions: ITypingOptions
 ) : IPracticeIntend, IDebugPracticeIntend {
     private val generator: ContinuousGenerator
     private var typingClockJob: Job? = null
@@ -63,6 +63,7 @@ class PracticeIntendImpl(
             while (typingClockJob?.isActive == true && timerUpdateCycle()) { /* Nothing to do here */
                 if (isDebug) {
                     i += 1L
+                    update()
                     _timerUpdateCycleCountStateFlow.emit(i)
                 }
             }
@@ -77,6 +78,8 @@ class PracticeIntendImpl(
         _timerStateFlow.emit(remTimeMillis)
         return remTimeMillis > 0
     }
+
+    abstract fun update()
 
     override fun cancelRunningJobs() {
         typingClockJob?.cancel()

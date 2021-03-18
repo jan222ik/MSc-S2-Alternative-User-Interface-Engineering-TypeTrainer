@@ -3,7 +3,7 @@ package ui.exercise.practice
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 
-interface IDebugPracticeIntend : IPracticeIntend {
+interface IDebugPracticeIntend : ITextDisplayPracticeIntend {
     fun modifyRemainingTimeByAmount(amountMs: Long)
     val timeSkip: State<Boolean>
 

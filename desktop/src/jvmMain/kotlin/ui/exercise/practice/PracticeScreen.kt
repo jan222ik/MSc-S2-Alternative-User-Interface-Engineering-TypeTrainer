@@ -2,32 +2,17 @@
 
 package ui.exercise.practice
 
+import TypeTrainerTheme
 import androidx.compose.desktop.LocalAppWindow
+import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,10 +20,15 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import textgen.generators.impl.RandomKnownWordGenerator
 import ui.components.progress.practice.CountDownProgressBar
 import ui.dashboard.BaseDashboardCard
+import ui.exercise.ExerciseMode
 import ui.exercise.ITypingOptions
+import ui.exercise.TypingOptions
+import ui.exercise.practice.text.MovingCursorTyping
 import ui.util.debug.ifDebugCompose
+import ui.util.i18n.LanguageDefinition
 
 @Composable
 fun PracticeScreen(typingOptions: ITypingOptions) {
@@ -55,7 +45,7 @@ fun PracticeScreen(typingOptions: ITypingOptions) {
         )
     )
      */
-    val intend = remember(typingOptions) { PracticeIntendImpl(typingOptions = typingOptions) }
+    val intend = remember(typingOptions) { MovingCursorTypingIntend(typingOptions = typingOptions) }
     DisposableEffect(intend) {
         onDispose {
             intend.cancelRunningJobs()
@@ -85,7 +75,7 @@ fun PracticeScreen(typingOptions: ITypingOptions) {
 }
 
 @Composable
-private fun PracticeScreenContent(intend: IPracticeIntend) {
+private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
     val max = intend.typingOptions.durationMillis.div(1000).toFloat()
 
     Column(
@@ -111,14 +101,7 @@ private fun PracticeScreenContent(intend: IPracticeIntend) {
             Column(
                 modifier = Modifier.align(Alignment.Center).fillMaxSize()
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(50.dp),
-                ) {
-                    Text(text = "Generated text:")
-                    val text = intend.textStateFlow.collectAsState()
-                    Text(text = text.value)
-                }
+                MovingCursorTyping(intend)
             }
         }
         if (intend.isCameraEnabled.value) {
@@ -140,9 +123,10 @@ private fun ColumnScope.VideoFeedExpanding(
     shape: Shape = RoundedCornerShape(16.dp) //TODO change to fit bottom of screen
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = Modifier
-        .align(Alignment.CenterHorizontally)
-        .fillMaxHeight()
+    Box(
+        modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .fillMaxHeight()
     ) {
         Card(
             modifier = Modifier.align(Alignment.BottomCenter),
@@ -182,5 +166,25 @@ private fun VideoFeedLive() { //placeholder for actual live feed
     }
 }
 
+fun main() {
+    Window {
+        TypeTrainerTheme {
+            Surface(Modifier.fillMaxSize()) {
+                PracticeScreen(
+                    TypingOptions(
+                        generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(
+                            seed = 1L,
+                            language = LanguageDefinition.German,
+                            minimalSegmentLength = 300
+                        ),
+                        durationMillis = 60 * 1000,
+                        type = ExerciseMode.Speed,
+                        isCameraEnabled = false
+                    )
+                )
+            }
+        }
+    }
+}
 
 
