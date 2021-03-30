@@ -92,7 +92,7 @@ class HandTrackingActivity : AppCompatActivity() {
         processor!!.setInputSidePackets(inputSidePackets)
 
         // To show verbose logging, run:
-        // adb shell setprop log.tag.MainActivity VERBOSE
+        // adb shell setprop log.tag.HandTrackingActivity VERBOSE
         if (Log.isLoggable(TAG, Log.VERBOSE)) {
             processor!!.addPacketCallback(
                 OUTPUT_LANDMARKS_STREAM_NAME

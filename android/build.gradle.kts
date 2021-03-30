@@ -24,7 +24,8 @@ dependencies {
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.guava:guava:$guava_version")
     implementation("com.google.guava:guava:$guava_version")
-    implementation("com.google.protobuf:protobuf-lite:3.0.0")
+    //implementation("com.google.protobuf:protobuf-lite:3.0.0")
+    implementation("com.google.protobuf:protobuf-java:3.11.4")
 
     // CameraX core library
     val camerax_version = "1.1.0-alpha03"
