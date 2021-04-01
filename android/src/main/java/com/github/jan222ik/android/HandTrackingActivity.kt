@@ -112,6 +112,12 @@ class HandTrackingActivity : AppCompatActivity() {
                 )
             }
         }
+
+        processor!!.addPacketCallback(OUTPUT_LANDMARKS_STREAM_NAME){
+            packet: Packet ->
+            val multiHandLandmarks = PacketGetter.getProtoVector(packet, NormalizedLandmarkList.parser())
+            FingerTipExtractor.extractAndSend(multiHandLandmarks)
+        }
     }
 
     // Used to obtain the content view for this application. If you are extending this class, and
