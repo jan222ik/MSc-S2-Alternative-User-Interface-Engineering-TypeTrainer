@@ -6,24 +6,18 @@ import TypeTrainerTheme
 import androidx.compose.desktop.AppWindow
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ui.dashboard.BaseDashboardCard
 
@@ -55,6 +49,7 @@ fun PracticeScreenDebuggable(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colors.surface
             ) {
+                val scope = rememberCoroutineScope()
                 LazyColumn(
                     modifier = Modifier
                         .padding(8.dp)
@@ -216,6 +211,53 @@ fun PracticeScreenDebuggable(
                                         Text("Toggle CameraPreview")
                                     }
 
+                                }
+                            }
+                        }
+                    }
+                    stickyHeader {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.surface
+                        ) {
+                            Text(text = "Typing:")
+                        }
+                    }
+                    item {
+                        val (isStarted, setStarted) = remember { mutableStateOf(false) }
+                        BaseDashboardCard {
+                            Column {
+                                val (periodMs, setPeriodMs) = remember { mutableStateOf("30") }
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    if (!isStarted) {
+                                        Text("Period[ms]")
+                                        TextField(
+                                            value = periodMs,
+                                            onValueChange = setPeriodMs
+                                        )
+                                    } else {
+                                        Text("Period ${1f.div(periodMs.toLong().div(1000f))}kHz")
+                                    }
+                                }
+                                if (!isStarted) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        val clockState = intend.typingClockStateStateFlow.collectAsState()
+                                        OutlinedButton(
+                                            enabled = clockState.value == IPracticeIntend.TypingClockState.ACTIVE,
+                                            onClick = {
+                                                scope.launch { intend.startConstantSpeedTypeDemo(periodMs.toLong()) }
+                                                setStarted(true)
+                                            }
+                                        ) {
+                                            Text("Start")
+                                        }
+                                    }
                                 }
                             }
                         }

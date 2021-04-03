@@ -10,4 +10,6 @@ interface IDebugPracticeIntend : ITextDisplayPracticeIntend {
     val _isCameraEnabled: MutableState<Boolean>
 
     suspend fun forceNextText()
+
+    suspend fun startConstantSpeedTypeDemo(period: Long)
 }

@@ -15,9 +15,6 @@ import textgen.generators.impl.RandomKnownWordGenerator
 import ui.exercise.ITypingOptions
 
 
-
-
-
 abstract class PracticeIntendImpl(
     final override val typingOptions: ITypingOptions
 ) : IPracticeIntend, IDebugPracticeIntend {
@@ -52,11 +49,11 @@ abstract class PracticeIntendImpl(
         get() = _timerUpdateCycleCountStateFlow
 
 
-    val isDebug = System.getProperty("debug") == "true"
+    private val isDebug = System.getProperty("debug") == "true"
 
     override fun start() {
         if (typingClockJob != null) return // Return if job is already assigned, could be invoked multiple times from UI.
-        var i: Long = 0L
+        var i = 0L
         _startTimeMillis = System.currentTimeMillis()
         typingClockJob = GlobalScope.launch(Dispatchers.IO) {
             _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.ACTIVE)
@@ -79,6 +76,14 @@ abstract class PracticeIntendImpl(
         return remTimeMillis > 0
     }
 
+    abstract fun onNextText()
+
+    override suspend fun nextText() {
+        val generateSegment = generator.generateSegment()
+        _textStateFlow.value = generateSegment
+        onNextText()
+    }
+
     abstract fun update()
 
     override fun cancelRunningJobs() {
@@ -93,11 +98,11 @@ abstract class PracticeIntendImpl(
     }
 
 
-    private val _timeSkip =  mutableStateOf(false)
+    private val _timeSkip = mutableStateOf(false)
     override val timeSkip: State<Boolean>
         get() = _timeSkip
 
-    override val _isCameraEnabled =  mutableStateOf(typingOptions.isCameraEnabled)
+    override val _isCameraEnabled = mutableStateOf(typingOptions.isCameraEnabled)
     override val isCameraEnabled: State<Boolean>
         get() = _isCameraEnabled
 
@@ -105,4 +110,10 @@ abstract class PracticeIntendImpl(
         _textStateFlow.emit(generator.generateSegment())
     }
 
+    init {
+        // Displays the first text
+        GlobalScope.launch(Dispatchers.IO) {
+            nextText()
+        }
+    }
 }

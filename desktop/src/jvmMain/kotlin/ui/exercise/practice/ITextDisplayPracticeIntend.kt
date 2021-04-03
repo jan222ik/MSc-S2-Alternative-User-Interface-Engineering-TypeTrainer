@@ -10,7 +10,8 @@ interface ITextDisplayPracticeIntend : IPracticeIntend {
     val textCurrent: StateFlow<String>
     val textFuture: StateFlow<String>
 
-    suspend fun addCharToQueue(char: Char)
 
     suspend fun checkChar(char: Char)
+
+    suspend fun nextText()
 }
