@@ -33,6 +33,9 @@ kotlin {
                 api(compose.materialIconsExtended)
                 implementation(kotlin("reflect"))
 
+                // Charts
+                implementation(project(":tehras-charts"))
+
                 // Database
                 val exposedVersion = "0.26.2"
                 val h2Version = "1.4.200"

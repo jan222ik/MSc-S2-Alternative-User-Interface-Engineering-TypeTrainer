@@ -5,9 +5,13 @@ package ui.exercise.practice
 import TypeTrainerTheme
 import androidx.compose.desktop.AppWindow
 import androidx.compose.desktop.LocalAppWindow
+import androidx.compose.desktop.Window
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -15,10 +19,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.github.tehras.charts.line.LineChart
+import com.github.tehras.charts.line.LineChartData
 import kotlinx.coroutines.launch
+import textgen.error.CharEvaluation
 import ui.dashboard.BaseDashboardCard
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -228,6 +237,40 @@ fun PracticeScreenDebuggable(
                         BaseDashboardCard {
                             Column {
                                 val (periodMs, setPeriodMs) = remember { mutableStateOf("30") }
+                                val clockState = intend.typingClockStateStateFlow.collectAsState()
+                                if (clockState.value == IPracticeIntend.TypingClockState.FINISHED) {
+                                    val movingCursorTypingIntend = intend as MovingCursorTypingIntend
+                                    println(movingCursorTypingIntend.exerciseEvaluation)
+                                    Window {
+                                        val data = LineChartData(
+                                            points = movingCursorTypingIntend.exerciseEvaluation.texts.map {
+                                                it.chars
+                                                    .filterIsInstance<CharEvaluation.TypingError>()
+                                                    .map {
+                                                        LineChartData.Point(
+                                                            value = it.expected.toFloat(),
+                                                            label = it.timeRemaining.toString()
+                                                        )
+                                                    }
+                                            }.flatten(),
+                                            startAtZero = true
+                                        )
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                //.background(Color.Cyan)
+                                                .horizontalScroll(rememberScrollState())
+                                        ) {
+                                            LineChart(
+                                                modifier = Modifier
+                                                    .width(20.dp.times(data.points.size))
+                                                    //.background(Color.Red)
+                                                ,
+                                                lineChartData = data,
+                                            )
+                                        }
+                                    }
+                                }
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -247,7 +290,6 @@ fun PracticeScreenDebuggable(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
-                                        val clockState = intend.typingClockStateStateFlow.collectAsState()
                                         OutlinedButton(
                                             enabled = clockState.value == IPracticeIntend.TypingClockState.ACTIVE,
                                             onClick = {

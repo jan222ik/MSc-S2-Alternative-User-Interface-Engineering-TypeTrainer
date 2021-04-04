@@ -14,4 +14,4 @@ rootProject.name = "TypeTrainerMultiplatform"
 include(":android")
 include(":desktop")
 include(":common")
-
+include("tehras-charts")
