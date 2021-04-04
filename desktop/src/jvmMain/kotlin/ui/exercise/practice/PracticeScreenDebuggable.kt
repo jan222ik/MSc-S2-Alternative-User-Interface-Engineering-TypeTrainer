@@ -29,6 +29,7 @@ import com.github.tehras.charts.line.LineChartData
 import kotlinx.coroutines.launch
 import textgen.error.CharEvaluation
 import ui.dashboard.BaseDashboardCard
+import ui.exercise.result.TypingErrorTreeMap
 
 @OptIn(ExperimentalFoundationApi::class)
 fun PracticeScreenDebuggable(
@@ -267,6 +268,16 @@ fun PracticeScreenDebuggable(
                                                     //.background(Color.Red)
                                                 ,
                                                 lineChartData = data,
+                                            )
+                                        }
+                                    }
+                                    Window {
+                                        Column {
+                                            val list = movingCursorTypingIntend.exerciseEvaluation.texts
+                                            println("list = ${list}")
+                                            TypingErrorTreeMap(
+                                                modifier = Modifier.fillMaxSize(),
+                                                list = list
                                             )
                                         }
                                     }

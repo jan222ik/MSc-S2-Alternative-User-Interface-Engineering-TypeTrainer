@@ -5,7 +5,8 @@ data class ExerciseEvaluation(
 )
 
 data class TextEvaluation(
-    val chars: MutableList<CharEvaluation> = mutableListOf()
+    val chars: MutableList<CharEvaluation> = mutableListOf(),
+    val text: String
 )
 
 sealed class CharEvaluation(
@@ -29,5 +30,9 @@ sealed class CharEvaluation(
         override fun toString(): String {
             return "CharEvaluation.TypingError[time: $timeRemaining, expected: $expected, actual: $actual]\n"
         }
+    }
+
+    fun getExpectedChar(text: String): Char {
+        return text[expected]
     }
 }

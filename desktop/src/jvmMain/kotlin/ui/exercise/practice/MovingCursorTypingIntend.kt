@@ -79,7 +79,8 @@ class MovingCursorTypingIntend(
     }
 
     override fun onNextText() {
-        textEvaluation = TextEvaluation()
+        val text = textStateFlow.value
+        textEvaluation = TextEvaluation(text = text)
         exerciseEvaluation.texts.add(textEvaluation)
         inTextIndex = 1
         currSpace = ""
@@ -87,7 +88,6 @@ class MovingCursorTypingIntend(
         GlobalScope.launch {
             _currentIsError.emit(false)
             _textTyped.emit("")
-            val text = textStateFlow.value
             _textCurrent.emit(text.first().toString())
             _textFuture.emit(text.removeRange(0, 1))
         }

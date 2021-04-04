@@ -35,6 +35,7 @@ kotlin {
 
                 // Charts
                 implementation(project(":tehras-charts"))
+                implementation(project(":treemap"))
 
                 // Database
                 val exposedVersion = "0.26.2"
