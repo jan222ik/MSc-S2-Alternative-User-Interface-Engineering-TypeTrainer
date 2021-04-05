@@ -1,6 +1,7 @@
+@file:Suppress("FunctionName")
+
 package ui.exercise.result
 
-import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,9 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import edu.umd.cs.treemap.*
+import edu.umd.cs.treemap.MapItem
+import edu.umd.cs.treemap.PivotBySplitSize
+import edu.umd.cs.treemap.TreeModel
 import textgen.error.CharEvaluation
 import textgen.error.TextEvaluation
 
@@ -35,10 +38,11 @@ fun TypingErrorTreeMap(modifier: Modifier = Modifier, list: List<TextEvaluation>
 
     println(charMapped)
     val sum = charMapped.map { it.second }.sum()
-    Box(modifier = modifier
-        .padding(all = 10.dp)
-        .fillMaxSize()
-        .background(Color.Cyan)
+    Box(
+        modifier = modifier
+            .padding(all = 10.dp)
+            .fillMaxSize()
+            .background(Color.Cyan)
     ) {
         Layout(
             content = {
@@ -57,12 +61,12 @@ fun TypingErrorTreeMap(modifier: Modifier = Modifier, list: List<TextEvaluation>
             }
         ) { list, constraints ->
 
-            val ORDER = 1
-            val root = MapItem(sum.toDouble(), ORDER)
+            var order = 1
+            val root = MapItem(sum.toDouble(), order)
             val tree = TreeModel(root).apply {
                 for (item in charMapped) {
                     val percentage = item.second//.div(sum.toFloat())
-                    this.addChild(TreeModel(MapItem(percentage.toDouble(), ORDER)))
+                    this.addChild(TreeModel(MapItem(percentage.toDouble(), order++)))
                 }
             }
             tree.layout(PivotBySplitSize())
@@ -83,7 +87,10 @@ fun TypingErrorTreeMap(modifier: Modifier = Modifier, list: List<TextEvaluation>
             layout(width = constraints.maxWidth, height = constraints.maxHeight) {
                 placeables.forEachIndexed { index, placeable ->
                     val bounds = tree.treeItems[index].bounds
-                    placeable.place((bounds.x * constraints.maxWidth).toInt(), (bounds.y * constraints.maxHeight).toInt())
+                    placeable.place(
+                        (bounds.x * constraints.maxWidth).toInt(),
+                        (bounds.y * constraints.maxHeight).toInt()
+                    )
                 }
             }
         }
