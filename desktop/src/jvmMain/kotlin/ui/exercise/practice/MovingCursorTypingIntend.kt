@@ -5,11 +5,18 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.sql.statements.api.ExposedBlob
+import org.jetbrains.exposed.sql.transactions.transaction
+import textgen.database.DbHistory
 import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
 import ui.exercise.ITypingOptions
 import util.RandomUtil
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.concurrent.fixedRateTimer
 
 class MovingCursorTypingIntend(
@@ -90,6 +97,15 @@ class MovingCursorTypingIntend(
             _textTyped.emit("")
             _textCurrent.emit(text.first().toString())
             _textFuture.emit(text.removeRange(0, 1))
+        }
+    }
+
+    override fun onTimerFinished() {
+        transaction {
+            DbHistory.new {
+                timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                dataJson = ExposedBlob(Json.encodeToString(exerciseEvaluation).toByteArray())
+            }
         }
     }
 

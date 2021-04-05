@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
+import textgen.database.DatabaseFactory
 import textgen.generators.impl.RandomKnownWordGenerator
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
@@ -27,6 +28,7 @@ import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowRouter
 import ui.general.WindowRouterAmbient
 import ui.general.window.container.WindowContainer
+import ui.history.HistoryScreen
 import ui.util.debug.ifDebug
 import ui.util.i18n.LanguageConfiguration
 import ui.util.i18n.LanguageDefinition
@@ -41,6 +43,7 @@ fun main() {
         ui.util.i18n.main()
         println("-".repeat(80))
     }
+    DatabaseFactory.initWithDemoData()
     Window(size = IntSize(width = 1280, height = 720)) {
         TypeTrainerTheme {
             LanguageConfiguration {
@@ -80,7 +83,7 @@ fun main() {
                             ApplicationRoutes.Goals.Compose -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
-                            ApplicationRoutes.History -> Text("Missing Screen: " + +current.title)
+                            ApplicationRoutes.History -> HistoryScreen()
                             ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
                         }
                     }

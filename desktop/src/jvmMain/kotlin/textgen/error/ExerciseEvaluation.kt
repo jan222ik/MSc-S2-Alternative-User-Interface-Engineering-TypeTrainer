@@ -1,32 +1,39 @@
 package textgen.error
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ExerciseEvaluation(
     val texts: MutableList<TextEvaluation> = mutableListOf()
 )
 
+@Serializable
 data class TextEvaluation(
     val chars: MutableList<CharEvaluation> = mutableListOf(),
     val text: String
 )
 
-sealed class CharEvaluation(
-    val timeRemaining: Long,
-    val expected: Int
-) {
+@Serializable
+sealed class CharEvaluation {
+    abstract val timeRemaining: Long
+    abstract val expected: Int
+
+    @Serializable
     class Correct(
-        timeRemaining: Long,
-        expected: Int
-    ) : CharEvaluation(timeRemaining = timeRemaining, expected = expected) {
+        override val timeRemaining: Long,
+        override val expected: Int
+    ) : CharEvaluation() {
         override fun toString(): String {
             return "CharEvaluation.Correct[time: $timeRemaining, expected: $expected]\n"
         }
     }
 
+    @Serializable
     class TypingError(
-        timeRemaining: Long,
-        expected: Int,
+        override val timeRemaining: Long,
+        override val expected: Int,
         val actual: Char
-    ) : CharEvaluation(timeRemaining = timeRemaining, expected = expected) {
+    ) : CharEvaluation() {
         override fun toString(): String {
             return "CharEvaluation.TypingError[time: $timeRemaining, expected: $expected, actual: $actual]\n"
         }

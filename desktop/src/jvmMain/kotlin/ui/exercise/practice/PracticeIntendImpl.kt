@@ -51,6 +51,8 @@ abstract class PracticeIntendImpl(
 
     private val isDebug = System.getProperty("debug") == "true"
 
+    abstract fun onTimerFinished()
+
     override fun start() {
         if (typingClockJob != null) return // Return if job is already assigned, could be invoked multiple times from UI.
         var i = 0L
@@ -65,6 +67,7 @@ abstract class PracticeIntendImpl(
                 }
             }
             _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.FINISHED)
+            onTimerFinished()
             println("Iterations $i")
         }
     }

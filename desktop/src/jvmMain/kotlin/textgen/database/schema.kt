@@ -1,5 +1,6 @@
 package textgen.database
 
+import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 
@@ -20,4 +21,13 @@ object DbTextsGerman : Table(), DbTexts {
     override val content = varchar("content", 5000)
 
     override val primaryKey = PrimaryKey(id)
+}
+
+
+object DbHistorys : IntIdTable() {
+    val histId = integer("histId").autoIncrement()
+    val timestamp = varchar("timestamp", 45)
+    val dataJson = blob("dataJson")
+
+    override val primaryKey = PrimaryKey(histId)
 }
