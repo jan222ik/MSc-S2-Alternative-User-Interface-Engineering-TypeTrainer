@@ -11,12 +11,12 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
+import textgen.database.DatabaseFactory
 import textgen.generators.impl.RandomKnownWordGenerator
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
@@ -28,6 +28,7 @@ import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowRouter
 import ui.general.WindowRouterAmbient
 import ui.general.window.container.WindowContainer
+import ui.history.HistoryScreen
 import ui.util.debug.ifDebug
 import ui.util.i18n.LanguageConfiguration
 import ui.util.i18n.LanguageDefinition
@@ -42,6 +43,7 @@ fun main() {
         ui.util.i18n.main()
         println("-".repeat(80))
     }
+    DatabaseFactory.initWithDemoData()
     Window(size = IntSize(width = 1280, height = 720)) {
         TypeTrainerTheme {
             LanguageConfiguration {
@@ -81,7 +83,7 @@ fun main() {
                             ApplicationRoutes.Goals.Compose -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
-                            ApplicationRoutes.History -> Text("Missing Screen: " + +current.title)
+                            ApplicationRoutes.History -> HistoryScreen()
                             ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
                         }
                     }
@@ -156,7 +158,11 @@ private fun AllRoutes() {
                     ApplicationRoutes.Exercise.Training::class -> {
                         val dest = ApplicationRoutes.Exercise.Training(
                             TypingOptions(
-                                generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(seed =1L, minimalSegmentLength = 300, language = LanguageDefinition.German),
+                                generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(
+                                    seed = 1L,
+                                    minimalSegmentLength = 300,
+                                    language = LanguageDefinition.German
+                                ),
                                 durationMillis = 1 * 60_000,
                                 type = ExerciseMode.Speed,
                                 isCameraEnabled = true
