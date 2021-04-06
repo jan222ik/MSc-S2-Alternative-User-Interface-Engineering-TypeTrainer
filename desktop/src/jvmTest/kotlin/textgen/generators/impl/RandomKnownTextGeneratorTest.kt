@@ -5,8 +5,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import textgen.database.DatabaseFactory
 import ui.util.i18n.LanguageDefinition
+import kotlin.test.BeforeTest
 
 internal class RandomKnownTextGeneratorTest {
+
+    @BeforeTest
+    fun beforeEach() {
+        DatabaseFactory.initWithDemoData()
+    }
 
     @Test
     fun stableRngEnglish() {
@@ -44,15 +50,5 @@ internal class RandomKnownTextGeneratorTest {
         repeat(50) {
             assertEquals(gen0.generateSegment(), gen1.generateSegment())
         }
-    }
-}
-
-fun main() {
-    DatabaseFactory.initWithDemoData()
-    RandomKnownTextGeneratorTest().apply {
-        println("Test 1")
-        stableRngEnglish()
-        println("Test 2")
-        stableRngGerman()
     }
 }

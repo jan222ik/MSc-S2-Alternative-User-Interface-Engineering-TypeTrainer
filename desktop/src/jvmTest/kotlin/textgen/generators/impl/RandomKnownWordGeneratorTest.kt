@@ -49,12 +49,3 @@ internal class RandomKnownWordGeneratorTest {
     }
 
 }
-
-fun main() {
-    RandomKnownWordGeneratorTest().apply {
-        println("Test 1")
-        stableRngEnglish()
-        println("Test 2")
-        stableRngGerman()
-    }
-}

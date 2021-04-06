@@ -5,12 +5,21 @@ import textgen.generators.IGenerator
 import textgen.generators.IGeneratorOptions
 import ui.util.i18n.LanguageDefinition
 import util.RandomUtil
-import java.io.File
+import java.io.InputStream
+import java.nio.charset.Charset
 
 object RandomKnownWordGenerator : IGenerator<RandomKnownWordGenerator.RandomKnownWordOptions> {
 
-    private val eng: List<String> by lazy { File("desktop/src/jvmMain/resources/eng.txt").readLines() }
-    private val ger: List<String> by lazy { File("desktop/src/jvmMain/resources/ger2.txt").readLines() }
+    private fun InputStream.readLinesAndClose(charset: Charset = Charsets.UTF_8): List<String> {
+        return this.bufferedReader(charset).use { it.readLines() }
+    }
+
+    private fun String.getResourceAsFile(): InputStream? {
+        return RandomKnownWordGenerator::class.java.classLoader.getResourceAsStream(this)
+    }
+    val s = "desktop/src/jvmMain/resources/eng.txt"
+    private val eng: List<String> by lazy { "eng.txt".getResourceAsFile()!!.readLinesAndClose() }
+    private val ger: List<String> by lazy { "ger2.txt".getResourceAsFile()!!.readLinesAndClose() }
 
     data class RandomKnownWordOptions(
         val seed: Long,
@@ -34,4 +43,17 @@ object RandomKnownWordGenerator : IGenerator<RandomKnownWordGenerator.RandomKnow
             return@ContinuousGenerator str
         }
     }
+}
+
+
+
+fun main() {
+    val gen0 = RandomKnownWordGenerator.create(
+        options = RandomKnownWordGenerator.RandomKnownWordOptions(
+            seed = 2L,
+            language = LanguageDefinition.German,
+            minimalSegmentLength = 100
+        )
+    )
+    println(gen0.generateSegment())
 }

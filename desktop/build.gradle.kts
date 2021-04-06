@@ -3,16 +3,22 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.3.0-build150"
+    id("org.jetbrains.compose") version "0.3.2"
+    kotlin("plugin.serialization") version "1.4.30"
 }
 
 group = "com.github.jan222ik"
 version = "1.0"
 
+
 kotlin {
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "11"
+        }
+        withJava()
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
         }
     }
     sourceSets {
@@ -28,21 +34,30 @@ kotlin {
                 api(compose.materialIconsExtended)
                 implementation(kotlin("reflect"))
 
+                // Charts
+                implementation(project(":tehras-charts"))
+                implementation(project(":treemap"))
+
                 // Database
                 val exposedVersion = "0.26.2"
                 val h2Version = "1.4.200"
                 val hikariCpVersion = "3.4.5"
                 implementation("com.h2database:h2:$h2Version")
                 implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
                 implementation("com.zaxxer:HikariCP:$hikariCpVersion")
+
+                // Serialization
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
-
+                implementation(kotlin("test-junit5"))
+                implementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
             }
         }
         all {
@@ -51,11 +66,12 @@ kotlin {
     }
 }
 
+
 compose.desktop {
     application {
         mainClass = "MainKt"
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Deb)
             packageName = "jvm"
         }
     }
