@@ -1,5 +1,6 @@
 package ui.dashboard
 
+import textgen.error.ExerciseEvaluation
 import ui.exercise.results.ResultsRoutes
 import ui.exercise.ITypingOptions
 import ui.util.i18n.KeyI18N
@@ -33,7 +34,7 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Training"))
 
         data class ExerciseResults(
-            val exerciseResults: Any,
+            val exerciseResults: ExerciseEvaluation,
             val initialPage: ResultsRoutes = ResultsRoutes.OVERVIEW
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Results"))
     }

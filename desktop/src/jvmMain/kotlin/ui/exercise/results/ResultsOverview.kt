@@ -24,10 +24,14 @@ import ui.dashboard.BaseDashboardCard
 import ui.util.i18n.RequiresTranslationI18N
 
 @Composable
-fun ColumnScope.ResultsOverview() {
+fun ColumnScope.ResultsOverview(intent: ResultIntent, isStandalone: Boolean) {
+    val widthFraction = when (isStandalone) {
+        true -> 0.7f
+        false -> 1f
+    }
     Row(
         modifier = Modifier
-            .fillMaxWidth(0.7f)
+            .fillMaxWidth(widthFraction)
             .fillMaxHeight()
             .align(Alignment.CenterHorizontally),
         horizontalArrangement = Arrangement.spacedBy(32.dp)
@@ -35,7 +39,7 @@ fun ColumnScope.ResultsOverview() {
         KeyPoints(
             Modifier
                 .fillMaxWidth(0.4f),
-            keyPoints = ResultIntent.getKeyPoints()
+            keyPoints = intent.getKeyPoints()
         )
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
