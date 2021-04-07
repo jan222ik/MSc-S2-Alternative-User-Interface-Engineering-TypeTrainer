@@ -2,11 +2,9 @@
 
 package ui.exercise.results
 
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 
-@ExperimentalLayout
 @Composable
 fun ResultsScreen(
     innerRouting: ResultsRoutes

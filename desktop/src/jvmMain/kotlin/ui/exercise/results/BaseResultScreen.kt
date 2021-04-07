@@ -28,7 +28,6 @@ import ui.util.router.Router
 
 val ResultsSubRouterAmbient = compositionLocalOf<Router<ResultsRoutes>> { error("No active router found!") }
 
-@ExperimentalLayout
 @Composable
 fun BaseResultScreen(
     resultsRoutes: ResultsRoutes,
