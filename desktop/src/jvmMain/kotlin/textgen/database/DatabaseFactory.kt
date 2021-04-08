@@ -17,8 +17,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object DatabaseFactory {
+    lateinit var dataSource: HikariDataSource
+
     fun initWithDemoData() {
-        Database.connect(hikari())
+        val datasource = hikari()
+        Database.connect(datasource)
         transaction {
             SchemaUtils.create(DbHistorys)
             SchemaUtils.create(DbTextsEnglish)
@@ -32,6 +35,16 @@ object DatabaseFactory {
                 }
             }
         }
+    }
+
+    fun start() {
+        val datasource = hikari()
+        Database.connect(datasource)
+        TODO("Use demo at the moment")
+    }
+
+    fun stop() {
+        dataSource.close()
     }
 
     private fun hikari(): HikariDataSource {
