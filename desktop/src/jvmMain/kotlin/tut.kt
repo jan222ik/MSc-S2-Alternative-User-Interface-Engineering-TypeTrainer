@@ -3,8 +3,6 @@
     "CanBeParameter"
 )
 
-import androidx.compose.desktop.Window
-
 typealias ReturnValue = String
 typealias ReturnValueOptional = String
 
