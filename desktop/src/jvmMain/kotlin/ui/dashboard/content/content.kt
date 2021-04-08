@@ -9,15 +9,19 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ui.components.filling_layout_with_spacer.CustomLayoutHeightWithCenterSpace
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.BaseDashboardCard
 import ui.dashboard.IconDashboardCard
+import ui.dashboard.StreakAPI
 import ui.general.WindowRouterAmbient
+import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 import ui.util.router.Router
+import java.time.LocalDate
 
 private const val iconFraction = .75f
 private const val halfIconFraction = .5f
@@ -145,7 +149,29 @@ private fun RightColumn(router: Router<ApplicationRoutes>) {
         BaseDashboardCard(
             modifier = doubleCard
         ) {
-            Text("Calendar Placeholder")
+            val streakapi = StreakAPI()
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        modifier = Modifier.size(64.dp),
+                        imageVector = Icons.Filled.Whatshot,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary
+                    )
+                    Text(text = streakapi.calcStreaks().toString() + " " + +RequiresTranslationI18N("Days"))
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        modifier = Modifier.padding(paddingValues = PaddingValues(start = 10.dp)),
+                        text = +RequiresTranslationI18N("Streak")
+                    )
+                    Text(text = +RequiresTranslationI18N(LocalDate.now().month.name) + ", " + LocalDate.now().year)
+                }
+
+            }
         }
         CustomLayoutHeightWithCenterSpace(
             centralPadding = padding.div(2),
