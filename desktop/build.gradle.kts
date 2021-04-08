@@ -4,6 +4,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose") version "0.3.2"
+    kotlin("plugin.serialization") version "1.4.30"
 }
 
 group = "com.github.jan222ik"
@@ -33,12 +34,17 @@ kotlin {
                 api(compose.materialIconsExtended)
                 implementation(kotlin("reflect"))
 
+                // Charts
+                implementation(project(":tehras-charts"))
+                implementation(project(":treemap"))
+
                 // Database
                 val exposedVersion = "0.26.2"
                 val h2Version = "1.4.200"
                 val hikariCpVersion = "3.4.5"
                 implementation("com.h2database:h2:$h2Version")
                 implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
                 implementation("com.zaxxer:HikariCP:$hikariCpVersion")
 
@@ -49,6 +55,10 @@ kotlin {
                 // Logger
                 val logbackVersion = "1.2.3"
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
+                // Serialization
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+
             }
         }
         val jvmTest by getting {
@@ -64,10 +74,10 @@ kotlin {
     }
 }
 
+
 compose.desktop {
     application {
         mainClass = "MainKt"
-
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb)
             packageName = "jvm"

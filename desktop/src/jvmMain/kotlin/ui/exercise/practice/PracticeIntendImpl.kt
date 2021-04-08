@@ -15,11 +15,8 @@ import textgen.generators.impl.RandomKnownWordGenerator
 import ui.exercise.ITypingOptions
 
 
-
-
-
-class PracticeIntendImpl(
-    override val typingOptions: ITypingOptions
+abstract class PracticeIntendImpl(
+    final override val typingOptions: ITypingOptions
 ) : IPracticeIntend, IDebugPracticeIntend {
     private val generator: ContinuousGenerator
     private var typingClockJob: Job? = null
@@ -52,21 +49,25 @@ class PracticeIntendImpl(
         get() = _timerUpdateCycleCountStateFlow
 
 
-    val isDebug = System.getProperty("debug") == "true"
+    private val isDebug = System.getProperty("debug") == "true"
+
+    abstract fun onTimerFinished()
 
     override fun start() {
         if (typingClockJob != null) return // Return if job is already assigned, could be invoked multiple times from UI.
-        var i: Long = 0L
+        var i = 0L
         _startTimeMillis = System.currentTimeMillis()
         typingClockJob = GlobalScope.launch(Dispatchers.IO) {
             _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.ACTIVE)
             while (typingClockJob?.isActive == true && timerUpdateCycle()) { /* Nothing to do here */
                 if (isDebug) {
                     i += 1L
+                    update()
                     _timerUpdateCycleCountStateFlow.emit(i)
                 }
             }
             _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.FINISHED)
+            onTimerFinished()
             println("Iterations $i")
         }
     }
@@ -77,6 +78,16 @@ class PracticeIntendImpl(
         _timerStateFlow.emit(remTimeMillis)
         return remTimeMillis > 0
     }
+
+    abstract fun onNextText()
+
+    override suspend fun nextText() {
+        val generateSegment = generator.generateSegment()
+        _textStateFlow.value = generateSegment
+        onNextText()
+    }
+
+    abstract fun update()
 
     override fun cancelRunningJobs() {
         typingClockJob?.cancel()
@@ -90,16 +101,15 @@ class PracticeIntendImpl(
     }
 
 
-    private val _timeSkip =  mutableStateOf(false)
+    private val _timeSkip = mutableStateOf(false)
     override val timeSkip: State<Boolean>
         get() = _timeSkip
 
-    override val _isCameraEnabled =  mutableStateOf(typingOptions.isCameraEnabled)
+    override val _isCameraEnabled = mutableStateOf(typingOptions.isCameraEnabled)
     override val isCameraEnabled: State<Boolean>
         get() = _isCameraEnabled
 
     override suspend fun forceNextText() {
         _textStateFlow.emit(generator.generateSegment())
     }
-
 }

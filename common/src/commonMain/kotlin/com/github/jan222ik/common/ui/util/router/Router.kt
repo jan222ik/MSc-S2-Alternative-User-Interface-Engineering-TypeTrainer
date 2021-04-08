@@ -7,6 +7,7 @@ interface Router<T> {
     fun navTo(dest: T)
     fun hasBackDestination(): Boolean
     fun back(): Boolean
+    fun setRoot(dest: T)
 }
 
 internal data class RouterImpl<T>(
@@ -32,4 +33,14 @@ internal data class RouterImpl<T>(
             true
         } else false
     }
+
+    override fun setRoot(dest: T) {
+        setRouter.invoke(
+            RouterImpl(current = dest).apply {
+                this.setRouter = this@RouterImpl.setRouter
+            }
+        )
+    }
+
+
 }
