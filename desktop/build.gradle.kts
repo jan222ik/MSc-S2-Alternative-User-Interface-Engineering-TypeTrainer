@@ -64,6 +64,14 @@ kotlin {
                 // Serialization
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
 
+                // QR
+                arrayOf(
+                    "core",
+                    "swing",
+                    "kotlin"//,
+                    //"WebcamCapture"
+                ).forEach{ implementation("org.boofcv:boofcv-$it:0.36") }
+
             }
         }
         val jvmTest by getting {
