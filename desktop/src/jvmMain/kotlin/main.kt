@@ -34,6 +34,7 @@ import ui.util.i18n.LanguageConfiguration
 import ui.util.i18n.LanguageDefinition
 import kotlin.reflect.KClass
 
+@ExperimentalFoundationApi
 @ExperimentalStdlibApi
 fun main() {
     System.setProperty("debug", "true")
