@@ -26,8 +26,9 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(project(":common"))
-                /*
                 implementation(compose.desktop.currentOs)
+                /*
+
                 api(compose.animation)
                 api(compose.foundation)
                 api(compose.material)
