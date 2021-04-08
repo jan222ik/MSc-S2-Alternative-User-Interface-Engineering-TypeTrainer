@@ -1,5 +1,7 @@
 package ui.dashboard
 
+import textgen.error.ExerciseEvaluation
+import ui.exercise.results.ResultsRoutes
 import ui.exercise.ITypingOptions
 import ui.util.i18n.KeyI18N
 import ui.util.i18n.RequiresTranslationI18N
@@ -21,6 +23,7 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
 
         object ExerciseSelection : Exercise(title = RequiresTranslationI18N("Exercise - Selection"))
 
+
         sealed class Connection(title: KeyI18N) : Exercise(title) {
             object QRCode : Connection(title = RequiresTranslationI18N("Connection with Companion"))
             object SetupInstructions : Connection(title = RequiresTranslationI18N("Exercise - Setup Camera"))
@@ -31,8 +34,8 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Training"))
 
         data class ExerciseResults(
-            val exerciseResults: Any,
-            val initialPage: Int = 0
+            val exerciseResults: ExerciseEvaluation,
+            val initialPage: ResultsRoutes = ResultsRoutes.OVERVIEW
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Results"))
     }
 

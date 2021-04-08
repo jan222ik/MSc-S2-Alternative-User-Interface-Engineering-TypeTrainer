@@ -20,13 +20,17 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import textgen.generators.impl.RandomKnownWordGenerator
 import ui.components.progress.practice.CountDownProgressBar
+import ui.dashboard.ApplicationRoutes
 import ui.dashboard.BaseDashboardCard
 import ui.exercise.ExerciseMode
 import ui.exercise.ITypingOptions
 import ui.exercise.TypingOptions
 import ui.exercise.practice.text.MovingCursorTyping
+import ui.general.WindowRouter
+import ui.general.WindowRouterAmbient
 import ui.util.debug.ifDebugCompose
 import ui.util.i18n.LanguageDefinition
 
@@ -77,7 +81,37 @@ fun PracticeScreen(typingOptions: ITypingOptions) {
 @Composable
 private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
     val max = intend.typingOptions.durationMillis.div(1000).toFloat()
-
+    val clockState = intend.typingClockStateStateFlow.collectAsState()
+    if (clockState.value == IPracticeIntend.TypingClockState.FINISHED) {
+        Popup {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.surface.copy(alpha = 0.8f))
+            ) {
+                Box {
+                    val router = WindowRouterAmbient.current
+                    Column(
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        Text(
+                            text = "Time elapsed."
+                        )
+                        Button(
+                            onClick = {
+                                val route = ApplicationRoutes.Exercise.ExerciseResults(
+                                    exerciseResults = intend.result
+                                )
+                                router.navTo(route)
+                            }
+                        ) {
+                            Text(text = "See your results")
+                        }
+                    }
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier.fillMaxWidth().padding(25.dp)
     ) {

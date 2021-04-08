@@ -17,12 +17,14 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
 import textgen.database.DatabaseFactory
+import textgen.error.ExerciseEvaluation
 import textgen.generators.impl.RandomKnownWordGenerator
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
 import ui.exercise.ExerciseMode
 import ui.exercise.TypingOptions
 import ui.exercise.practice.PracticeScreen
+import ui.exercise.results.ResultsScreen
 import ui.exercise.selection.ExerciseSelection
 import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowRouter
@@ -78,7 +80,7 @@ fun main() {
                             ApplicationRoutes.Exercise.Connection.QRCode -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
                             is ApplicationRoutes.Exercise.Training -> PracticeScreen(current.trainingOptions)
-                            is ApplicationRoutes.Exercise.ExerciseResults -> Text("Missing Screen: " + +current.title)
+                            is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(current.exerciseResults, current.initialPage)
                             ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Goals.Compose -> Text("Missing Screen: " + +current.title)
                             ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
@@ -173,7 +175,7 @@ private fun AllRoutes() {
                         }
                     }
                     ApplicationRoutes.Exercise.ExerciseResults::class -> {
-                        val dest = ApplicationRoutes.Exercise.ExerciseResults(Any())
+                        val dest = ApplicationRoutes.Exercise.ExerciseResults(ExerciseEvaluation())
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)
                         }
