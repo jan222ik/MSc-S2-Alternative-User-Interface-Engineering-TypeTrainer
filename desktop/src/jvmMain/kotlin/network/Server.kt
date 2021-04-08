@@ -1,6 +1,6 @@
 package network
 
-import io.ktor.websocket.*
+import io.ktor.websocket.DefaultWebSocketServerSession
 import kotlin.properties.Delegates
 import kotlin.random.Random
 

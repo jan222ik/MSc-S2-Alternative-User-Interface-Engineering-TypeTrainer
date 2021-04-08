@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
-import ui.dashboard.ApplicationRoutes
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
+import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.LanguageDefinition

@@ -1,8 +1,7 @@
 package textgen.generators.impl
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import textgen.database.DatabaseFactory
 import ui.util.i18n.LanguageDefinition
 import kotlin.test.BeforeTest

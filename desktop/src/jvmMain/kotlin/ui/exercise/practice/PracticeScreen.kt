@@ -2,23 +2,23 @@
 
 package ui.exercise.practice
 
-import TypeTrainerTheme
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -38,15 +38,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
-import textgen.generators.impl.RandomKnownWordGenerator
+import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
+import textgen.generators.impl.RandomKnownWordGenerator
 import ui.components.progress.practice.CountDownProgressBar
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.ExerciseMode
 import ui.exercise.ITypingOptions
 import ui.exercise.TypingOptions
 import ui.exercise.practice.text.MovingCursorTyping
-import ui.general.WindowRouter
 import ui.general.WindowRouterAmbient
 import ui.util.debug.ifDebugCompose
 import ui.util.i18n.LanguageDefinition

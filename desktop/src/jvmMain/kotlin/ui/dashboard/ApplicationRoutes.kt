@@ -1,8 +1,8 @@
 package ui.dashboard
 
 import textgen.error.ExerciseEvaluation
-import ui.exercise.results.ResultsRoutes
 import ui.exercise.ITypingOptions
+import ui.exercise.results.ResultsRoutes
 import ui.util.i18n.KeyI18N
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
