@@ -46,7 +46,6 @@ kotlin {
                 val ktorVersion = "1.3.2"
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-websockets:$ktorVersion")
-
                 // Logger
                 val logbackVersion = "1.2.3"
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")

@@ -4,7 +4,6 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose") version "0.3.2"
     id("com.android.library")
-    id("kotlin-android-extensions")
 }
 
 group = "com.github.jan222ik"
@@ -42,10 +41,10 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(24)
-        targetSdkVersion(29)
+        minSdkVersion(28)
+        targetSdkVersion(30)
     }
 }
