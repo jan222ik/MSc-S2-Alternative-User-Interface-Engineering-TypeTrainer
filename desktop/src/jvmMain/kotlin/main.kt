@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.IntSize
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import textgen.database.DatabaseFactory
 import textgen.error.ExerciseEvaluation
+import network.Server
+import network.ServerApplication
 import textgen.generators.impl.RandomKnownWordGenerator
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
@@ -37,6 +39,8 @@ import kotlin.reflect.KClass
 @ExperimentalFoundationApi
 @ExperimentalStdlibApi
 fun main() {
+    ServerApplication(Server())
+
     System.setProperty("debug", "true")
     ifDebug {
         println("Debug Pre Checks")

@@ -1,5 +1,6 @@
 package com.github.jan222ik.android
 
+import com.github.jan222ik.android.network.WSClient
 import com.github.jan222ik.common.FingerEnum
 import com.github.jan222ik.common.FingerTipLandmark
 import com.github.jan222ik.common.HandLandmark
@@ -7,11 +8,16 @@ import com.google.mediapipe.formats.proto.LandmarkProto
 
 class FingerTipExtractor {
     companion object {
+        private val ws = WSClient()
         private const val THUMB_TIP = 4
         private const val INDEX_TIP = 8
         private const val MIDDLE_TIP = 12
         private const val RING_TIP = 16
         private const val PINKY_TIP = 20
+
+        init {
+            ws.connect(,"localhost")
+        }
 
         fun extractAndSend(multiHandLandmarks: MutableList<LandmarkProto.NormalizedLandmarkList>) {
             if (multiHandLandmarks.isEmpty()) return

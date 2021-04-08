@@ -24,7 +24,6 @@ dependencies {
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.guava:guava:$guava_version")
     implementation("com.google.guava:guava:$guava_version")
-    //implementation("com.google.protobuf:protobuf-lite:3.0.0")
     implementation("com.google.protobuf:protobuf-java:3.11.4")
 
     // CameraX core library
@@ -32,6 +31,14 @@ dependencies {
     implementation("androidx.camera:camera-core:$camerax_version")
     implementation("androidx.camera:camera-camera2:$camerax_version")
     implementation("androidx.camera:camera-lifecycle:$camerax_version")
+
+    // networking
+    val ktor_version = "1.5.3"
+//    val kotlinx_coroutines_version = "1.4.3-native-mt"
+//    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-android:$ktor_version")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines_version")
 }
 
 android {

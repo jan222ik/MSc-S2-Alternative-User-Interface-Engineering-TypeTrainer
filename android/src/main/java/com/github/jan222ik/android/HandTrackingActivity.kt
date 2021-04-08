@@ -93,25 +93,25 @@ class HandTrackingActivity : AppCompatActivity() {
 
         // To show verbose logging, run:
         // adb shell setprop log.tag.HandTrackingActivity VERBOSE
-        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            processor!!.addPacketCallback(
-                OUTPUT_LANDMARKS_STREAM_NAME
-            ) { packet: Packet ->
-                Log.v(
-                    TAG,
-                    "Received multi-hand landmarks packet."
-                )
-                val multiHandLandmarks =
-                    PacketGetter.getProtoVector(packet, NormalizedLandmarkList.parser())
-                Log.v(
-                    TAG,
-                    "[TS:"
-                            + packet.timestamp
-                            + "] "
-                            + getMultiHandLandmarksDebugString(multiHandLandmarks)
-                )
-            }
-        }
+//        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+//            processor!!.addPacketCallback(
+//                OUTPUT_LANDMARKS_STREAM_NAME
+//            ) { packet: Packet ->
+//                Log.v(
+//                    TAG,
+//                    "Received multi-hand landmarks packet."
+//                )
+//                val multiHandLandmarks =
+//                    PacketGetter.getProtoVector(packet, NormalizedLandmarkList.parser())
+//                Log.v(
+//                    TAG,
+//                    "[TS:"
+//                            + packet.timestamp
+//                            + "] "
+//                            + getMultiHandLandmarksDebugString(multiHandLandmarks)
+//                )
+//            }
+//        }
 
         processor!!.addPacketCallback(OUTPUT_LANDMARKS_STREAM_NAME){
             packet: Packet ->
