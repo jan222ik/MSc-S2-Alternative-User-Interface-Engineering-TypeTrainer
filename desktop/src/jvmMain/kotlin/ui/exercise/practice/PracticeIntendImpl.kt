@@ -112,11 +112,4 @@ abstract class PracticeIntendImpl(
     override suspend fun forceNextText() {
         _textStateFlow.emit(generator.generateSegment())
     }
-
-    init {
-        // Displays the first text
-        GlobalScope.launch(Dispatchers.IO) {
-            nextText()
-        }
-    }
 }

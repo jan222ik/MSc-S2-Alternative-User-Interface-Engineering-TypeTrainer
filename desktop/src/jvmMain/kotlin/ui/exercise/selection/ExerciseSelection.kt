@@ -26,10 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
 import ui.dashboard.ApplicationRoutes
-import ui.dashboard.BaseDashboardCard
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n

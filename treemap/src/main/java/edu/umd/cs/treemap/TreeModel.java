@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2001 by University of Maryland, College Park, MD 20742, USA 
+ * Copyright (C) 2001 by University of Maryland, College Park, MD 20742, USA
  * and Martin Wattenberg, w@bewitched.com
  * All rights reserved.
  * Authors: Benjamin B. Bederson and Martin Wattenberg
@@ -8,7 +8,7 @@
 
 package edu.umd.cs.treemap;
 
-import java.util.*;
+import java.util.Vector;
 
 /**
  *
@@ -27,24 +27,24 @@ public class TreeModel implements MapModel
     private TreeModel parent;
     private Vector children=new Vector();
     private boolean sumsChildren;
-    
+
     public TreeModel()
     {
         this.mapItem=new MapItem();
         sumsChildren=true;
     }
-    
+
     public TreeModel(Mappable mapItem)
     {
         this.mapItem=mapItem;
     }
-    
-    
+
+
     public void setOrder(int order)
     {
         mapItem.setOrder(order);
     }
-    
+
     public MapModel[] getLeafModels()
     {
         if (cachedLeafModels!=null)
@@ -57,7 +57,7 @@ public class TreeModel implements MapModel
         cachedLeafModels=m;
         return m;
     }
-    
+
     private Vector addLeafModels(Vector v)
     {
         if (!hasChildren())
@@ -71,20 +71,20 @@ public class TreeModel implements MapModel
             for (int i=childCount()-1; i>=0; i--)
                 getChild(i).addLeafModels(v);
         return v;
-        
+
     }
-    
+
     public int depth()
     {
         if (parent==null) return 0;
         return 1+parent.depth();
     }
-    
+
     public void layout(MapLayout tiling)
     {
         layout(tiling, mapItem.getBounds());
     }
-    
+
     public void layout(MapLayout tiling, Rect bounds)
     {
         mapItem.setBounds(bounds);
@@ -94,12 +94,12 @@ public class TreeModel implements MapModel
         for (int i=childCount()-1; i>=0; i--)
             getChild(i).layout(tiling);
     }
-    
+
     public Mappable[] getTreeItems()
     {
         if (cachedTreeItems!=null)
             return cachedTreeItems;
-            
+
         Vector v=new Vector();
         addTreeItems(v);
         int n=v.size();
@@ -108,7 +108,7 @@ public class TreeModel implements MapModel
         cachedTreeItems=m;
         return m;
     }
-    
+
     private void addTreeItems(Vector v)
     {
         if (!hasChildren())
@@ -117,7 +117,7 @@ public class TreeModel implements MapModel
             for (int i=childCount()-1; i>=0; i--)
                 getChild(i).addTreeItems(v);
     }
-    
+
     private double sum()
     {
         if (!sumsChildren)
@@ -128,7 +128,7 @@ public class TreeModel implements MapModel
         mapItem.setSize(s);
         return s;
     }
-    
+
     public Mappable[] getItems()
     {
         if (childItems!=null)
@@ -142,51 +142,51 @@ public class TreeModel implements MapModel
         }
         return childItems;
     }
-    
+
     public Mappable getMapItem()
     {
         return mapItem;
     }
-    
+
     public void addChild(TreeModel child)
     {
         child.setParent(this);
         children.addElement(child);
         childItems=null;
     }
-    
+
     public void setParent(TreeModel parent)
     {
         for (TreeModel p=parent; p!=null; p=p.getParent())
             if (p==this) throw new IllegalArgumentException("Circular ancestry!");
         this.parent=parent;
     }
-    
+
     public TreeModel getParent()
     {
         return parent;
     }
-    
+
     public int childCount()
     {
         return children.size();
     }
-    
+
     public TreeModel getChild(int n)
     {
         return (TreeModel)children.elementAt(n);
     }
-    
+
     public boolean hasChildren()
     {
         return children.size()>0;
     }
-    
+
     public void print()
     {
         print("");
     }
-    
+
     private void print(String prefix)
     {
         System.out.println(prefix+"size="+mapItem.getSize());

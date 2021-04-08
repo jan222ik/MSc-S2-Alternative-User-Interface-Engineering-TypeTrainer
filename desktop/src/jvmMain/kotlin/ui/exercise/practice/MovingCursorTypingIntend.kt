@@ -26,6 +26,9 @@ class MovingCursorTypingIntend(
     val exerciseEvaluation = ExerciseEvaluation()
     lateinit var textEvaluation: TextEvaluation
 
+    override val result: ExerciseEvaluation
+        get() = exerciseEvaluation
+
 
     override fun update() {
 
@@ -46,6 +49,7 @@ class MovingCursorTypingIntend(
     private val _textFuture = MutableStateFlow("")
     override val textFuture: StateFlow<String>
         get() = _textFuture
+
 
 
     var inTextIndex: Int = 1
@@ -132,6 +136,13 @@ class MovingCursorTypingIntend(
                     this.cancel()
                 }
             }
+        }
+    }
+
+    init {
+        // Displays the first text
+        GlobalScope.launch(Dispatchers.IO) {
+            nextText()
         }
     }
 

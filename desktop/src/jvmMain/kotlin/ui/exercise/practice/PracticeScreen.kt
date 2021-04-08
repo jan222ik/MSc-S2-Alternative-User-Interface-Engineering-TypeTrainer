@@ -2,17 +2,34 @@
 
 package ui.exercise.practice
 
-import TypeTrainerTheme
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,13 +37,17 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import com.github.jan222ik.common.ui.components.TypeTrainerTheme
+import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import textgen.generators.impl.RandomKnownWordGenerator
 import ui.components.progress.practice.CountDownProgressBar
-import ui.dashboard.BaseDashboardCard
+import ui.dashboard.ApplicationRoutes
 import ui.exercise.ExerciseMode
 import ui.exercise.ITypingOptions
 import ui.exercise.TypingOptions
 import ui.exercise.practice.text.MovingCursorTyping
+import ui.general.WindowRouterAmbient
 import ui.util.debug.ifDebugCompose
 import ui.util.i18n.LanguageDefinition
 
@@ -77,7 +98,37 @@ fun PracticeScreen(typingOptions: ITypingOptions) {
 @Composable
 private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
     val max = intend.typingOptions.durationMillis.div(1000).toFloat()
-
+    val clockState = intend.typingClockStateStateFlow.collectAsState()
+    if (clockState.value == IPracticeIntend.TypingClockState.FINISHED) {
+        Popup {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.surface.copy(alpha = 0.8f))
+            ) {
+                Box {
+                    val router = WindowRouterAmbient.current
+                    Column(
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        Text(
+                            text = "Time elapsed."
+                        )
+                        Button(
+                            onClick = {
+                                val route = ApplicationRoutes.Exercise.ExerciseResults(
+                                    exerciseResults = intend.result
+                                )
+                                router.navTo(route)
+                            }
+                        ) {
+                            Text(text = "See your results")
+                        }
+                    }
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier.fillMaxWidth().padding(25.dp)
     ) {
