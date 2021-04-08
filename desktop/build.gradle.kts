@@ -2,8 +2,9 @@ import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
+    java
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.3.2"
+    id("org.jetbrains.compose")
     kotlin("plugin.serialization") version "1.4.30"
 }
 
@@ -26,12 +27,16 @@ kotlin {
             dependencies {
                 implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
+                /*
+
                 api(compose.animation)
                 api(compose.foundation)
                 api(compose.material)
                 api(compose.runtime)
                 api(compose.ui)
                 api(compose.materialIconsExtended)
+
+                 */
                 implementation(kotlin("reflect"))
 
                 // Charts

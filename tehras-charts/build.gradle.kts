@@ -2,7 +2,7 @@ import org.jetbrains.compose.compose
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.3.2"
+    id("org.jetbrains.compose")
 }
 
 group = "com.github.jan222ik"
@@ -23,24 +23,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(project(":common"))
-                implementation(compose.desktop.currentOs)
-                api(compose.animation)
-                api(compose.foundation)
-                api(compose.material)
-                api(compose.runtime)
-                api(compose.ui)
-                api(compose.materialIconsExtended)
                 implementation(kotlin("reflect"))
-
-
-                // Database
-                val exposedVersion = "0.26.2"
-                val h2Version = "1.4.200"
-                val hikariCpVersion = "3.4.5"
-                implementation("com.h2database:h2:$h2Version")
-                implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-                implementation("com.zaxxer:HikariCP:$hikariCpVersion")
             }
         }
         val jvmTest by getting {

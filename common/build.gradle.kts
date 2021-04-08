@@ -1,9 +1,9 @@
 import org.jetbrains.compose.compose
 
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.3.2"
     id("com.android.library")
+    kotlin("multiplatform")
+    id("org.jetbrains.compose")
 }
 
 group = "com.github.jan222ik"
@@ -22,7 +22,7 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
+        named("commonMain") {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
@@ -30,11 +30,18 @@ kotlin {
                 api(compose.materialIconsExtended)
             }
         }
-        //val commonTest by getting
-        val androidMain by getting {
+        named("androidMain") {
+            kotlin.srcDirs("src/jvmMain/kotlin")
             dependencies {
-                api("androidx.appcompat:appcompat:1.2.0")
-                api("androidx.core:core-ktx:1.3.2")
+                api("androidx.appcompat:appcompat:1.3.0-beta01")
+                api("androidx.core:core-ktx:1.3.1")
+            }
+        }
+        named("desktopMain") {
+            kotlin.srcDirs("src/jvmMain/kotlin")
+            resources.srcDirs("src/commonMain/resources")
+            dependencies {
+                api(compose.desktop.common)
             }
         }
     }
@@ -42,9 +49,23 @@ kotlin {
 
 android {
     compileSdkVersion(30)
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
     defaultConfig {
         minSdkVersion(28)
         targetSdkVersion(30)
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        named("main") {
+            manifest.srcFile("src/androidMain/AndroidManifest.xml")
+            res.srcDirs("src/androidMain/res", "src/commonMain/resources")
+        }
     }
 }
