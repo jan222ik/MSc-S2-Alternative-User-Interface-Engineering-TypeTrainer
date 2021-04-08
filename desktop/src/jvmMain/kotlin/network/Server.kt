@@ -32,6 +32,7 @@ class Server {
     }
 
     fun receivedMessage(id: String, readText: String) {
+        println(readText)
         TODO("Not yet implemented")
     }
 
