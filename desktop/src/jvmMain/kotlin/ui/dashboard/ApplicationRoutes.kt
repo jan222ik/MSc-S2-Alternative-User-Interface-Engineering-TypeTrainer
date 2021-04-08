@@ -1,12 +1,15 @@
 package ui.dashboard
 
+import textgen.error.ExerciseEvaluation
+import ui.exercise.ITypingOptions
+import ui.exercise.results.ResultsRoutes
 import ui.util.i18n.KeyI18N
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 
 sealed class ApplicationRoutes(val title: KeyI18N) {
 
-    object Dashboard : ApplicationRoutes(title = RequiresTranslationI18N("Dashboard"))
+    object Dashboard : ApplicationRoutes(title = i18n.str.navigation.self.dashboard)
 
     object Settings : ApplicationRoutes(title = i18n.str.navigation.self.settings)
 
@@ -27,12 +30,12 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
         }
 
         data class Training(
-            val trainingOptions: Any
+            val trainingOptions: ITypingOptions
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Training"))
 
         data class ExerciseResults(
-            val exerciseResults: Any,
-            val initialPage: Int = 0
+            val exerciseResults: ExerciseEvaluation,
+            val initialPage: ResultsRoutes = ResultsRoutes.OVERVIEW
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Results"))
     }
 
@@ -48,6 +51,8 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
     }
 
     object History : ApplicationRoutes(title = RequiresTranslationI18N("History"))
+
+    object AppBenefits : ApplicationRoutes(title = i18n.str.navigation.self.app_benefits)
 
     object Debug : ApplicationRoutes(title = RequiresTranslationI18N("Debug"))
 }

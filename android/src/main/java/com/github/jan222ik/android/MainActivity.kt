@@ -1,20 +1,14 @@
 package com.github.jan222ik.android
 
-import com.github.jan222ik.common.App
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.platform.setContent
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            App()
+            mobileMain(this)
         }
     }
-}
-
-@Composable
-fun a() {
-    val context = ContextAmbient.current
 }
