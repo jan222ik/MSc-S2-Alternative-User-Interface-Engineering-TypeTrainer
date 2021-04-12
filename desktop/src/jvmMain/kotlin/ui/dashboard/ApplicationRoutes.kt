@@ -25,8 +25,8 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
 
 
         sealed class Connection(title: KeyI18N) : Exercise(title) {
-            object QRCode : Connection(title = RequiresTranslationI18N("Connection with Companion"))
-            object SetupInstructions : Connection(title = RequiresTranslationI18N("Exercise - Setup Camera"))
+            data class QRCode(val trainingOptions: ITypingOptions) : Connection(title = RequiresTranslationI18N("Connection with Companion"))
+            data class SetupInstructions(val trainingOptions: ITypingOptions?) : Connection(title = RequiresTranslationI18N("Exercise - Setup Camera"))
         }
 
         data class Training(
