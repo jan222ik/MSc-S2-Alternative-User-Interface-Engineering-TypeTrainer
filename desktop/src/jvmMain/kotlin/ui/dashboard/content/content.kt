@@ -27,6 +27,7 @@ import com.github.jan222ik.common.ui.util.router.Router
 import ui.components.filling_layout_with_spacer.CustomLayoutHeightWithCenterSpace
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.HoverIconDashboardCard
+import ui.exercise.TypingOptions
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.i18n
 
@@ -163,7 +164,7 @@ private fun RightColumn(router: Router<ApplicationRoutes>) {
             top = {
                 HoverIconDashboardCard(
                     modifier = standardCard,
-                    onClick = { router.navTo(ApplicationRoutes.Exercise.Connection.SetupInstructions) },
+                    onClick = { router.navTo(ApplicationRoutes.Exercise.Connection.SetupInstructions(null)) },
                     icon = {
                         Icon(
                             modifier = Modifier.fillMaxSize(fraction = iconFraction),

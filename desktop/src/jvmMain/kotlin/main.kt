@@ -28,12 +28,12 @@ import network.Server
 import network.ServerApplication
 import textgen.database.DatabaseFactory
 import ui.components.AnimatedLogo
+import ui.connection.ConnectionQRCodeScreen
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
 import ui.exercise.practice.PracticeScreen
 import ui.exercise.results.ResultsScreen
 import ui.exercise.selection.ExerciseSelection
-import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowRouter
 import ui.general.window.container.WindowContainer
 import ui.history.HistoryScreen
@@ -82,11 +82,9 @@ fun main() {
                                 ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
                                 ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
                                 is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
-                                ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection(
-                                    ExerciseSelectionIntent()
-                                )
-                                ApplicationRoutes.Exercise.Connection.QRCode -> Text("Missing Screen: " + +current.title)
-                                ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
+                                ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection()
+                                is ApplicationRoutes.Exercise.Connection.QRCode -> ConnectionQRCodeScreen(server = server, trainingOptions = current.trainingOptions)
+                                is ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
                                 is ApplicationRoutes.Exercise.Training -> PracticeScreen(current.trainingOptions)
                                 is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
                                     current.exerciseResults,
