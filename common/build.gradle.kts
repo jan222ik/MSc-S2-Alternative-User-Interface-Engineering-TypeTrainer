@@ -3,6 +3,7 @@ import org.jetbrains.compose.compose
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.4.30"
     id("org.jetbrains.compose")
 }
 
@@ -28,6 +29,7 @@ kotlin {
                 api(compose.foundation)
                 api(compose.material)
                 api(compose.materialIconsExtended)
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.1.0")
             }
         }
         named("androidMain") {

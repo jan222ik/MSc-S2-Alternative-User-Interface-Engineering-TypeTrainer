@@ -1,5 +1,8 @@
 package com.github.jan222ik.common
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class FingerTipLandmark(
     val finger: FingerEnum,
     val x: Float,
@@ -11,6 +14,7 @@ class FingerTipLandmark(
     }
 }
 
+@Serializable
 enum class FingerEnum {
     NONE, INDEX, MIDDLE, RING, PINKY, THUMB
 }

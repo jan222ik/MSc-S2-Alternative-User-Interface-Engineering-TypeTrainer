@@ -1,9 +1,12 @@
 package network
 
-import io.ktor.websocket.*
+import com.github.jan222ik.common.HandLandmark
+import io.ktor.websocket.DefaultWebSocketServerSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.random.Random
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.cbor.Cbor
+import kotlinx.serialization.decodeFromByteArray
 
 class Server {
     private var _connection: String? = null
@@ -19,8 +22,13 @@ class Server {
     }
 
     fun receivedMessage(id: String, readText: String) {
-        println(readText)
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    fun receivedMessage(id: String, readData: ByteArray) {
+        val landmarks = Cbor.decodeFromByteArray<List<HandLandmark>>(readData)
+        landmarks.forEach(::println)
     }
 
     suspend fun disconnected(id: String, defaultWebSocketServerSession: DefaultWebSocketServerSession) {

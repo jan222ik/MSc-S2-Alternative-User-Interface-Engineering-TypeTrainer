@@ -2,6 +2,7 @@ plugins {
     id("org.jetbrains.compose")
     id("com.android.application")
     kotlin("android")
+    kotlin("plugin.serialization") version "1.4.30"
 }
 
 repositories {
@@ -34,11 +35,10 @@ dependencies {
 
     // networking
     val ktor_version = "1.5.3"
-//    val kotlinx_coroutines_version = "1.4.3-native-mt"
-//    implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-android:$ktor_version")
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines_version")
+    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.1.0")
 }
 
 android {

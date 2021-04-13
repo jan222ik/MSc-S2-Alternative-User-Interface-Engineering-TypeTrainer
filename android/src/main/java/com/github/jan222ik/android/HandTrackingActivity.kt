@@ -2,13 +2,14 @@ package com.github.jan222ik.android
 
 import android.graphics.SurfaceTexture
 import android.os.Bundle
-import android.util.Log
 import android.util.Size
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.github.jan222ik.android.FingerTipExtractor.Companion.extractAndSend
 import com.google.mediapipe.components.CameraHelper.CameraFacing
 import com.google.mediapipe.components.CameraXPreviewHelper
 import com.google.mediapipe.components.ExternalTextureConverter
@@ -113,8 +114,8 @@ class HandTrackingActivity : AppCompatActivity() {
 //            }
 //        }
 
-        processor!!.addPacketCallback(OUTPUT_LANDMARKS_STREAM_NAME){
-            packet: Packet ->
+        FingerTipExtractor.lifecycle = lifecycleScope
+        processor!!.addPacketCallback(OUTPUT_LANDMARKS_STREAM_NAME) { packet: Packet ->
             val multiHandLandmarks = PacketGetter.getProtoVector(packet, NormalizedLandmarkList.parser())
             FingerTipExtractor.extractAndSend(multiHandLandmarks)
         }
