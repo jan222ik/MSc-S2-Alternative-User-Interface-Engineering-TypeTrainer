@@ -2,13 +2,13 @@ package com.github.jan222ik.android
 
 import android.graphics.SurfaceTexture
 import android.os.Bundle
-import android.util.Log
 import android.util.Size
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.mediapipe.components.CameraHelper.CameraFacing
 import com.google.mediapipe.components.CameraXPreviewHelper
 import com.google.mediapipe.components.ExternalTextureConverter
@@ -91,30 +91,8 @@ class HandTrackingActivity : AppCompatActivity() {
             packetCreator.createInt32(NUM_HANDS)
         processor!!.setInputSidePackets(inputSidePackets)
 
-        // To show verbose logging, run:
-        // adb shell setprop log.tag.HandTrackingActivity VERBOSE
-//        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-//            processor!!.addPacketCallback(
-//                OUTPUT_LANDMARKS_STREAM_NAME
-//            ) { packet: Packet ->
-//                Log.v(
-//                    TAG,
-//                    "Received multi-hand landmarks packet."
-//                )
-//                val multiHandLandmarks =
-//                    PacketGetter.getProtoVector(packet, NormalizedLandmarkList.parser())
-//                Log.v(
-//                    TAG,
-//                    "[TS:"
-//                            + packet.timestamp
-//                            + "] "
-//                            + getMultiHandLandmarksDebugString(multiHandLandmarks)
-//                )
-//            }
-//        }
-
-        processor!!.addPacketCallback(OUTPUT_LANDMARKS_STREAM_NAME){
-            packet: Packet ->
+        FingerTipExtractor.lifecycle = lifecycleScope
+        processor!!.addPacketCallback(OUTPUT_LANDMARKS_STREAM_NAME) { packet: Packet ->
             val multiHandLandmarks = PacketGetter.getProtoVector(packet, NormalizedLandmarkList.parser())
             FingerTipExtractor.extractAndSend(multiHandLandmarks)
         }

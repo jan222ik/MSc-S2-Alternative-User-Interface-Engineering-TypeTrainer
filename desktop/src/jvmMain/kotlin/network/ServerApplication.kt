@@ -1,13 +1,28 @@
 package network
 
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.http.cio.websocket.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.sessions.*
-import io.ktor.util.*
-import io.ktor.websocket.*
+import io.ktor.application.Application
+import io.ktor.application.ApplicationCallPipeline
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.CallLogging
+import io.ktor.features.DefaultHeaders
+import io.ktor.http.cio.websocket.CloseReason
+import io.ktor.http.cio.websocket.Frame
+import io.ktor.http.cio.websocket.close
+import io.ktor.http.cio.websocket.pingPeriod
+import io.ktor.http.cio.websocket.readText
+import io.ktor.response.respond
+import io.ktor.routing.get
+import io.ktor.routing.routing
+import io.ktor.sessions.Sessions
+import io.ktor.sessions.cookie
+import io.ktor.sessions.get
+import io.ktor.sessions.sessions
+import io.ktor.sessions.set
+import io.ktor.util.KtorExperimentalAPI
+import io.ktor.util.generateNonce
+import io.ktor.websocket.WebSockets
+import io.ktor.websocket.webSocket
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.consumeEach
 import java.time.Duration
@@ -42,8 +57,13 @@ class ServerApplication(private val server: Server) {
                 server.connected(session.id, this)
                 try {
                     incoming.consumeEach { frame ->
-                        if (frame is Frame.Text) {
-                            server.receivedMessage(session.id, frame.readText())
+                        when (frame) {
+                            is Frame.Text ->
+                                server.receivedMessage(session.id, frame.readText())
+                            is Frame.Binary ->
+                                server.receivedMessage(session.id, frame.data)
+                            else -> {
+                            }
                         }
                     }
                 } finally {
