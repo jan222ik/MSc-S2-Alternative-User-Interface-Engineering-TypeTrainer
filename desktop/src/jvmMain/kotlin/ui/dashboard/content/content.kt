@@ -2,7 +2,9 @@
 
 package ui.dashboard.content
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +21,7 @@ import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.SentimentVerySatisfied
 import androidx.compose.material.icons.filled.Stars
+import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,14 +31,10 @@ import com.github.jan222ik.common.ui.util.router.Router
 import ui.components.filling_layout_with_spacer.CustomLayoutHeightWithCenterSpace
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.HoverIconDashboardCard
-import ui.exercise.TypingOptions
-import ui.dashboard.BaseDashboardCard
-import ui.dashboard.IconDashboardCard
 import ui.dashboard.StreakAPI
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
-import ui.util.router.Router
 import java.time.LocalDate
 
 private const val iconFraction = .75f
