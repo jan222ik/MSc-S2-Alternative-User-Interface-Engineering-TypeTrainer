@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,9 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import org.jetbrains.exposed.sql.transactions.transaction
 import textgen.database.DbHistory
-import ui.dashboard.BaseDashboardCard
 import ui.exercise.results.ResultsRoutes
 import ui.exercise.results.ResultsScreen
 import ui.util.debug.ifDebugCompose
@@ -41,6 +43,8 @@ fun HistoryScreen() {
         LazyColumn(
             modifier = Modifier
                 // .fillMaxWidth(0.3f)
+                .padding(horizontal = 8.dp)
+                .padding(vertical = 16.dp)
                 .fillMaxHeight()
         ) {
             if (items.isNotEmpty()) {
@@ -52,8 +56,9 @@ fun HistoryScreen() {
                 var lastMonth = true
                 var older = true
                 items.forEachIndexed { index, item ->
-                    val date = item.timestampDate.value.truncatedTo(ChronoUnit.DAYS)
-                    val untilToday = date.until(local, ChronoUnit.DAYS).toInt().absoluteValue
+                    val date = item.timestampDate.value
+                    val untilToday =
+                        date.truncatedTo(ChronoUnit.DAYS).until(local, ChronoUnit.DAYS).toInt().absoluteValue
                     println("date: $date   - $untilToday")
                     when {
                         untilToday == 0 && today -> {
@@ -64,7 +69,7 @@ fun HistoryScreen() {
                             yesterday = false
                             "Yesterday:"
                         }
-                        (1 until 7).contains(untilToday) && thisWeek -> {
+                        (2 until 7).contains(untilToday) && thisWeek -> {
                             thisWeek = false
                             "This Week:"
                         }

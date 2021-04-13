@@ -7,7 +7,6 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -18,8 +17,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object DatabaseFactory {
+    lateinit var dataSource: HikariDataSource
+
     fun initWithDemoData() {
-        Database.connect(hikari())
+        val datasource = hikari()
+        Database.connect(datasource)
         transaction {
             SchemaUtils.create(DbHistorys)
             SchemaUtils.create(DbTextsEnglish)
@@ -33,6 +35,16 @@ object DatabaseFactory {
                 }
             }
         }
+    }
+
+    fun start() {
+        val datasource = hikari()
+        Database.connect(datasource)
+        TODO("Use demo at the moment")
+    }
+
+    fun stop() {
+        dataSource.close()
     }
 
     private fun hikari(): HikariDataSource {

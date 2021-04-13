@@ -2,14 +2,16 @@ package com.github.tehras.charts.line.renderer.xaxis
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Canvas
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.tehras.charts.piechart.utils.toLegacyInt
-import org.jetbrains.skija.TextBlobBuilder
 import org.jetbrains.skija.TextLine
 
 class SimpleXAxisDrawer(

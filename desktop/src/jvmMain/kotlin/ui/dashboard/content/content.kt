@@ -2,18 +2,33 @@
 
 package ui.dashboard.content
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Keyboard
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.SentimentVerySatisfied
+import androidx.compose.material.icons.filled.Stars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
+import com.github.jan222ik.common.ui.util.router.Router
 import ui.components.filling_layout_with_spacer.CustomLayoutHeightWithCenterSpace
 import ui.dashboard.ApplicationRoutes
+import ui.dashboard.HoverIconDashboardCard
+import ui.exercise.TypingOptions
 import ui.dashboard.BaseDashboardCard
 import ui.dashboard.IconDashboardCard
 import ui.dashboard.StreakAPI
@@ -59,7 +74,7 @@ fun DashboardContent() {
 @Composable
 private fun LeftColumn(router: Router<ApplicationRoutes>) {
     Row(modifier = Modifier.height(size)) {
-        IconDashboardCard(
+        HoverIconDashboardCard(
             modifier = standardCard,
             onClick = { router.navTo(ApplicationRoutes.Exercise.ExerciseSelection) },
             icon = {
@@ -74,7 +89,7 @@ private fun LeftColumn(router: Router<ApplicationRoutes>) {
                 Text(+i18n.str.navigation.self.practice)
             }
         )
-        IconDashboardCard(
+        HoverIconDashboardCard(
             modifier = standardCard,
             onClick = { router.navTo(ApplicationRoutes.Competitions.Overview) },
             icon = {
@@ -93,7 +108,7 @@ private fun LeftColumn(router: Router<ApplicationRoutes>) {
             modifier = Modifier.padding(padding),
             centralPadding = padding.times(2),
             top = {
-                IconDashboardCard(
+                HoverIconDashboardCard(
                     modifier = halfCard,
                     onClick = { router.navTo(ApplicationRoutes.History) },
                     icon = {
@@ -110,7 +125,7 @@ private fun LeftColumn(router: Router<ApplicationRoutes>) {
                 )
             },
             bottom = {
-                IconDashboardCard(
+                HoverIconDashboardCard(
                     modifier = halfCard,
                     onClick = { router.navTo(ApplicationRoutes.Achievements) },
                     icon = {
@@ -176,9 +191,9 @@ private fun RightColumn(router: Router<ApplicationRoutes>) {
         CustomLayoutHeightWithCenterSpace(
             centralPadding = padding.div(2),
             top = {
-                IconDashboardCard(
+                HoverIconDashboardCard(
                     modifier = standardCard,
-                    onClick = { router.navTo(ApplicationRoutes.Exercise.Connection.SetupInstructions) },
+                    onClick = { router.navTo(ApplicationRoutes.Exercise.Connection.SetupInstructions(null)) },
                     icon = {
                         Icon(
                             modifier = Modifier.fillMaxSize(fraction = iconFraction),
@@ -193,7 +208,7 @@ private fun RightColumn(router: Router<ApplicationRoutes>) {
                 )
             },
             bottom = {
-                IconDashboardCard(
+                HoverIconDashboardCard(
                     modifier = standardCard,
                     onClick = { router.navTo(ApplicationRoutes.AppBenefits) },
                     icon = {

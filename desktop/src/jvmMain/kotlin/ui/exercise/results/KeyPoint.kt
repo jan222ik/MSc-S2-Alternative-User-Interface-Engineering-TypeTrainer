@@ -1,7 +1,11 @@
 package ui.exercise.results
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.East
+import androidx.compose.material.icons.filled.North
+import androidx.compose.material.icons.filled.NorthEast
+import androidx.compose.material.icons.filled.South
+import androidx.compose.material.icons.filled.SouthEast
 import androidx.compose.ui.graphics.vector.ImageVector
 import util.RandomUtil
 

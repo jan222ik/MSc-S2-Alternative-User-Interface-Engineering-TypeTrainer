@@ -2,8 +2,9 @@ import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
+    java
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.3.2"
+    id("org.jetbrains.compose")
     kotlin("plugin.serialization") version "1.4.30"
 }
 
@@ -26,12 +27,16 @@ kotlin {
             dependencies {
                 implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
+                /*
+
                 api(compose.animation)
                 api(compose.foundation)
                 api(compose.material)
                 api(compose.runtime)
                 api(compose.ui)
                 api(compose.materialIconsExtended)
+
+                 */
                 implementation(kotlin("reflect"))
 
                 // Charts
@@ -48,8 +53,24 @@ kotlin {
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
                 implementation("com.zaxxer:HikariCP:$hikariCpVersion")
 
+                // Ktor Server & REST & Websocket
+                val ktorVersion = "1.3.2"
+                implementation("io.ktor:ktor-server-netty:$ktorVersion")
+                implementation("io.ktor:ktor-websockets:$ktorVersion")
+                // Logger
+                val logbackVersion = "1.2.3"
+                implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
                 // Serialization
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+
+                // QR
+                arrayOf(
+                    "core",
+                    "swing",
+                    "kotlin"//,
+                    //"WebcamCapture"
+                ).forEach{ implementation("org.boofcv:boofcv-$it:0.36") }
 
             }
         }
