@@ -9,7 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
@@ -17,9 +23,10 @@ import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import io.ktor.util.*
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.netty.NettyApplicationEngine
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -83,7 +90,11 @@ fun main() {
                                 ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
                                 is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
                                 ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection()
-                                is ApplicationRoutes.Exercise.Connection.QRCode -> ConnectionQRCodeScreen(server = server, trainingOptions = current.trainingOptions)
+                                is ApplicationRoutes.Exercise.Connection.QRCode ->
+                                    ConnectionQRCodeScreen(
+                                        server = server,
+                                        trainingOptions = current.trainingOptions
+                                    )
                                 is ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
                                 is ApplicationRoutes.Exercise.Training -> PracticeScreen(current.trainingOptions)
                                 is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
@@ -112,7 +123,7 @@ fun main() {
 fun StartupApplication(afterStartUp: @Composable (server: Server) -> Unit) {
     val server = remember { Server() }
     val startUpScope = rememberCoroutineScope()
-    val loadingStateFlow = remember { MutableStateFlow<StartUpLoading>(StartUpLoading.START)}
+    val loadingStateFlow = remember { MutableStateFlow<StartUpLoading>(StartUpLoading.START) }
     DisposableEffect(server) {
         var engine: NettyApplicationEngine? = null
         startUpScope.launch(Dispatchers.IO) {
@@ -130,17 +141,34 @@ fun StartupApplication(afterStartUp: @Composable (server: Server) -> Unit) {
         }
     }
     val loading = loadingStateFlow.collectAsState()
+    val animOnce = remember { mutableStateOf(false) }
+    val window = LocalAppWindow.current
+    DisposableEffect(window) {
+        val keySet = KeysSet(Key.E)
+        val keyboard = window.keyboard
+        keyboard.setShortcut(keySet) {
+            animOnce.component2()(true)
+            println("Skip Animation must run once to end!")
+        }
+        onDispose {
+            keyboard.removeShortcut(keySet)
+        }
+    }
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        if (loading.value != StartUpLoading.DONE) {
+        if (!animOnce.component1() || loading.value != StartUpLoading.DONE) {
             Box(modifier = Modifier.fillMaxWidth().padding(vertical = 80.dp)) {
-                AnimatedLogo(modifier = Modifier.align(Alignment.Center))
+                AnimatedLogo(modifier = Modifier.align(Alignment.Center), onAnimatedOnce = animOnce.component2())
             }
         }
         when (loading.value) {
             StartUpLoading.START -> Text("Typetrainer is starting.")
             StartUpLoading.NETWORK -> Text("Starting the servers.")
             StartUpLoading.DATABASE -> Text("Spinning up database.")
-            StartUpLoading.DONE -> afterStartUp.invoke(server)
+            StartUpLoading.DONE -> {
+                if (animOnce.value) {
+                    afterStartUp.invoke(server)
+                }
+            }
         }
     }
 }

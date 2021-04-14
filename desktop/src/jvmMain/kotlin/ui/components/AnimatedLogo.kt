@@ -1,19 +1,30 @@
 package ui.components
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.TwoWayConverter
+import androidx.compose.animation.core.animateValue
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.desktop.Window
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 private val IntToVector: TwoWayConverter<Int, AnimationVector1D> =
@@ -24,10 +35,14 @@ private val BoolToVector: TwoWayConverter<Boolean, AnimationVector1D> =
 
 @ExperimentalAnimationApi
 @Composable
-fun AnimatedLogo(modifier: Modifier = Modifier) {
+fun AnimatedLogo(modifier: Modifier = Modifier, onAnimatedOnce: (Boolean) -> Unit) {
     val instantEase = Easing { it }
     val transition = rememberInfiniteTransition()
     val totalDuration = 3000
+    val indexCount = remember { mutableStateOf(0) }
+    if (indexCount.value == 1) {
+        onAnimatedOnce(true)
+    }
     val charIndex by transition.animateValue(
         initialValue = 0,
         targetValue = 12,
@@ -52,6 +67,9 @@ fun AnimatedLogo(modifier: Modifier = Modifier) {
             }
         )
     )
+    if (indexCount.value == 0 && charIndex == 12) {
+        indexCount.value++
+    }
     val cursorFlash by transition.animateValue(
         initialValue = false,
         targetValue = true,
@@ -66,11 +84,14 @@ fun AnimatedLogo(modifier: Modifier = Modifier) {
             }
         )
     )
-    println(charIndex)
-    Row(modifier = modifier.width(500.dp), verticalAlignment = Alignment.CenterVertically) {
+    //println(charIndex)
+    Row(
+        modifier = modifier.width(350.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         val tStyle = MaterialTheme.typography.h1
         Text(
-            modifier = Modifier.offset(y = -5.dp),
+            modifier = Modifier.offset(y = (-5).dp),
             text = "T",
             style = tStyle
         )
@@ -87,7 +108,7 @@ fun AnimatedLogo(modifier: Modifier = Modifier) {
             AnimatedLogoChar(9, charIndex)
             AnimatedLogoChar(10, charIndex)
         }
-        println(cursorFlash)
+        //println(cursorFlash)
         if (cursorFlash) {
             Text(modifier = Modifier.offset(y = 5.dp).rotate(180f), text = "T", style = tStyle)
         }
@@ -107,7 +128,7 @@ fun AnimatedLogoChar(index: Int, currentIndex: Int) {
 
 }
 
-fun timeStepper(time: Int, totalSteps: Int) : (nr: Float) -> Int {
+fun timeStepper(time: Int, totalSteps: Int): (nr: Float) -> Int {
     return { nr -> nr.div(totalSteps).times(time).toInt() }
 }
 
@@ -190,7 +211,8 @@ fun AnimatedLogo2(modifier: Modifier = Modifier) {
 fun main() {
     Window {
         Box(Modifier.fillMaxSize()) {
-            AnimatedLogo(modifier = Modifier.align(Alignment.Center))
+            val animOnce = remember { mutableStateOf(false) }
+            AnimatedLogo(modifier = Modifier.align(Alignment.Center), onAnimatedOnce = animOnce.component2())
         }
     }
 }
