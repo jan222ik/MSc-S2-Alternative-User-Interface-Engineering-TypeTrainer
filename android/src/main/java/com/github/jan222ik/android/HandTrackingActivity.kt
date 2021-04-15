@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.github.jan222ik.android.FingerTipExtractor.Companion.extractAndSend
 import com.google.mediapipe.components.CameraHelper.CameraFacing
 import com.google.mediapipe.components.CameraXPreviewHelper
 import com.google.mediapipe.components.ExternalTextureConverter
@@ -91,28 +90,6 @@ class HandTrackingActivity : AppCompatActivity() {
         inputSidePackets[INPUT_NUM_HANDS_SIDE_PACKET_NAME] =
             packetCreator.createInt32(NUM_HANDS)
         processor!!.setInputSidePackets(inputSidePackets)
-
-        // To show verbose logging, run:
-        // adb shell setprop log.tag.HandTrackingActivity VERBOSE
-//        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-//            processor!!.addPacketCallback(
-//                OUTPUT_LANDMARKS_STREAM_NAME
-//            ) { packet: Packet ->
-//                Log.v(
-//                    TAG,
-//                    "Received multi-hand landmarks packet."
-//                )
-//                val multiHandLandmarks =
-//                    PacketGetter.getProtoVector(packet, NormalizedLandmarkList.parser())
-//                Log.v(
-//                    TAG,
-//                    "[TS:"
-//                            + packet.timestamp
-//                            + "] "
-//                            + getMultiHandLandmarksDebugString(multiHandLandmarks)
-//                )
-//            }
-//        }
 
         FingerTipExtractor.lifecycle = lifecycleScope
         processor!!.addPacketCallback(OUTPUT_LANDMARKS_STREAM_NAME) { packet: Packet ->

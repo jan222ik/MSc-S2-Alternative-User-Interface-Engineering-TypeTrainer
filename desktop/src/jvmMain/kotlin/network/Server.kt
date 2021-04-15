@@ -22,13 +22,14 @@ class Server {
     }
 
     fun receivedMessage(id: String, readText: String) {
-        //TODO("Not yet implemented")
+        TODO("Not yet implemented")
     }
 
     @OptIn(ExperimentalSerializationApi::class)
     fun receivedMessage(id: String, readData: ByteArray) {
         val landmarks = Cbor.decodeFromByteArray<List<HandLandmark>>(readData)
         landmarks.forEach(::println)
+        // TODO do something with the data
     }
 
     suspend fun disconnected(id: String, defaultWebSocketServerSession: DefaultWebSocketServerSession) {
