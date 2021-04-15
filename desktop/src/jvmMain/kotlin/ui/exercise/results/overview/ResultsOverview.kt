@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package ui.exercise.results
+package ui.exercise.results.overview
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
+import ui.exercise.results.ResultIntent
 import ui.util.i18n.RequiresTranslationI18N
 
 @Composable

@@ -5,6 +5,8 @@ package ui.exercise.results
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import textgen.error.ExerciseEvaluation
+import ui.exercise.results.overview.ResultsOverview
+import ui.exercise.results.timeline.ResultsTimeline
 
 @Composable
 fun ResultsScreen(
@@ -20,7 +22,7 @@ fun ResultsScreen(
             ResultsRoutes.OVERVIEW -> ResultsOverview(intent, isStandalone)
             ResultsRoutes.ANALYSIS -> Text(+current.title)
             ResultsRoutes.ERROR_HEATMAP -> Text(+current.title)
-            ResultsRoutes.TIMELINE -> Text(+current.title)
+            ResultsRoutes.TIMELINE -> ResultsTimeline(intent, isStandalone)
         }
     }
 }

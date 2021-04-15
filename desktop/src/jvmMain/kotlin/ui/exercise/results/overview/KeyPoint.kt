@@ -1,4 +1,4 @@
-package ui.exercise.results
+package ui.exercise.results.overview
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.East

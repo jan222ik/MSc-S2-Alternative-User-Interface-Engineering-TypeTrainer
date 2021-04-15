@@ -1,9 +1,10 @@
 package ui.exercise.results
 
 import textgen.error.ExerciseEvaluation
+import ui.exercise.results.overview.KeyPoint
 
 class ResultIntent(
-    private val data: ExerciseEvaluation
+    internal val data: ExerciseEvaluation
 ) {
 
     fun getKeyPoints(): List<KeyPoint> {
@@ -12,11 +13,11 @@ class ResultIntent(
             KeyPoint("Characters typed", data.totalCharsTyped.toString()),
             KeyPoint("Accuracy", data.totalAccuracy.times(100).toString() + "%"),
             KeyPoint("Errors", data.totalErrors.toString()),
-            KeyPoint("Error %", "2.5%"),
+            KeyPoint("Error %", "hc"),
             KeyPoint("Typing Errors", data.falseCharsTyped.toString()),
-            KeyPoint("Typing Errors %", "1.6%"),
-            KeyPoint("Finger Errors", "4"),
-            KeyPoint("Finger Errors %", "0.8%")
+            KeyPoint("Typing Errors %", "hc"),
+            KeyPoint("Finger Errors", "hc"),
+            KeyPoint("Finger Errors %", "hc")
         )
     }
 

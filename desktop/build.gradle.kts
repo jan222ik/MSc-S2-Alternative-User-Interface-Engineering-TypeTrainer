@@ -27,21 +27,13 @@ kotlin {
             dependencies {
                 implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
-                /*
 
-                api(compose.animation)
-                api(compose.foundation)
-                api(compose.material)
-                api(compose.runtime)
-                api(compose.ui)
-                api(compose.materialIconsExtended)
-
-                 */
                 implementation(kotlin("reflect"))
 
                 // Charts
                 implementation(project(":tehras-charts"))
                 implementation(project(":treemap"))
+                //implementation(project(":staakk-ccharts"))
 
                 // Database
                 val exposedVersion = "0.26.2"

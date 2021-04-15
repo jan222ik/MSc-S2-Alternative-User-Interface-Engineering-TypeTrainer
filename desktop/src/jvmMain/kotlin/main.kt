@@ -1,5 +1,6 @@
 @file:Suppress("FunctionName")
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
@@ -83,30 +84,32 @@ fun main() {
                         WindowContainer(
                             title = router.current.title.observedString(router)
                         ) {
-                            when (current) {
-                                ApplicationRoutes.Debug -> DebugWithAllRoutes()
-                                ApplicationRoutes.Dashboard -> DashboardContent()
-                                ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
-                                ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
-                                is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
-                                ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection()
-                                is ApplicationRoutes.Exercise.Connection.QRCode ->
-                                    ConnectionQRCodeScreen(
-                                        server = server,
-                                        trainingOptions = current.trainingOptions
+                            Crossfade(current) { current ->
+                                when (current) {
+                                    ApplicationRoutes.Debug -> DebugWithAllRoutes()
+                                    ApplicationRoutes.Dashboard -> DashboardContent()
+                                    ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
+                                    ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
+                                    is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
+                                    ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection()
+                                    is ApplicationRoutes.Exercise.Connection.QRCode ->
+                                        ConnectionQRCodeScreen(
+                                            server = server,
+                                            trainingOptions = current.trainingOptions
+                                        )
+                                    is ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
+                                    is ApplicationRoutes.Exercise.Training -> PracticeScreen(current.trainingOptions)
+                                    is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
+                                        current.exerciseResults,
+                                        current.initialPage
                                     )
-                                is ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
-                                is ApplicationRoutes.Exercise.Training -> PracticeScreen(current.trainingOptions)
-                                is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
-                                    current.exerciseResults,
-                                    current.initialPage
-                                )
-                                ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
-                                ApplicationRoutes.Goals.Compose -> Text("Missing Screen: " + +current.title)
-                                ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
-                                ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
-                                ApplicationRoutes.History -> HistoryScreen()
-                                ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
+                                    ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
+                                    ApplicationRoutes.Goals.Compose -> Text("Missing Screen: " + +current.title)
+                                    ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
+                                    ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
+                                    ApplicationRoutes.History -> HistoryScreen()
+                                    ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
+                                }
                             }
                         }
                     }
