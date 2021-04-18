@@ -13,7 +13,7 @@ import util.weightedAt
 import kotlin.random.Random
 
 class ExerciseSelectionIntent {
-    val withFingerTracking = mutableStateOf(true)
+    val withFingerTracking = mutableStateOf(false)
     val textModeSelection = mutableStateOf(0)
     val exerciseModeSelection = mutableStateOf(0)
     val languageSelection = mutableStateOf(0)

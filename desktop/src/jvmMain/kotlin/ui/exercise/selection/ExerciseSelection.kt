@@ -321,8 +321,8 @@ private fun ExerciseModeSubCard(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(15.dp))
-        if (duration == ExerciseSelectionIntent.durationSelectionOptions.size - 1) {
+        if (timeLimit && duration == ExerciseSelectionIntent.durationSelectionOptions.size - 1) {
+            Spacer(modifier = Modifier.height(15.dp))
             Row(
                 modifier = Modifier.padding(start = 50.dp),
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
