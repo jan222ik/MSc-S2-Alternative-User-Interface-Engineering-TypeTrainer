@@ -2,7 +2,6 @@
 
 package ui.dashboard.goal_preview
 
-import TypeTrainerTheme
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.TargetBasedAnimation
 import androidx.compose.animation.core.VectorConverter
@@ -14,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,8 +40,9 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.ui.components.TypeTrainerTheme
+import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import kotlinx.coroutines.launch
-import ui.dashboard.BaseDashboardCard
 import ui.util.i18n.LanguageConfiguration
 import ui.util.i18n.RequiresTranslationI18N
 
@@ -58,7 +59,7 @@ fun DashboardGoalsPreviewCard(goalIntend: GoalIntend = GoalIntend()) {
                         contentDescription = null
                     )
                     Text(
-                        text = +RequiresTranslationI18N("Goals:")
+                        text = +RequiresTranslationI18N("Goals: [Placeholder]")
                     )
                 }
                 TextButton(
@@ -112,6 +113,7 @@ fun DashboardGoal(goal: IGoal, onOpenGoal: (IGoal) -> Unit) {
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp)
+            .aspectRatio(1f)
             .clickable { onOpenGoal.invoke(goal) }
             .pointerMoveFilter(
                 onEnter = {

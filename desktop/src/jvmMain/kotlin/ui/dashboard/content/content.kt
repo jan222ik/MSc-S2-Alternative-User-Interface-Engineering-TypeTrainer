@@ -33,6 +33,7 @@ import ui.components.filling_layout_with_spacer.CustomLayoutHeightWithCenterSpac
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.HoverIconDashboardCard
 import ui.dashboard.StreakAPI
+import ui.dashboard.goal_preview.DashboardGoalsPreviewCard
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.RequiresTranslationI18N
@@ -158,9 +159,8 @@ private fun LeftColumn(router: Router<ApplicationRoutes>) {
 @Composable
 private fun RightColumn(router: Router<ApplicationRoutes>) {
     Row(modifier = Modifier.height(size).padding(all = padding)) {
-        BaseDashboardCard {
-            Text("Goals Placeholder")
-        }
+        DashboardGoalsPreviewCard()
+        //BaseDashboardCard { Text("Goals Placeholder") }
     }
     Row(modifier = Modifier.padding(all = padding)) {
         BaseDashboardCard(
