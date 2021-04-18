@@ -2,13 +2,18 @@
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.desktop.AppManager
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -19,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
@@ -61,9 +67,22 @@ fun main() {
         ui.util.i18n.main()
         println("-".repeat(80))
     }
-    Window(size = IntSize(width = 1280, height = 720)) {
+    val initSize = IntSize(width = 1280, height = 720)
+    Window(size = initSize) {
+        val applicationScale = remember { mutableStateOf(1f to 1f) }
+        /*
+        LocalAppWindow.current.apply {
+            this.events.onResize = { size ->
+                val xScale = size.width.toFloat().div(initSize.width)
+                val yScale = size.height.toFloat().div(initSize.height)
+                println("xScale = ${xScale} yScale = ${yScale}")
+
+                applicationScale.value = xScale to yScale
+            }
+        }
+        */
         TypeTrainerTheme {
-            StartupApplication { server ->
+            StartupApplication(applicationScale.value) { server ->
                 LanguageConfiguration {
                     WindowRouter(
                         initialRoute = ApplicationRoutes.Dashboard
@@ -123,7 +142,7 @@ fun main() {
 @ExperimentalCoroutinesApi
 @KtorExperimentalAPI
 @Composable
-fun StartupApplication(afterStartUp: @Composable (server: Server) -> Unit) {
+fun StartupApplication(scale: Pair<Float, Float>, afterStartUp: @Composable (server: Server) -> Unit) {
     val server = remember { Server() }
     val startUpScope = rememberCoroutineScope()
     val loadingStateFlow = remember { MutableStateFlow<StartUpLoading>(StartUpLoading.START) }
@@ -157,19 +176,32 @@ fun StartupApplication(afterStartUp: @Composable (server: Server) -> Unit) {
             keyboard.removeShortcut(keySet)
         }
     }
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        if (!animOnce.component1() || loading.value != StartUpLoading.DONE) {
-            Box(modifier = Modifier.fillMaxWidth().padding(vertical = 80.dp)) {
-                AnimatedLogo(modifier = Modifier.align(Alignment.Center), onAnimatedOnce = animOnce.component2())
-            }
-        }
-        when (loading.value) {
-            StartUpLoading.START -> Text("Typetrainer is starting.")
-            StartUpLoading.NETWORK -> Text("Starting the servers.")
-            StartUpLoading.DATABASE -> Text("Spinning up database.")
-            StartUpLoading.DONE -> {
-                if (animOnce.value) {
-                    afterStartUp.invoke(server)
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+        Box(
+            modifier = Modifier.scale(scale.first, scale.second),//.background(androidx.compose.ui.graphics.Color.Companion.Cyan),
+            contentAlignment = Alignment.TopStart
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),//.background(androidx.compose.ui.graphics.Color.Companion.Red),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (!animOnce.component1() || loading.value != StartUpLoading.DONE) {
+                    Box(modifier = Modifier.fillMaxWidth().padding(vertical = 80.dp)) {
+                        AnimatedLogo(modifier = Modifier.align(Alignment.Center), onAnimatedOnce = animOnce.component2())
+                    }
+                }
+                when (loading.value) {
+                    StartUpLoading.START -> Text("Typetrainer is starting.")
+                    StartUpLoading.NETWORK -> Text("Starting the servers.")
+                    StartUpLoading.DATABASE -> Text("Spinning up database.")
+                    StartUpLoading.DONE -> {
+                        if (animOnce.value) {
+                            afterStartUp.invoke(server)
+                        }
+                    }
                 }
             }
         }
