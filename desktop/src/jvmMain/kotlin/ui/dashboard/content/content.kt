@@ -2,8 +2,11 @@
 
 package ui.dashboard.content
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +22,9 @@ import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.SentimentVerySatisfied
 import androidx.compose.material.icons.filled.Stars
+import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
@@ -27,9 +32,13 @@ import com.github.jan222ik.common.ui.util.router.Router
 import ui.components.filling_layout_with_spacer.CustomLayoutHeightWithCenterSpace
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.HoverIconDashboardCard
-import ui.exercise.TypingOptions
+import ui.dashboard.StreakAPI
 import ui.general.WindowRouterAmbient
+import ui.util.i18n.LanguageAmbient
+import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
+import java.time.LocalDate
+import java.time.format.TextStyle
 
 private const val iconFraction = .75f
 private const val halfIconFraction = .5f
@@ -157,7 +166,40 @@ private fun RightColumn(router: Router<ApplicationRoutes>) {
         BaseDashboardCard(
             modifier = doubleCard
         ) {
-            Text("Calendar Placeholder")
+            val streakapi = StreakAPI()
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        modifier = Modifier.size(64.dp),
+                        imageVector = Icons.Filled.Whatshot,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary
+                    )
+                    Text(
+                        text = streakapi.calcStreaks().toString() + " " + +RequiresTranslationI18N("Days"),
+                        style = MaterialTheme.typography.h5
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        modifier = Modifier.padding(paddingValues = PaddingValues(start = 10.dp)),
+                        text = +RequiresTranslationI18N("Streak"),
+                        style = MaterialTheme.typography.h6
+                    )
+                    Text(
+                        modifier = Modifier.padding(end = 27.dp),
+                        text = LocalDate.now().month
+                            .getDisplayName(TextStyle.FULL, LanguageAmbient.current.language.locale)
+                                + ", " + LocalDate.now().year,
+                        style = MaterialTheme.typography.h6
+                    )
+                }
+                Spacer(modifier = Modifier.size(20.dp))
+                StreakCalendar()
+            }
         }
         CustomLayoutHeightWithCenterSpace(
             centralPadding = padding.div(2),

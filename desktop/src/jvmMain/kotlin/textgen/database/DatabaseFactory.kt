@@ -13,8 +13,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 object DatabaseFactory {
     lateinit var dataSource: HikariDataSource
@@ -23,6 +26,7 @@ object DatabaseFactory {
         val datasource = hikari()
         Database.connect(datasource)
         transaction {
+            SchemaUtils.drop(DbHistorys, DbTextsEnglish, DbTextsGerman)
             SchemaUtils.create(DbHistorys)
             SchemaUtils.create(DbTextsEnglish)
             SchemaUtils.create(DbTextsGerman)
@@ -32,6 +36,16 @@ object DatabaseFactory {
                 }
                 DbTextsGerman.insert {
                     it[content] = "GER" + i.toString().repeat(15)
+                }
+            }
+            for(i in 0..45){
+                if(Random.nextInt(100) < 25){
+                    DbHistory.new {
+                        val today = LocalDate.now()
+                        timestamp = LocalDateTime.of(today.minusDays(i.toLong()), LocalTime.MIDNIGHT)
+                            .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                        dataJson = ExposedBlob("{}".toByteArray())
+                    }
                 }
             }
         }
