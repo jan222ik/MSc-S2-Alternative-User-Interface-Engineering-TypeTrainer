@@ -14,8 +14,6 @@ import util.RandomUtil
 
 object RandomKnownTextGenerator : IGenerator<RandomKnownTextGenerator.RandomKnownTextOptions> {
     override fun create(options: RandomKnownTextOptions): ContinuousGenerator {
-        DatabaseFactory.initWithDemoData()
-
         val table = when (options.language) {
             LanguageDefinition.English -> DbTextsEnglish
             LanguageDefinition.German -> DbTextsGerman

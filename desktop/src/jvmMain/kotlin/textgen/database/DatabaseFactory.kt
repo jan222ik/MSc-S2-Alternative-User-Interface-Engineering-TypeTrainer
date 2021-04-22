@@ -1,5 +1,7 @@
 package textgen.database
 
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.serialization.encodeToString
@@ -13,6 +15,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
+import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -31,12 +34,27 @@ object DatabaseFactory {
             SchemaUtils.create(DbTextsEnglish)
             SchemaUtils.create(DbTextsGerman)
             for (i in 0 until 100) {
-                DbTextsEnglish.insert {
-                    it[content] = "ENG" + i.toString().repeat(15)
-                }
                 DbTextsGerman.insert {
                     it[content] = "GER" + i.toString().repeat(15)
                 }
+            }
+            val file = File("src/jvmMain/resources/kaggle_poem_dataset.csv")
+            println(file.absolutePath)
+            try {
+
+                csvReader().open(file) {
+                    readAllWithHeaderAsSequence().forEach { csv ->
+                        println("csv = ${csv}")
+                        val toString = csv["Content"].toString()
+                        if (toString.length <= 400) {
+                            DbTextsEnglish.insert {
+                                it[content] = toString
+                            }
+                        }
+                    }
+                }
+            } catch (e: CSVFieldNumDifferentException) {
+                e.printStackTrace()
             }
             for(i in 0..45){
                 if(Random.nextInt(100) < 25){
@@ -54,7 +72,6 @@ object DatabaseFactory {
     fun start() {
         val datasource = hikari()
         Database.connect(datasource)
-        TODO("Use demo at the moment")
     }
 
     fun stop() {

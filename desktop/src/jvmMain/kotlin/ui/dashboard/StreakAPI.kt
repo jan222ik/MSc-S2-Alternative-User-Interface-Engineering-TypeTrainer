@@ -55,7 +55,7 @@ class StreakAPI {
                 .map { history -> history.timestampDate.value.toLocalDate() }
                 .distinct()
                 .sortedBy { it }
-            histories.forEach { println(it) }
+            //histories.forEach { println(it) }
             val result = mutableListOf<Pair<LocalDate, Boolean>>()
             var date = LocalDate.of(today().year, today().monthValue, 1)
 

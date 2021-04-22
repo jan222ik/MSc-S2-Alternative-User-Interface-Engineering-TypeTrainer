@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
-import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 
 private val IntToVector: TwoWayConverter<Int, AnimationVector1D> =
     TwoWayConverter({ AnimationVector1D(it.toFloat()) }, { it.value.toInt() })
@@ -212,16 +210,9 @@ fun AnimatedLogo2(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalAnimationApi::class)
 fun main() {
     Window {
-        TypeTrainerTheme {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colors.background
-            ) {
-                Box(Modifier.fillMaxSize()) {
-                    val animOnce = remember { mutableStateOf(false) }
-                    AnimatedLogo(modifier = Modifier.align(Alignment.Center), onAnimatedOnce = animOnce.component2())
-                }
-            }
+        Box(Modifier.fillMaxSize()) {
+            val animOnce = remember { mutableStateOf(false) }
+            AnimatedLogo(modifier = Modifier.align(Alignment.Center), onAnimatedOnce = animOnce.component2())
         }
     }
 }

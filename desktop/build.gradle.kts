@@ -65,6 +65,9 @@ kotlin {
                     //"WebcamCapture"
                 ).forEach{ implementation("org.boofcv:boofcv-$it:0.36") }
 
+                // CSV
+                implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
+
             }
         }
         val jvmTest by getting {

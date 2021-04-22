@@ -82,7 +82,7 @@ fun fillBoxes(n: Int, mod: Modifier) {
 
 @Composable
 fun CalendarWeek(maxHeight: Dp, practiceDays: List<Pair<LocalDate, Boolean>>) {
-    practiceDays.forEach { println("${it.first}  |  ${it.second}") }
+    //practiceDays.forEach { println("${it.first}  |  ${it.second}") }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         BoxWithConstraints {
             val minSpacer = 8.dp
