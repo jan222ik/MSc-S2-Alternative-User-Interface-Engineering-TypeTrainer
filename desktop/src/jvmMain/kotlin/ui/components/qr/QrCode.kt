@@ -29,7 +29,7 @@ fun QRCode(link: String = NetworkUtils.getAddress()) {
         drawIntoCanvas { canvas ->
             canvas.nativeCanvas.drawBitmapRect(
                 bitmap,
-                IRect(0, 0, bitmap.getWidth(), bitmap.getHeight()).toRect()
+                IRect(0, 0, bitmap.width, bitmap.height).toRect()
             )
         }
     }

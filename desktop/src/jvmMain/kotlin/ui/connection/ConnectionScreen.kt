@@ -10,26 +10,41 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import network.NDSServer
+import network.NDSState
 import network.Server
-import ui.components.qr.QRCode
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.ITypingOptions
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.RequiresTranslationI18N
 
 @Composable
-fun ConnectionQRCodeScreen(server: Server, trainingOptions: ITypingOptions) {
+fun ConnectionScreen(server: Server, trainingOptions: ITypingOptions) {
     val hasConnection = server.connectionStatus.collectAsState()
     val router = WindowRouterAmbient.current
+
     when (hasConnection.value) {
         true -> {
-            router.navTo(ApplicationRoutes.Exercise.Connection.SetupInstructions(trainingOptions = trainingOptions))
+            router.navTo(ApplicationRoutes.Exercise.Training(trainingOptions = trainingOptions))
         }
         false -> {
+            val ndsStateFlow = remember { MutableStateFlow(NDSState.STARTING) }
+            val nds = ndsStateFlow.collectAsState()
+
+            NDSServer.coroutineScope = rememberCoroutineScope()
+            rememberCoroutineScope().launch {
+                NDSServer.start(server)
+                ndsStateFlow.emit(NDSState.STARTED)
+            }
+
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
@@ -40,11 +55,21 @@ fun ConnectionQRCodeScreen(server: Server, trainingOptions: ITypingOptions) {
                         .padding(vertical = 16.dp)
                 ) {
                     Column {
-                        Text(+RequiresTranslationI18N("Scan to connect!"))
-                        QRCode()
+                        when (nds.value) {
+                            NDSState.STARTING -> Text(+RequiresTranslationI18N("Starting discovery ..."))
+                            NDSState.STARTED -> Text(+RequiresTranslationI18N("Waiting for companion connection ..."))
+                        }
+
                         TextButton(
                             onClick = {
-                                router.navTo(ApplicationRoutes.Exercise.Training(trainingOptions = trainingOptions.copyOptions(isCameraEnabled = false)))
+                                NDSServer.stop()
+                                router.navTo(
+                                    ApplicationRoutes.Exercise.Training(
+                                        trainingOptions = trainingOptions.copyOptions(
+                                            isCameraEnabled = false
+                                        )
+                                    )
+                                )
                             }
                         ) {
                             Text(+RequiresTranslationI18N("Or continue without hand tracking"))
@@ -55,3 +80,4 @@ fun ConnectionQRCodeScreen(server: Server, trainingOptions: ITypingOptions) {
         }
     }
 }
+

@@ -29,7 +29,7 @@ class Server {
     fun receivedMessage(id: String, readData: ByteArray) {
         val landmarks = Cbor.decodeFromByteArray<List<HandLandmark>>(readData)
         landmarks.forEach(::println)
-        // TODO do something with the data
+        // TODO something with the data
     }
 
     suspend fun disconnected(id: String, defaultWebSocketServerSession: DefaultWebSocketServerSession) {

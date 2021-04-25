@@ -24,7 +24,6 @@ dependencies {
     implementation("com.google.flogger:flogger-system-backend:$flogger_version")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.guava:guava:$guava_version")
-    implementation("com.google.guava:guava:$guava_version")
     implementation("com.google.protobuf:protobuf-java:3.11.4")
 
     // CameraX core library
@@ -39,6 +38,7 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:$ktor_version")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.1.0")
+    implementation("org.jmdns:jmdns:3.5.6")
 }
 
 android {

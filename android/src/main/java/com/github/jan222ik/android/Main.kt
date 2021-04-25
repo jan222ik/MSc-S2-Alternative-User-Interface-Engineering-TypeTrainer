@@ -31,12 +31,17 @@ fun mobileMain(activity: Activity) {
                 ) { current, router ->
                     when (current) {
                         MobileRoutes.Menu -> MobileMenu()
-                        MobileRoutes.Scanner -> CurrentlyMissing("Scanner")
-                        is MobileRoutes.Exercise -> HandTracking(activity)
+                        MobileRoutes.Scanner -> ConnectToPc()
+                        is MobileRoutes.Exercise -> {
+                            if(current.connection.canConnect)
+                                HandTracking(activity)
+                            else
+                                ConnectToPc()
+                        }
                         MobileRoutes.CameraSetup -> Column {
                             CurrentlyMissing("Camera Setup")
                             Button(onClick = {
-                                router.navTo(MobileRoutes.Exercise(Connection(Any())))
+                                router.navTo(MobileRoutes.Exercise(Connection()))
                             }) {
                                 Text("Exercise")
                             }

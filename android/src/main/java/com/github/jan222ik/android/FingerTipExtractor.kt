@@ -11,8 +11,6 @@ import kotlinx.coroutines.launch
 
 class FingerTipExtractor {
     companion object {
-        private val wsClient = WSClient()
-
         private const val THUMB_TIP = 4
         private const val INDEX_TIP = 8
         private const val MIDDLE_TIP = 12
@@ -22,7 +20,7 @@ class FingerTipExtractor {
         var lifecycle: LifecycleCoroutineScope? = null
             set(value) {
                 field = value
-                wsClient.connect(value!!, "ws://192.168.17.100:8080/ws")
+                WSClient.connect(value!!)
             }
 
         @OptIn(ExperimentalCoroutinesApi::class)
@@ -50,7 +48,7 @@ class FingerTipExtractor {
             }
 
             lifecycle!!.launch {
-                wsClient.landmarks.emit(hands)
+                WSClient.landmarks.emit(hands)
             }
         }
     }

@@ -1,5 +1,6 @@
 package network
 
+import com.github.jan222ik.common.network.ServerConfig
 import io.ktor.application.Application
 import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.call
@@ -47,7 +48,7 @@ class ServerApplication(private val server: Server) {
         }
 
         routing {
-            webSocket("/ws") {
+            webSocket(ServerConfig.ROUTE_WEBSOCKET) {
                 val session = call.sessions.get<SocketSession>()
 
                 if (session == null) {
@@ -70,7 +71,7 @@ class ServerApplication(private val server: Server) {
                     server.disconnected(session.id, this)
                 }
             }
-            get("/test") {
+            get(ServerConfig.ROUTE_TEST) {
                 println("Requested test")
                 val testConnect = server.testConnect("test")
                 call.respond(if (!testConnect) "Connected" else "Disconnected")

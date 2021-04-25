@@ -2,11 +2,9 @@
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.desktop.AppManager
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +27,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.network.ServerConfig
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -42,7 +41,7 @@ import network.Server
 import network.ServerApplication
 import textgen.database.DatabaseFactory
 import ui.components.AnimatedLogo
-import ui.connection.ConnectionQRCodeScreen
+import ui.connection.ConnectionScreen
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
 import ui.exercise.practice.PracticeScreen
@@ -112,7 +111,7 @@ fun main() {
                                     is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
                                     ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection()
                                     is ApplicationRoutes.Exercise.Connection.QRCode ->
-                                        ConnectionQRCodeScreen(
+                                        ConnectionScreen(
                                             server = server,
                                             trainingOptions = current.trainingOptions
                                         )
@@ -152,7 +151,7 @@ fun StartupApplication(scale: Pair<Float, Float>, afterStartUp: @Composable (ser
             loadingStateFlow.emit(StartUpLoading.DATABASE)
             DatabaseFactory.initWithDemoData()
             loadingStateFlow.emit(StartUpLoading.NETWORK)
-            engine = embeddedServer(Netty, port = 8080) {
+            engine = embeddedServer(Netty, port = ServerConfig.PORT) {
                 ServerApplication(server).apply { create() }
             }.start(wait = false)
             loadingStateFlow.emit(StartUpLoading.DONE)

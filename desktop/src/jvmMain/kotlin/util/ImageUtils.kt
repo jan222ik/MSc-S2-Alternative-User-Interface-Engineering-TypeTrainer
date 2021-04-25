@@ -3,7 +3,6 @@ package util
 import org.jetbrains.skija.Bitmap
 import org.jetbrains.skija.ColorAlphaType
 import org.jetbrains.skija.ImageInfo
-import java.awt.Color
 import java.awt.image.BufferedImage
 
 object ImageUtils {

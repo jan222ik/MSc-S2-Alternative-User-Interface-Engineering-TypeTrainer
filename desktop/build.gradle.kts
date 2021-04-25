@@ -11,7 +11,6 @@ plugins {
 group = "com.github.jan222ik"
 version = "1.0"
 
-
 kotlin {
     jvm {
         compilations.all {
@@ -45,10 +44,12 @@ kotlin {
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
                 implementation("com.zaxxer:HikariCP:$hikariCpVersion")
 
-                // Ktor Server & REST & Websocket
+                // Networking - Ktor Server & REST & Websocket
                 val ktorVersion = "1.3.2"
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-websockets:$ktorVersion")
+                implementation("org.jmdns:jmdns:3.5.6")
+
                 // Logger
                 val logbackVersion = "1.2.3"
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
@@ -63,11 +64,10 @@ kotlin {
                     "swing",
                     "kotlin"//,
                     //"WebcamCapture"
-                ).forEach{ implementation("org.boofcv:boofcv-$it:0.36") }
+                ).forEach { implementation("org.boofcv:boofcv-$it:0.36") }
 
                 // CSV
                 implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
-
             }
         }
         val jvmTest by getting {
