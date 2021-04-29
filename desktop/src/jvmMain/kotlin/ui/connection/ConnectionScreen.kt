@@ -24,7 +24,7 @@ import network.Server
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.ITypingOptions
 import ui.general.WindowRouterAmbient
-import ui.util.i18n.RequiresTranslationI18N
+import ui.util.i18n.i18n
 
 @Composable
 fun ConnectionScreen(server: Server, trainingOptions: ITypingOptions) {
@@ -56,8 +56,8 @@ fun ConnectionScreen(server: Server, trainingOptions: ITypingOptions) {
                 ) {
                     Column {
                         when (nds.value) {
-                            NDSState.STARTING -> Text(+RequiresTranslationI18N("Starting discovery ..."))
-                            NDSState.STARTED -> Text(+RequiresTranslationI18N("Waiting for companion connection ..."))
+                            NDSState.STARTING -> Text(+i18n.str.exercise.connection.ndsStarting)
+                            NDSState.STARTED -> Text(+i18n.str.exercise.connection.ndsStarting)
                         }
 
                         TextButton(
@@ -72,7 +72,7 @@ fun ConnectionScreen(server: Server, trainingOptions: ITypingOptions) {
                                 )
                             }
                         ) {
-                            Text(+RequiresTranslationI18N("Or continue without hand tracking"))
+                            Text(+i18n.str.exercise.connection.continueWithoutHandtracking)
                         }
                     }
                 }

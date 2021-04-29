@@ -19,13 +19,13 @@ object NDSDiscovery {
         val jmdns = JmDNS.create(getLocalWifiIpAddress(), NDService.SERVICE_NAME)
         jmdns.addServiceListener(
             NDService.SERVICE_TYPE,
-            SampleListener(callback) {
+            ConnectionListener(callback) {
                 jmdns.unregisterAllServices()
                 jmdns.close()
             })
     }
 
-    private class SampleListener(externCallback: (ip: String) -> Unit, stopCall: () -> Unit) : ServiceListener {
+    private class ConnectionListener(externCallback: (ip: String) -> Unit, stopCall: () -> Unit) : ServiceListener {
         val callback: (value: String) -> Unit = externCallback
         val stop: () -> Unit = stopCall
 
@@ -36,7 +36,6 @@ object NDSDiscovery {
         }
 
         override fun serviceResolved(event: ServiceEvent) {
-            println("BOING-----------------------------------------------")
             callback(event.info.hostAddresses!![0])
             stop
         }

@@ -95,6 +95,14 @@ sealed class i18n {
                     val returnToDashboard = "returnToDashboard".i18Key()
                 }
             }
+
+            object connection : exercise(){
+                override val path: String = super.path + ".connection"
+
+                val ndsStarting = "nds_starting".i18Key()
+                val ndsStarted = "nds_started".i18Key()
+                val continueWithoutHandtracking : KeyI18N= "continue_without_handtracking".i18Key()
+            }
         }
 
     }
