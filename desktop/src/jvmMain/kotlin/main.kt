@@ -50,6 +50,7 @@ import ui.exercise.selection.ExerciseSelection
 import ui.general.WindowRouter
 import ui.general.window.container.WindowContainer
 import ui.history.HistoryScreen
+import ui.util.debug.Debug
 import ui.util.debug.DebugWithAllRoutes
 import ui.util.debug.ifDebug
 import ui.util.i18n.LanguageConfiguration
@@ -67,7 +68,7 @@ fun main() {
         println("-".repeat(80))
     }
     val initSize = IntSize(width = 1920, height = 1080)
-    Window(size = initSize) {
+    Window(size = initSize, undecorated = !Debug.isDebug) {
         val applicationScale = remember { mutableStateOf(1f to 1f) }
         /*
         LocalAppWindow.current.apply {
