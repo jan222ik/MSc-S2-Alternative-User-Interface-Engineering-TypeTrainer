@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.skija.Color4f
 import org.jetbrains.skija.TextLine
 
 class SimpleXAxisDrawer(
@@ -67,6 +68,7 @@ class SimpleXAxisDrawer(
         }
     }
 
+    @OptIn(ExperimentalUnsignedTypes::class)
     override fun drawAxisLabels(
         drawScope: DrawScope,
         canvas: Canvas,
@@ -82,7 +84,8 @@ class SimpleXAxisDrawer(
 
              */
             val labelPaint = org.jetbrains.skija.Paint().apply {
-
+                val (r, g, b, a) = labelTextColor
+                color4f = Color4f(r, g, b, a)
             }
 
             val labelIncrements = drawableArea.width / (labels.size - 1)

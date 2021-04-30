@@ -38,7 +38,7 @@ object DatabaseFactory {
                     it[content] = "GER" + i.toString().repeat(15)
                 }
             }
-            val file = File("src/jvmMain/resources/kaggle_poem_dataset.csv")
+            val file = File("desktop/src/jvmMain/resources/kaggle_poem_dataset.csv")
             println(file.absolutePath)
             try {
 

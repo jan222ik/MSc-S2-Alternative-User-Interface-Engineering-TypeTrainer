@@ -66,7 +66,7 @@ fun main() {
         ui.util.i18n.main()
         println("-".repeat(80))
     }
-    val initSize = IntSize(width = 1280, height = 720)
+    val initSize = IntSize(width = 1920, height = 1080)
     Window(size = initSize) {
         val applicationScale = remember { mutableStateOf(1f to 1f) }
         /*
@@ -149,7 +149,8 @@ fun StartupApplication(scale: Pair<Float, Float>, afterStartUp: @Composable (ser
         var engine: NettyApplicationEngine? = null
         startUpScope.launch(Dispatchers.IO) {
             loadingStateFlow.emit(StartUpLoading.DATABASE)
-            DatabaseFactory.initWithDemoData()
+            //DatabaseFactory.initWithDemoData()
+            DatabaseFactory.start()
             loadingStateFlow.emit(StartUpLoading.NETWORK)
             engine = embeddedServer(Netty, port = ServerConfig.PORT) {
                 ServerApplication(server).apply { create() }

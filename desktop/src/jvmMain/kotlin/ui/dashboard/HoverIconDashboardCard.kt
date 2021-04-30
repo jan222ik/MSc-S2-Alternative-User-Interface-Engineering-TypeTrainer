@@ -3,6 +3,7 @@
 package ui.dashboard
 
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +30,7 @@ fun HoverIconDashboardCard(
     hoverColor: Color = MaterialTheme.colors.primary,
     onClick: () -> Unit,
     text: @Composable BoxScope.() -> Unit,
-    icon: @Composable BoxScope.() -> Unit
+    icon: @Composable BoxWithConstraintsScope.() -> Unit
 ) {
     val hover = remember { mutableStateOf(false) }
 
