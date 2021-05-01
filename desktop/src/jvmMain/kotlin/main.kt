@@ -49,6 +49,7 @@ import ui.exercise.results.ResultsScreen
 import ui.exercise.selection.ExerciseSelection
 import ui.general.WindowRouter
 import ui.general.window.container.WindowContainer
+import ui.goals.GoalComposeScreen
 import ui.history.HistoryScreen
 import ui.util.debug.Debug
 import ui.util.debug.DebugWithAllRoutes
@@ -123,7 +124,7 @@ fun main() {
                                         current.initialPage
                                     )
                                     ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
-                                    ApplicationRoutes.Goals.Compose -> Text("Missing Screen: " + +current.title)
+                                    ApplicationRoutes.Goals.Compose -> GoalComposeScreen()
                                     ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
                                     ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
                                     ApplicationRoutes.History -> HistoryScreen()
