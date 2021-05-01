@@ -36,7 +36,7 @@ fun IconDashboardCard(
     bgColor: Color = MaterialTheme.colors.background,
     onClick: () -> Unit,
     text: @Composable BoxScope.() -> Unit,
-    icon: @Composable BoxWithConstraintsScope.() -> Unit
+    icon: @Composable BoxScope.() -> Unit
 ) {
     val hover = remember { mutableStateOf(false) }
 
@@ -59,7 +59,7 @@ fun IconDashboardCard(
                     ) {
                         text.invoke(this)
                     }
-                    BoxWithConstraints(
+                    Box(
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                             .fillMaxWidth(),

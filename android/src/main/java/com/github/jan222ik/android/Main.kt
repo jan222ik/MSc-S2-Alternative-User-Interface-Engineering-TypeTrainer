@@ -19,9 +19,10 @@ import com.github.jan222ik.common.ui.router.Connection
 import com.github.jan222ik.common.ui.router.MobileRouter
 import com.github.jan222ik.common.ui.router.MobileRouterAmbient
 import com.github.jan222ik.common.ui.router.MobileRoutes
+import com.github.jan222ik.common.ui.util.router.Router
 
 @Composable
-fun mobileMain(activity: Activity) {
+fun mobileMain(activity: Activity, supplyRouter: @Composable (Router<MobileRoutes>) -> Unit) {
     TypeTrainerTheme {
         Surface(color = MaterialTheme.colors.background) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -29,6 +30,7 @@ fun mobileMain(activity: Activity) {
                 MobileRouter(
                     initialRoute = initialRoute
                 ) { current, router ->
+                    supplyRouter(router)
                     when (current) {
                         MobileRoutes.Menu -> MobileMenu()
                         MobileRoutes.Scanner -> ConnectToPc()

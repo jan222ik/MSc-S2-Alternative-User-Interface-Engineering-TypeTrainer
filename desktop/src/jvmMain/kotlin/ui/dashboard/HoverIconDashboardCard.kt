@@ -30,7 +30,7 @@ fun HoverIconDashboardCard(
     hoverColor: Color = MaterialTheme.colors.primary,
     onClick: () -> Unit,
     text: @Composable BoxScope.() -> Unit,
-    icon: @Composable BoxWithConstraintsScope.() -> Unit
+    icon: @Composable BoxScope.() -> Unit
 ) {
     val hover = remember { mutableStateOf(false) }
 
