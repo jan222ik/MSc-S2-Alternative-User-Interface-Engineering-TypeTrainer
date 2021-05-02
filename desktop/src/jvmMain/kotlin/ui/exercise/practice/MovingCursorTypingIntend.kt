@@ -23,7 +23,7 @@ class MovingCursorTypingIntend(
     typingOptions: ITypingOptions
 ) : PracticeIntendImpl(typingOptions = typingOptions), ITextDisplayPracticeIntend {
 
-    val exerciseEvaluation = ExerciseEvaluation()
+    override val exerciseEvaluation = ExerciseEvaluation()
     lateinit var textEvaluation: TextEvaluation
 
     override val result: ExerciseEvaluation

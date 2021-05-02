@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +49,7 @@ import ui.exercise.ExerciseMode
 import ui.exercise.ITypingOptions
 import ui.exercise.TypingOptions
 import ui.exercise.practice.text.MovingCursorTyping
+import ui.exercise.practice.text.MovingTextTyping
 import ui.general.WindowRouterAmbient
 import ui.util.debug.ifDebugCompose
 import ui.util.i18n.LanguageDefinition
@@ -66,33 +69,44 @@ fun PracticeScreen(typingOptions: ITypingOptions) {
         )
     )
      */
-    val intend = remember(typingOptions) { MovingCursorTypingIntend(typingOptions = typingOptions) }
+    val mode = remember { mutableStateOf(0) }
+    val intend = remember(mode.value, typingOptions) {
+        when (mode.value) {
+            1 -> MovingCursorTypingIntend(typingOptions = typingOptions)
+            2 -> MovingTextTypingIntend(typingOptions = typingOptions)
+            else -> null
+        }
+    }
     DisposableEffect(intend) {
         onDispose {
-            intend.cancelRunningJobs()
+            intend?.cancelRunningJobs()
         }
     }
     val localWindow = LocalAppWindow.current
-    ifDebugCompose {
-        DisposableEffect(intend) {
-            var closeWindow: (() -> Unit)? = null
-            PracticeScreenDebuggable(
-                intend = intend as IDebugPracticeIntend,
-                parentWindowLocation = IntOffset(localWindow.x, localWindow.y),
-                parentWindowWidth = localWindow.width,
-                parentWindowHeight = localWindow.height,
-                windowClose = {
-                    closeWindow = it
-                    localWindow.events.onClose = it
-                }
-            )
+    if (intend != null) {
+        ifDebugCompose {
+            DisposableEffect(intend) {
+                var closeWindow: (() -> Unit)? = null
+                PracticeScreenDebuggable(
+                    intend = intend as IDebugPracticeIntend,
+                    parentWindowLocation = IntOffset(localWindow.x, localWindow.y),
+                    parentWindowWidth = localWindow.width,
+                    parentWindowHeight = localWindow.height,
+                    windowClose = {
+                        closeWindow = it
+                        localWindow.events.onClose = it
+                    }
+                )
 
-            onDispose {
-                closeWindow?.invoke()
+                onDispose {
+                    closeWindow?.invoke()
+                }
             }
         }
+        PracticeScreenContent(intend)
+    } else {
+        SelectTypingMode(mode)
     }
-    PracticeScreenContent(intend)
 }
 
 @Composable
@@ -152,12 +166,46 @@ private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
             Column(
                 modifier = Modifier.align(Alignment.Center).fillMaxSize()
             ) {
-                MovingCursorTyping(intend)
+                when (intend) {
+                    is MovingCursorTypingIntend -> MovingCursorTyping(intend)
+                    is MovingTextTypingIntend -> MovingTextTyping(intend)
+                }
             }
         }
         if (intend.isCameraEnabled.value) {
             // collapsable video feed
             VideoFeedExpanding(title = "Video Feed")
+        }
+    }
+
+}
+
+@Composable
+fun SelectTypingMode(mode: MutableState<Int>) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
+        Card(
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            Row {
+                Button(
+                    onClick = {
+                        mode.value = 1
+                    }
+                ) {
+                    Text("Moving Cursor Typing")
+                }
+                Button(
+                    onClick = {
+                        mode.value = 2
+                    }
+                ) {
+                    Text("Moving Text Typing")
+                }
+            }
         }
     }
 

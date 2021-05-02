@@ -153,46 +153,5 @@ fun MovingCursorTyping2(intend: ITextDisplayPracticeIntend) {
 }
 
 
-fun handleInput(
-    intend: ITextDisplayPracticeIntend,
-    scope: CoroutineScope,
-    clockState: IPracticeIntend.TypingClockState,
-    event: KeyEvent
-) {
-    val char = event.nativeKeyEvent.keyChar
-    if (char != '￿') {
-        when (clockState) {
-            IPracticeIntend.TypingClockState.ACTIVE -> {
-                scope.launch(Dispatchers.IO) {
-                    intend.checkChar(char)
-                }
-            }
-            IPracticeIntend.TypingClockState.PREVIEW -> {
-                scope.launch(Dispatchers.IO) {
-                    intend.start()
-                    intend.checkChar(char)
-                }
-            }
-            IPracticeIntend.TypingClockState.FINISHED -> Unit
-        }
-    } else {
-        ifDebug {
-            println("Unknown Key pressed!")
-        }
-    }
-}
 
-@Composable
-fun t(text: MutableState<String>) {
-    TextField( // TODO Change to Text with focus
-        modifier = Modifier.onKeyEvent {
-            if (it.type == KeyEventType.KeyDown) {
-                println("Pressed $it")
-            }
-            false
-        },
-        value = TextFieldValue(text.value),
-        onValueChange = {}
-    )
-}
 

@@ -19,11 +19,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.concurrent.fixedRateTimer
 
-class MovingCursorTypingIntendOLD(
+class MovingTextTypingIntend(
     typingOptions: ITypingOptions
 ) : PracticeIntendImpl(typingOptions = typingOptions), ITextDisplayPracticeIntend {
 
-    val exerciseEvaluation = ExerciseEvaluation()
+    override val exerciseEvaluation = ExerciseEvaluation()
     lateinit var textEvaluation: TextEvaluation
 
     override val result: ExerciseEvaluation
@@ -71,7 +71,7 @@ class MovingCursorTypingIntendOLD(
                 )
             )
             _textTyped.emit(_textTyped.value + currentChar)
-            _textFuture.emit(" " + _textFuture.value.removeRange(0, 1))
+            _textFuture.emit(_textFuture.value.removeRange(0, 1))
             _textCurrent.emit(currSpace + textStateFlow.value[inTextIndex])
             currSpace += " "
             inTextIndex++

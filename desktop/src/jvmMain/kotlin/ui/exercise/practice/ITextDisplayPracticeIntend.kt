@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.StateFlow
 import textgen.error.ExerciseEvaluation
 
 interface ITextDisplayPracticeIntend : IPracticeIntend {
+    val exerciseEvaluation: ExerciseEvaluation
+
     val textStateFlow: StateFlow<String>
     val currentIsError: StateFlow<Boolean>
 

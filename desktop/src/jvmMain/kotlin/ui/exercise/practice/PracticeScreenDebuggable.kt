@@ -246,7 +246,7 @@ fun PracticeScreenDebuggable(
                                 val (periodMs, setPeriodMs) = remember { mutableStateOf("30") }
                                 val clockState = intend.typingClockStateStateFlow.collectAsState()
                                 if (clockState.value == IPracticeIntend.TypingClockState.FINISHED) {
-                                    val movingCursorTypingIntend = intend as MovingCursorTypingIntend
+                                    val movingCursorTypingIntend = intend
                                     println(movingCursorTypingIntend.exerciseEvaluation)
                                     Window {
                                         val data = LineChartData(
