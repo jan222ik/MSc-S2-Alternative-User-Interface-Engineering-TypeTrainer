@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.RequiresTranslationI18N
+import ui.util.i18n.i18n
 import kotlin.math.roundToInt
 
 @Composable
@@ -32,13 +34,55 @@ fun GoalComposeScreen() {
     val router = WindowRouterAmbient.current
     GoalComposeScreenLayout(
         form = {
-
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = +i18n.str.debug.notImplementedYet,
+                style = MaterialTheme.typography.h2
+            )
         },
         goodGoalDescription = {
-
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = +RequiresTranslationI18N("What makes a good goal ?"),
+                    style = MaterialTheme.typography.h4
+                )
+                Text(
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    text = +RequiresTranslationI18N(
+                        """Think about what you want to achieve, and commit to it.
+                        | To maintain motivation a goal should be tangible. 
+                        | Thus, the goals need to be specific, measurable, attainable, 
+                        | relevant and time-bound. (SMART- Goals)""".trimMargin().replace("\n", "")
+                    ),
+                    style = MaterialTheme.typography.h5
+                )
+            }
         },
         goalInWords = {
-
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = +RequiresTranslationI18N("Your Goal in Words:"),
+                    style = MaterialTheme.typography.h4,
+                    color = MaterialTheme.colors.primary
+                )
+                Text(
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    text = +RequiresTranslationI18N(
+                        """Your Goal of type ‘IncreaseTyping Speed’ provides you with a speed progress tracking.
+                            | The Goal is to increase your speed by ‘1’ Words
+                            |  per Minute within the next  7 Days.""".trimMargin().replace("\n", "")
+                    ),
+                    style = MaterialTheme.typography.h5
+                )
+            }
         },
         createButton = {
             Button(
@@ -76,17 +120,17 @@ private fun GoalComposeScreenLayout(
                 BaseDashboardCard(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    BoxWithConstraints(content = form)
+                    BoxWithConstraints(modifier = Modifier.fillMaxSize(), content = form)
                 }
                 BaseDashboardCard(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    BoxWithConstraints(content = goodGoalDescription)
+                    BoxWithConstraints(modifier = Modifier.fillMaxSize(), content = goodGoalDescription)
                 }
                 BaseDashboardCard(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    BoxWithConstraints(content = goalInWords)
+                    BoxWithConstraints(modifier = Modifier.fillMaxSize(), content = goalInWords)
                 }
                 Row(
                     modifier = Modifier.padding(vertical = 32.dp, horizontal = 24.dp),

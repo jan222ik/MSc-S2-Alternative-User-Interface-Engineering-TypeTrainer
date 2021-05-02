@@ -15,6 +15,11 @@ sealed class i18n {
             val name: KeyI18N = "app_name".i18Key()
         }
 
+        object debug : str() {
+            override val path: String = "debug"
+            val notImplementedYet: KeyI18N = "not_implemented_yet".i18Key()
+        }
+
         sealed class dashboard : str() {
             override val path: String = "dashboard"
 
