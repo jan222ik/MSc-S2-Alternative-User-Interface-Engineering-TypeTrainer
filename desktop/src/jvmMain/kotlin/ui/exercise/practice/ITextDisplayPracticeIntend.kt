@@ -8,7 +8,10 @@ interface ITextDisplayPracticeIntend : IPracticeIntend {
     val currentIsError: StateFlow<Boolean>
 
     val textTyped: StateFlow<String>
+    val textTypedIndex: StateFlow<Int>
+
     val textCurrent: StateFlow<String>
+
     val textFuture: StateFlow<String>
 
     val result: ExerciseEvaluation

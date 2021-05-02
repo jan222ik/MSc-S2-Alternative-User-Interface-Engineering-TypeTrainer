@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.concurrent.fixedRateTimer
 
-class MovingCursorTypingIntend(
+class MovingCursorTypingIntendOLD(
     typingOptions: ITypingOptions
 ) : PracticeIntendImpl(typingOptions = typingOptions), ITextDisplayPracticeIntend {
 
@@ -38,26 +38,29 @@ class MovingCursorTypingIntend(
     override val currentIsError: StateFlow<Boolean>
         get() = _currentIsError
 
-    private val _textTypedIndex = MutableStateFlow(0)
-    override val textTypedIndex: StateFlow<Int>
-        get() = _textTypedIndex
-
+    private val _textTyped = MutableStateFlow("")
     override val textTyped: StateFlow<String>
+        get() = _textTyped
+
+    override val textTypedIndex: StateFlow<Int>
         get() = throw NotImplementedError()
 
+    private val _textCurrent = MutableStateFlow("")
     override val textCurrent: StateFlow<String>
-        get() = throw NotImplementedError()
+        get() = _textCurrent
 
+    private val _textFuture = MutableStateFlow("")
     override val textFuture: StateFlow<String>
-        get() = throw NotImplementedError()
+        get() = _textFuture
 
 
 
     var inTextIndex: Int = 1
+    var currSpace = ""
     var endOfTextIndex = 0
 
     override suspend fun checkChar(char: Char) {
-        val currentChar = textStateFlow.value[inTextIndex]
+        val currentChar = textCurrent.value.last()
         println("Char: $char - Current Expected: $currentChar")
         if (char == currentChar) {
             _currentIsError.compareAndSet(expect = true, update = false)
@@ -67,11 +70,14 @@ class MovingCursorTypingIntend(
                     expected = inTextIndex.dec()
                 )
             )
+            _textTyped.emit(_textTyped.value + currentChar)
+            _textFuture.emit(" " + _textFuture.value.removeRange(0, 1))
+            _textCurrent.emit(currSpace + textStateFlow.value[inTextIndex])
+            currSpace += " "
             inTextIndex++
-            _textTypedIndex.emit(inTextIndex)
             println("inTextIndex = $inTextIndex endOfTextIndex = $endOfTextIndex")
             if (inTextIndex == endOfTextIndex) {
-                println("End of text reached!")
+                println("True")
                 nextText()
             }
         } else {
@@ -91,10 +97,13 @@ class MovingCursorTypingIntend(
         textEvaluation = TextEvaluation(text = text)
         exerciseEvaluation.texts.add(textEvaluation)
         inTextIndex = 1
+        currSpace = ""
         endOfTextIndex = textStateFlow.value.length
         GlobalScope.launch {
             _currentIsError.emit(false)
-            _textTypedIndex.emit(0)
+            _textTyped.emit("")
+            _textCurrent.emit(text.first().toString())
+            _textFuture.emit(text.removeRange(0, 1))
         }
     }
 
@@ -122,7 +131,7 @@ class MovingCursorTypingIntend(
                         count = 0
                         nextErrAt = 4 + rand()
                         'π'
-                    } else textStateFlow.value[inTextIndex]
+                    } else textCurrent.value.last()
                     GlobalScope.launch(Dispatchers.IO) {
                         checkChar(char)
                     }
