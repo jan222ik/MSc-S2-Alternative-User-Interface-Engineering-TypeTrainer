@@ -1,3 +1,7 @@
+@file:Suppress("FunctionName")
+
+package _learn
+
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
