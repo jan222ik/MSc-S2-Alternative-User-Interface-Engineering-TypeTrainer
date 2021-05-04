@@ -74,7 +74,7 @@ fun MovingCursorTyping(intend: ITextDisplayPracticeIntend) {
                 val incIdx = idx.inc()
                 val content = when {
                     str[idx] == '\n' -> str.replaceRange(idx .. idx, "\u2BB0\n")
-                    str[incIdx] == '\n' -> str.replaceRange(incIdx..incIdx, "\u2BB0\n")
+                    str.length != incIdx && str[incIdx] == '\n' -> str.replaceRange(incIdx..incIdx, "\u2BB0\n")
                     else -> str
                 }
                 this.append(content)

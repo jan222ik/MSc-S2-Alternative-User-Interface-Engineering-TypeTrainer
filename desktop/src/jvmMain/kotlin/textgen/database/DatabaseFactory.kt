@@ -33,20 +33,22 @@ object DatabaseFactory {
             SchemaUtils.create(DbHistorys)
             SchemaUtils.create(DbTextsEnglish)
             SchemaUtils.create(DbTextsGerman)
-            for (i in 0 until 100) {
-                DbTextsGerman.insert {
-                    it[content] = "GER" + i.toString().repeat(15)
-                }
-            }
-            val file = File("desktop/src/jvmMain/resources/kaggle_poem_dataset.csv")
-            println(file.absolutePath)
-            try {
 
-                csvReader().open(file) {
+            var file = File("desktop/src/jvmMain/resources/literature_eng.csv")
+            try {
+                val csvReader = csvReader {
+                    delimiter = ';'
+                    escapeChar = '\\'
+                }
+                csvReader.open(file) {
                     readAllWithHeaderAsSequence().forEach { csv ->
                         println("csv = ${csv}")
-                        val toString = csv["Content"].toString()
-                        if (toString.length <= 400) {
+                        var toString = csv["Content"].toString()
+
+//                        toString = toString.replace(regex = Regex("^$\r\n"), replacement = "")
+//                        toString = toString.replace(regex = Regex("\r\n"), replacement = " ")
+
+                        if (toString.length <= 400 || true) {
                             DbTextsEnglish.insert {
                                 it[content] = toString
                             }
@@ -56,6 +58,33 @@ object DatabaseFactory {
             } catch (e: CSVFieldNumDifferentException) {
                 e.printStackTrace()
             }
+
+            file = File("desktop/src/jvmMain/resources/literature_ger.csv")
+            try {
+                val csvReader = csvReader {
+                    delimiter = ';'
+                    escapeChar = '\\'
+                }
+                csvReader.open(file) {
+                    readAllWithHeaderAsSequence().forEach { csv ->
+                        println("csv = ${csv}")
+                        var toString = csv["Content"].toString()
+
+//                        toString = toString.replace(regex = Regex("^$\r\n"), replacement = "")
+//                        toString = toString.replace(regex = Regex("\r\n"), replacement = " ")
+
+                        if (toString.length <= 400 || true) {
+                            DbTextsGerman.insert {
+                                it[content] = toString
+                            }
+                        }
+                    }
+                }
+            } catch (e: CSVFieldNumDifferentException) {
+                e.printStackTrace()
+            }
+
+
             for(i in 0..45){
                 if(Random.nextInt(100) < 25){
                     DbHistory.new {
