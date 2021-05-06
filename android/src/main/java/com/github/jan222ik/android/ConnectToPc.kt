@@ -19,9 +19,7 @@ fun ConnectToPc() {
     NDSDiscovery.start(callback = {
         coroutineScope.launch(Dispatchers.IO) {
             if (WSClient.canConnect(it)) {
-                println("BOING-test-connection-successful-$it---------------------------------------------")
                 WSClient.url = ServerConfig.getWebsocketUrl(it)
-                println("BOING-opening-HandTrackingActivity---------------------------------------------")
                 router.navTo(MobileRoutes.Exercise(Connection(true)))
             }
         }
