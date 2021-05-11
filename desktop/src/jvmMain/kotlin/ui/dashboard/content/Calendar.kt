@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ui.dashboard.StreakAPI
+import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.i18n
 import java.time.LocalDate
 
@@ -85,7 +87,9 @@ fun StreakCalendar() {
 
 @Composable
 fun WeekDayHeader(mod: Modifier){
-    val weekdays = i18n.str.dashboard.weeklyChart.daysOfWeek.resolve().split(" ")
+    val weekdays = remember(LanguageAmbient.current.language) {
+        i18n.str.dashboard.weeklyChart.daysOfWeek.resolve().split(" ")
+    }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         for (day in weekdays){
             Box(modifier = mod, contentAlignment = Alignment.Center) {
@@ -116,5 +120,5 @@ fun Day(modifier: Modifier, day: Int, practised: Boolean) {
     }
 }
 
-//fun today() = LocalDate.now()
-fun today() = LocalDate.of(2021, 2, 10)
+fun today() = LocalDate.now()
+//fun today() = LocalDate.of(2021, 2, 10)
