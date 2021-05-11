@@ -48,30 +48,13 @@ class StreakAPI {
         }
     }
 
-    fun getPractisesThisMonth(): List<List<Pair<LocalDate, Boolean>>>{
+    fun getPractisesThisMonth(): List<LocalDate> {
         return transaction {
-            val histories = DbHistory.all()
+            DbHistory.all()
                 .filter { it.timestampDate.value.toLocalDate().monthValue == today().monthValue }
                 .map { history -> history.timestampDate.value.toLocalDate() }
                 .distinct()
                 .sortedBy { it }
-            //histories.forEach { println(it) }
-            val result = mutableListOf<Pair<LocalDate, Boolean>>()
-            var date = LocalDate.of(today().year, today().monthValue, 1)
-
-            var index = 0
-            while(date.monthValue == today().monthValue){
-                if(index < histories.size && date == histories.get(index)){
-                    result.add(Pair(date, true))
-                    index += 1
-                }
-                else{
-                    result.add(Pair(date, false))
-                }
-                date = date.plusDays(1L)
-            }
-            //result.forEach { println("${it.first}: ${it.second}") }
-            result.groupBy { it.first.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR) }.values.toList()
         }
     }
 

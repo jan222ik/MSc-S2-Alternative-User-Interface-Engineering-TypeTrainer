@@ -20,109 +20,101 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ui.dashboard.StreakAPI
+import ui.util.i18n.i18n
 import java.time.LocalDate
-import java.time.temporal.ChronoField
 
-var dayCounter = -1
+@Composable
+fun CalendarWeek(from: LocalDate, maxDate: LocalDate, mod: Modifier, practiceDays: List<LocalDate>): LocalDate {
+    var runningDate = from
+    if (from.dayOfMonth == 1){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            for (i in 1 until from.dayOfWeek.value) {
+                Spacer(modifier = mod)
+            }
+            for (i in from.dayOfWeek.value..7) {
+                Day(modifier = mod, day = runningDate.dayOfMonth, practised = practiceDays.contains(runningDate))
+                runningDate = runningDate.plusDays(1)
+            }
+        }
+    }
+    else {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            for(i in 1..7){
+                if (!runningDate.isAfter(maxDate)) {
+                    Day(modifier = mod, day = runningDate.dayOfMonth, practised = practiceDays.contains(runningDate))
+                }
+                else{
+                    Spacer(modifier = mod)
+                }
+                runningDate = runningDate.plusDays(1)
+            }
+        }
+    }
+    return runningDate
+}
 
 @Composable
 fun StreakCalendar() {
-    dayCounter = today().dayOfMonth
     val streakApi = StreakAPI()
+    val practises = streakApi.getPractisesThisMonth()
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val maxHeight = this.maxHeight
-        Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-            var practiseWeeks = streakApi.getPractisesThisMonth()
-            var weeksDisplayed = 0
-            while (practiseWeeks.isNotEmpty()) {
-                val week = practiseWeeks.first()
-                practiseWeeks = practiseWeeks.drop(1)
-                CalendarWeek(maxHeight = maxHeight, practiceDays = week)
-                weeksDisplayed += 1
-            }
+        val minSpacer = 8.dp
+        val cornerShape = RoundedCornerShape(percent = 35)
+        val widthPerDay = this.maxWidth.div(7)
+        val heightPerDay = maxHeight.div(7)
+        val size = maxOf(10.dp, minOf(widthPerDay.minus(minSpacer), heightPerDay.minus(6.dp)))
+        this.maxWidth.minus(size.times(7)).div(8)
+        val mod = Modifier
+            .size(size)
+            .clip(cornerShape)
 
-            while (weeksDisplayed < 6) {
-                CalendarWeek(maxHeight = maxHeight, practiceDays = listOf())
-                weeksDisplayed += 1
+        var runningDate = LocalDate.of(today().year, today().month, 1)
+        val lastDay = runningDate.plusMonths(1).minusDays(1)
+        Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
+            WeekDayHeader(mod = mod)
+            while(!runningDate.isAfter(lastDay)){
+                runningDate = CalendarWeek(from = runningDate, maxDate = lastDay, mod = mod, practiceDays = practises)
             }
         }
-    }
-}
 
-
-@Composable
-fun CalendarDay(modifier: Modifier, displayDate: Boolean, practised: Boolean) {
-    var mod = modifier.border(width = 1.dp, color = Color.White, shape = RoundedCornerShape(percent = 35))
-    if (practised) {
-        mod = modifier.background(MaterialTheme.colors.primary)
-    }
-    Box(modifier = mod, contentAlignment = Alignment.Center) {
-        if (displayDate) {
-            Text(text = today().dayOfMonth.toString(), color = Color.White)
-        }
-    }
-}
-
-fun today(): LocalDate {
-    return LocalDate.now()
-//    return LocalDate.of(2020, 11, 30)
-}
-
-@Composable
-fun fillBoxes(n: Int, mod: Modifier) {
-    var counter = n
-    while (counter > 0) {
-        Spacer(modifier = mod)
-        counter -= 1
     }
 }
 
 @Composable
-fun CalendarWeek(maxHeight: Dp, practiceDays: List<Pair<LocalDate, Boolean>>) {
-    //practiceDays.forEach { println("${it.first}  |  ${it.second}") }
+fun WeekDayHeader(mod: Modifier){
+    val weekdays = i18n.str.dashboard.weeklyChart.daysOfWeek.resolve().split(" ")
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        BoxWithConstraints {
-            val minSpacer = 8.dp
-            val cornerShape = RoundedCornerShape(percent = 35)
-            val widthPerDay = this.maxWidth.div(7)
-            val heightPerDay = maxHeight.div(6)
-            val size = maxOf(10.dp, minOf(widthPerDay.minus(minSpacer), heightPerDay.minus(6.dp)))
-            val spacer = this.maxWidth.minus(size.times(7)).div(8)
-            val mod = Modifier
-                .size(size)
-                .clip(cornerShape)
-
-            Row(horizontalArrangement = Arrangement.spacedBy(spacer)) {
-                var spacersNeeded = 7 - practiceDays.size
-                var isPastWeek = false
-                if (practiceDays.isNotEmpty()) {
-                    isPastWeek = practiceDays.first().first.get(ChronoField.ALIGNED_WEEK_OF_YEAR) <
-                            today().get(ChronoField.ALIGNED_WEEK_OF_YEAR)
-                }
-                if (isPastWeek) {
-                    fillBoxes(n = spacersNeeded, mod = mod)
-                }
-                practiceDays.forEach {
-                    CalendarDay(
-                        mod,
-                        displayDate = dayCounter == 1,
-                        practised = it.second
-                    )
-                    dayCounter -= 1
-                }
-                if (!isPastWeek) {
-                    var index = 1L
-                    while (spacersNeeded > 0) {
-                        CalendarDay(mod, displayDate = dayCounter == 1, practised = false)
-                        spacersNeeded -= 1
-                        dayCounter -= 1
-                        index += 1
-                    }
-                }
+        for (day in weekdays){
+            Box(modifier = mod, contentAlignment = Alignment.Center) {
+                Text(text = day)
             }
         }
     }
 }
+
+@Composable
+fun Day(modifier: Modifier, day: Int, practised: Boolean) {
+    var borderWidth = 1.dp
+    var fontWeight = FontWeight.Normal
+    var mod = modifier
+
+    if (today().dayOfMonth == day){
+        borderWidth = 3.dp
+        fontWeight = FontWeight.ExtraBold
+    }
+
+    mod = mod.border(width = borderWidth, color = Color.White, shape = RoundedCornerShape(percent = 35))
+    if (practised) {
+        mod = mod.background(MaterialTheme.colors.primary)
+    }
+
+    Box(modifier = mod, contentAlignment = Alignment.Center) {
+        Text(text = day.toString(), color = Color.White, fontWeight = fontWeight)
+    }
+}
+
+//fun today() = LocalDate.now()
+fun today() = LocalDate.of(2021, 2, 10)
