@@ -6,6 +6,7 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
     kotlin("plugin.serialization") version "1.4.30"
+    id("org.jetbrains.dokka")
 }
 
 group = "com.github.jan222ik"
@@ -90,6 +91,32 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb)
             packageName = "jvm"
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTask::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+            perPackageOption() {
+                matchingRegex.set(""".*\_learn.*""")
+                suppress.set(true)
+            }
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTaskPartial::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+            perPackageOption() {
+                matchingRegex.set(""".*\_learn.*""")
+                suppress.set(true)
+            }
         }
     }
 }

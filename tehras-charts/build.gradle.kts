@@ -3,6 +3,7 @@ import org.jetbrains.compose.compose
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    id("org.jetbrains.dokka")
 }
 
 group = "com.github.jan222ik"

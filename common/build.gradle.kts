@@ -5,6 +5,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version "1.4.30"
     id("org.jetbrains.compose")
+    id("org.jetbrains.dokka")
 }
 
 group = "com.github.jan222ik"
@@ -68,6 +69,32 @@ android {
         named("main") {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
             res.srcDirs("src/androidMain/res", "src/commonMain/resources")
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTask::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+            perPackageOption() {
+                matchingRegex.set(""".*\_learn.*""")
+                suppress.set(true)
+            }
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTaskPartial::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+            perPackageOption() {
+                matchingRegex.set(""".*\_learn.*""")
+                suppress.set(true)
+            }
         }
     }
 }

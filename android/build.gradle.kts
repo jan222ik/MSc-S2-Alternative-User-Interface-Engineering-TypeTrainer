@@ -3,6 +3,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("plugin.serialization") version "1.4.30"
+    id("org.jetbrains.dokka")
 }
 
 repositories {
@@ -63,5 +64,23 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTask::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTaskPartial::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+        }
     }
 }
