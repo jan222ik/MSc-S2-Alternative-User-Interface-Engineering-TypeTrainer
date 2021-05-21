@@ -2,7 +2,6 @@
 
 package ui.components.filling_layout_with_spacer
 
-import TypeTrainerTheme
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 
 fun main() {
     `Width - Test`()

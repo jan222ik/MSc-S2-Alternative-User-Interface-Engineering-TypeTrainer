@@ -1,6 +1,7 @@
 package ui.exercise.selection
 
 import androidx.compose.runtime.mutableStateOf
+import network.Server
 import textgen.generators.impl.RandomCharGenerator
 import textgen.generators.impl.RandomKnownTextGenerator
 import textgen.generators.impl.RandomKnownWordGenerator
@@ -12,6 +13,7 @@ import util.weightedAt
 import kotlin.random.Random
 
 class ExerciseSelectionIntent {
+    val withFingerTracking = mutableStateOf(false)
     val textModeSelection = mutableStateOf(0)
     val exerciseModeSelection = mutableStateOf(0)
     val languageSelection = mutableStateOf(0)
@@ -55,7 +57,7 @@ class ExerciseSelectionIntent {
                 2 -> ExerciseMode.NoTimelimit
                 else -> throw RuntimeException("Invalid option in exercise-mode while selecting an exercise")
             },
-            isCameraEnabled = false
+            isCameraEnabled = withFingerTracking.value
         )
     }
 

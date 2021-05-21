@@ -8,4 +8,4 @@ sealed class MobileRoutes {
     data class Exercise(val connection: Connection) : MobileRoutes()
 }
 
-data class Connection(val stuff: Any = Any())
+data class Connection(val canConnect: Boolean = false)

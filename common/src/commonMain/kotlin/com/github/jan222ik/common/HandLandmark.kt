@@ -1,5 +1,8 @@
 package com.github.jan222ik.common
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class HandLandmark {
     val fingerLandmarks: MutableMap<FingerEnum, FingerTipLandmark> = mutableMapOf()
 

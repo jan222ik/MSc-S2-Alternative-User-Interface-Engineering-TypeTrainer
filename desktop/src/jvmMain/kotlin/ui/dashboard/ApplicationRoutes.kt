@@ -25,8 +25,8 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
 
 
         sealed class Connection(title: KeyI18N) : Exercise(title) {
-            object QRCode : Connection(title = RequiresTranslationI18N("Connection with Companion"))
-            object SetupInstructions : Connection(title = RequiresTranslationI18N("Exercise - Setup Camera"))
+            data class QRCode(val trainingOptions: ITypingOptions) : Connection(title = RequiresTranslationI18N("Connection with Companion"))
+            data class SetupInstructions(val trainingOptions: ITypingOptions?) : Connection(title = RequiresTranslationI18N("Exercise - Setup Camera"))
         }
 
         data class Training(
@@ -41,7 +41,7 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
 
     sealed class Goals(title: KeyI18N) : ApplicationRoutes(title) {
         object Overview : Goals(title = RequiresTranslationI18N("Your Goals"))
-        object Compose : Goals(title = RequiresTranslationI18N("Create a Goal"))
+        object Compose : Goals(title = RequiresTranslationI18N("Compose a new Goal"))
     }
 
     object Achievements : ApplicationRoutes(RequiresTranslationI18N("Achievements"))

@@ -2,14 +2,15 @@ import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
+    java
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.3.2"
+    id("org.jetbrains.compose")
     kotlin("plugin.serialization") version "1.4.30"
+    id("org.jetbrains.dokka")
 }
 
 group = "com.github.jan222ik"
 version = "1.0"
-
 
 kotlin {
     jvm {
@@ -26,17 +27,13 @@ kotlin {
             dependencies {
                 implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
-                api(compose.animation)
-                api(compose.foundation)
-                api(compose.material)
-                api(compose.runtime)
-                api(compose.ui)
-                api(compose.materialIconsExtended)
+
                 implementation(kotlin("reflect"))
 
                 // Charts
                 implementation(project(":tehras-charts"))
                 implementation(project(":treemap"))
+                //implementation(project(":staakk-ccharts"))
 
                 // Database
                 val exposedVersion = "0.26.2"
@@ -48,17 +45,30 @@ kotlin {
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
                 implementation("com.zaxxer:HikariCP:$hikariCpVersion")
 
-                // Ktor Server & REST & Websocket
+                // Networking - Ktor Server & REST & Websocket
                 val ktorVersion = "1.3.2"
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-websockets:$ktorVersion")
+                implementation("org.jmdns:jmdns:3.5.6")
+
                 // Logger
                 val logbackVersion = "1.2.3"
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
                 // Serialization
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.1.0")
 
+                // QR
+                arrayOf(
+                    "core",
+                    "swing",
+                    "kotlin"//,
+                    //"WebcamCapture"
+                ).forEach { implementation("org.boofcv:boofcv-$it:0.36") }
+
+                // CSV
+                implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
             }
         }
         val jvmTest by getting {
@@ -81,6 +91,32 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb)
             packageName = "jvm"
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTask::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+            perPackageOption() {
+                matchingRegex.set(""".*\_learn.*""")
+                suppress.set(true)
+            }
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTaskPartial::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+            perPackageOption() {
+                matchingRegex.set(""".*\_learn.*""")
+                suppress.set(true)
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ package ui.general.window.container.impl
 import androidx.compose.desktop.AppWindow
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -27,6 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ui.dashboard.ApplicationRoutes
@@ -55,7 +59,19 @@ internal fun WCHeader(
             height = height,
             surface = surface
         )
-        Box(heightMod.fillMaxWidth()) {
+        Box(heightMod
+            .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmoun2t ->
+                    val dragAmount = change.positionChange()
+                    appWindow.setLocation(
+                        x = (appWindow.x + dragAmount.x).toInt(),
+                        y = (appWindow.y + dragAmount.y).toInt()
+                    )
+                    change.consumeAllChanges()
+                }
+            }
+        ) {
             FallingWave(
                 surface = surface,
                 background = background,
@@ -75,6 +91,7 @@ internal fun WCHeader(
         }
     }
 }
+
 
 @Composable
 private fun BoxScope.EndGroup(

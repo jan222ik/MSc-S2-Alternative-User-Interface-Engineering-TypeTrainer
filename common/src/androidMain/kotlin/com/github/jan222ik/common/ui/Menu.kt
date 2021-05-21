@@ -16,11 +16,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -70,147 +73,154 @@ fun MobileMenu() {
             backgroundColor = MaterialTheme.colors.surface,
             elevation = 0.dp
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp)
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Max),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                BaseDashboardCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-                    Spacer(Modifier.height(200.dp))
-                    Text(text = "Weeks Stats")
-                }
-                BaseDashboardCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-
-                    Row {
-                        @Composable
-                        fun item(
-                            widthFraction: Float,
-                            imageVector: ImageVector,
-                            text: String,
-                            title: String
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(widthFraction)
-                                    .fillMaxHeight()
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .align(Alignment.TopCenter)
-                                        .fillMaxHeight()
-                                        .offset(y = (-10).dp, x = (-10).dp),
-                                    horizontalArrangement = Arrangement.spacedBy(5.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        modifier = Modifier.fillMaxHeight(0.75f).fillMaxWidth(0.5f),
-                                        imageVector = imageVector,
-                                        contentDescription = null
-                                    )
-                                    Text(
-                                        text = text
-                                    )
-                                }
-                                Text(
-                                    modifier = Modifier.align(Alignment.BottomCenter),
-                                    text = title
-                                )
-                            }
-                        }
-
-                        item(
-                            title = "Streak",
-                            imageVector = Icons.Filled.Whatshot,
-                            text = "13 Days",
-                            widthFraction = 0.5f
-                        )
-                        item(
-                            title = "Total Exercises",
-                            imageVector = Icons.Filled.Functions,
-                            text = "4711",
-                            widthFraction = 1f
-                        )
-
-                    }
-                }
-                Row {
-                    val interPaddingHalf = 16.dp.div(2)
-                    Square(
+            Scaffold(
+                backgroundColor = MaterialTheme.colors.surface,
+                content = { paddingValues ->
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .padding(end = interPaddingHalf)
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 16.dp, bottom = 30.dp.plus(paddingValues.calculateBottomPadding()))
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        IconDashboardCard(
-                            modifier = Modifier.fillMaxSize(),
-                            onClick = {
-                                router.navTo(MobileRoutes.CameraSetup)
-                            },
-                            icon = {
-                                Icon(
-                                    modifier = Modifier.align(Alignment.Center).fillMaxSize(0.75f),
-                                    imageVector = Icons.Filled.CameraAlt,
-                                    contentDescription = null
-                                )
-                            },
-                            text = {
-                                Text("Camera Setup")
-                            }
-                        )
-                    }
-                    Square(
-                        modifier = Modifier
-                            .padding(start = interPaddingHalf)
-                            .fillMaxWidth()
-                    ) {
-                        IconDashboardCard(
-                            modifier = Modifier.fillMaxSize(),
-                            onClick = {
-                                router.navTo(MobileRoutes.AppBenefits)
-                            },
-                            icon = {
-                                Icon(
-                                    modifier = Modifier.align(Alignment.Center).fillMaxSize(0.75f),
-                                    imageVector = Icons.Filled.SentimentSatisfied,
-                                    contentDescription = null
-                                )
-                            },
-                            text = {
-                                Text("App benefits")
-                            }
-                        )
-                    }
-                }
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    EFabWithBackground(
-                        onClick = {
-                            router.navTo(MobileRoutes.Scanner)
-                        }
-                    ) {
-                        Surface(
+                        BaseDashboardCard(
                             modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .fillMaxWidth(0.85f)
-                                .height(42.dp),
-                            shape = RoundedCornerShape(topStart = 35.dp, topEnd = 35.dp),
-                            color = MaterialTheme.colors.background
-                        ) {}
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Min)
+                        ) {
+                            Spacer(Modifier.height(200.dp))
+                            Text(text = "Weeks Stats")
+                        }
+                        BaseDashboardCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Min)
+                        ) {
+
+                            Row {
+                                @Composable
+                                fun item(
+                                    widthFraction: Float,
+                                    imageVector: ImageVector,
+                                    text: String,
+                                    title: String
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth(widthFraction)
+                                            .fillMaxHeight()
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .align(Alignment.TopCenter)
+                                                .fillMaxHeight()
+                                                .offset(y = (-10).dp, x = (-10).dp),
+                                            horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                modifier = Modifier.fillMaxHeight(0.75f).fillMaxWidth(0.5f),
+                                                imageVector = imageVector,
+                                                contentDescription = null
+                                            )
+                                            Text(
+                                                text = text
+                                            )
+                                        }
+                                        Text(
+                                            modifier = Modifier.align(Alignment.BottomCenter),
+                                            text = title
+                                        )
+                                    }
+                                }
+
+                                item(
+                                    title = "Streak",
+                                    imageVector = Icons.Filled.Whatshot,
+                                    text = "13 Days",
+                                    widthFraction = 0.5f
+                                )
+                                item(
+                                    title = "Total Exercises",
+                                    imageVector = Icons.Filled.Functions,
+                                    text = "4711",
+                                    widthFraction = 1f
+                                )
+
+                            }
+                        }
+                        Row {
+                            val interPaddingHalf = 16.dp.div(2)
+                            Square(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.5f)
+                                    .padding(end = interPaddingHalf)
+                            ) {
+                                IconDashboardCard(
+                                    modifier = Modifier.fillMaxSize(),
+                                    onClick = {
+                                        router.navTo(MobileRoutes.CameraSetup)
+                                    },
+                                    icon = {
+                                        Icon(
+                                            modifier = Modifier.align(Alignment.Center).fillMaxSize(0.75f),
+                                            imageVector = Icons.Filled.CameraAlt,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    text = {
+                                        Text("Camera Setup")
+                                    }
+                                )
+                            }
+                            Square(
+                                modifier = Modifier
+                                    .padding(start = interPaddingHalf)
+                                    .fillMaxWidth()
+                            ) {
+                                IconDashboardCard(
+                                    modifier = Modifier.fillMaxSize(),
+                                    onClick = {
+                                        router.navTo(MobileRoutes.AppBenefits)
+                                    },
+                                    icon = {
+                                        Icon(
+                                            modifier = Modifier.align(Alignment.Center).fillMaxSize(0.75f),
+                                            imageVector = Icons.Filled.SentimentSatisfied,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    text = {
+                                        Text("App benefits")
+                                    }
+                                )
+                            }
+                        }
+                    }
+                },
+                bottomBar = {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        EFabWithBackground(
+                            onClick = {
+                                router.navTo(MobileRoutes.Scanner)
+                            }
+                        ) {
+                            Surface(
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .fillMaxWidth(0.85f)
+                                    .height(42.dp),
+                                shape = RoundedCornerShape(topStart = 35.dp, topEnd = 35.dp),
+                                color = MaterialTheme.colors.background
+                            ) {}
+                        }
                     }
                 }
-            }
+            )
         }
     }
 }
@@ -256,10 +266,11 @@ fun EFabWithBackground(onClick: () -> Unit, backgroundShape: @Composable () -> U
             backgroundColor = MaterialTheme.colors.primary,
             onClick = onClick,
             text = {
-                Text("Connect to PC")
+                Text("Connect to PC", style = MaterialTheme.typography.h5)
             },
             icon = {
                 Icon(
+                    modifier = Modifier,
                     imageVector = Icons.Default.Phonelink,
                     contentDescription = null
                 )

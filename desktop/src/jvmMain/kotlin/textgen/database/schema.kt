@@ -11,14 +11,14 @@ interface DbTexts {
 
 object DbTextsEnglish : Table(), DbTexts {
     override val id = integer("id").autoIncrement()
-    override val content = varchar("content", 5000)
+    override val content = varchar("content", 50000)
 
     override val primaryKey = PrimaryKey(id)
 }
 
 object DbTextsGerman : Table(), DbTexts {
     override val id = integer("id").autoIncrement()
-    override val content = varchar("content", 5000)
+    override val content = varchar("content", 50000)
 
     override val primaryKey = PrimaryKey(id)
 }

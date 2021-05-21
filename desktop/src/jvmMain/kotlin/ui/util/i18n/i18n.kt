@@ -15,6 +15,24 @@ sealed class i18n {
             val name: KeyI18N = "app_name".i18Key()
         }
 
+        object debug : str() {
+            override val path: String = "debug"
+            val notImplementedYet: KeyI18N = "not_implemented_yet".i18Key()
+        }
+
+        sealed class dashboard : str() {
+            override val path: String = "dashboard"
+
+            object weeklyChart : dashboard() {
+                override val path: String = super.path + ".weekly_chart"
+
+                val daysOfWeek: KeyI18N = "days_of_week".i18Key()
+                val chartsTitle: KeyI18N = "title".i18Key()
+                val showMore: KeyI18N = "show_more".i18Key()
+                val description: KeyI18N = "description".i18Key()
+            }
+        }
+
         sealed class navigation : str() {
             override val path: String = "navigation"
 
@@ -94,6 +112,14 @@ sealed class i18n {
                     override val path: String = super.path + ".base"
                     val returnToDashboard = "returnToDashboard".i18Key()
                 }
+            }
+
+            object connection : exercise(){
+                override val path: String = super.path + ".connection"
+
+                val ndsStarting = "nds_starting".i18Key()
+                val ndsStarted = "nds_started".i18Key()
+                val continueWithoutHandtracking : KeyI18N= "continue_without_handtracking".i18Key()
             }
         }
 

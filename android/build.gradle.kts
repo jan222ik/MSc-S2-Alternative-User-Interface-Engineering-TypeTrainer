@@ -1,7 +1,9 @@
 plugins {
-    id("org.jetbrains.compose") version "0.3.2"
+    id("org.jetbrains.compose")
     id("com.android.application")
     kotlin("android")
+    kotlin("plugin.serialization") version "1.4.30"
+    id("org.jetbrains.dokka")
 }
 
 repositories {
@@ -23,8 +25,6 @@ dependencies {
     implementation("com.google.flogger:flogger-system-backend:$flogger_version")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.guava:guava:$guava_version")
-    implementation("com.google.guava:guava:$guava_version")
-    //implementation("com.google.protobuf:protobuf-lite:3.0.0")
     implementation("com.google.protobuf:protobuf-java:3.11.4")
 
     // CameraX core library
@@ -32,6 +32,14 @@ dependencies {
     implementation("androidx.camera:camera-core:$camerax_version")
     implementation("androidx.camera:camera-camera2:$camerax_version")
     implementation("androidx.camera:camera-lifecycle:$camerax_version")
+
+    // networking
+    val ktor_version = "1.5.3"
+    implementation("io.ktor:ktor-client-android:$ktor_version")
+    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.1.0")
+    implementation("org.jmdns:jmdns:3.5.6")
 }
 
 android {
@@ -56,5 +64,23 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTask::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTaskPartial::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+        }
     }
 }

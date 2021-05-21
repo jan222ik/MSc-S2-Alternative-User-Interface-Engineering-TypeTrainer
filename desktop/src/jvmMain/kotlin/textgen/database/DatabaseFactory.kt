@@ -1,5 +1,7 @@
 package textgen.database
 
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.serialization.encodeToString
@@ -13,25 +15,96 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
+import java.io.File
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 object DatabaseFactory {
+    lateinit var dataSource: HikariDataSource
+
     fun initWithDemoData() {
-        Database.connect(hikari())
+        val datasource = hikari()
+        Database.connect(datasource)
         transaction {
+            SchemaUtils.drop(DbHistorys, DbTextsEnglish, DbTextsGerman)
             SchemaUtils.create(DbHistorys)
             SchemaUtils.create(DbTextsEnglish)
             SchemaUtils.create(DbTextsGerman)
-            for (i in 0 until 100) {
-                DbTextsEnglish.insert {
-                    it[content] = "ENG" + i.toString().repeat(15)
+
+            var file = File("desktop/src/jvmMain/resources/literature_eng.csv")
+            try {
+                val csvReader = csvReader {
+                    delimiter = ';'
+                    escapeChar = '\\'
                 }
-                DbTextsGerman.insert {
-                    it[content] = "GER" + i.toString().repeat(15)
+                csvReader.open(file) {
+                    readAllWithHeaderAsSequence().forEach { csv ->
+                        println("csv = ${csv}")
+                        var toString = csv["Content"].toString()
+
+//                        toString = toString.replace(regex = Regex("^$\r\n"), replacement = "")
+//                        toString = toString.replace(regex = Regex("\r\n"), replacement = " ")
+
+                        if (toString.length <= 400 || true) {
+                            DbTextsEnglish.insert {
+                                it[content] = toString
+                            }
+                        }
+                    }
+                }
+            } catch (e: CSVFieldNumDifferentException) {
+                e.printStackTrace()
+            }
+
+            file = File("desktop/src/jvmMain/resources/literature_ger.csv")
+            try {
+                val csvReader = csvReader {
+                    delimiter = ';'
+                    escapeChar = '\\'
+                }
+                csvReader.open(file) {
+                    readAllWithHeaderAsSequence().forEach { csv ->
+                        println("csv = ${csv}")
+                        var toString = csv["Content"].toString()
+
+//                        toString = toString.replace(regex = Regex("^$\r\n"), replacement = "")
+//                        toString = toString.replace(regex = Regex("\r\n"), replacement = " ")
+
+                        if (toString.length <= 400 || true) {
+                            DbTextsGerman.insert {
+                                it[content] = toString
+                            }
+                        }
+                    }
+                }
+            } catch (e: CSVFieldNumDifferentException) {
+                e.printStackTrace()
+            }
+
+
+            for(i in 0..45){
+                if(Random.nextInt(100) < 25){
+                    DbHistory.new {
+                        val today = LocalDate.now()
+                        timestamp = LocalDateTime.of(today.minusDays(i.toLong()), LocalTime.MIDNIGHT)
+                            .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                        dataJson = ExposedBlob("{}".toByteArray())
+                    }
                 }
             }
         }
+    }
+
+    fun start() {
+        val datasource = hikari()
+        Database.connect(datasource)
+    }
+
+    fun stop() {
+        dataSource.close()
     }
 
     private fun hikari(): HikariDataSource {

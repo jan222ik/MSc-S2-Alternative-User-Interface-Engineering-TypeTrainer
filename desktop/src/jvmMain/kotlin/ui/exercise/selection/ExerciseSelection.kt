@@ -3,6 +3,7 @@
 package ui.exercise.selection
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,9 +14,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -35,7 +39,8 @@ import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 
 @Composable
-fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
+fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelectionIntent()) {
+    val selectionIntent = remember(selectionIntentO) { selectionIntentO }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -109,13 +114,38 @@ fun ExerciseSelection(selectionIntent: ExerciseSelectionIntent) {
                     )
                 }
                 Spacer(Modifier.height(50.dp))
-                Row(modifier = Modifier.align(Alignment.End)) {
+                Row(
+                    modifier = Modifier.align(Alignment.End),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     val router = WindowRouterAmbient.current
+                    val (withFingerTracking, setWithFingerTracking) = selectionIntent.withFingerTracking
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Checkbox(
+                            checked = withFingerTracking,
+                            onCheckedChange = setWithFingerTracking,
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = MaterialTheme.colors.primary,
+                            )
+                        )
+                        Text(
+                            text = +RequiresTranslationI18N("Use Handtracking"),
+                            style = MaterialTheme.typography.body1
+                        )
+                    }
+                    Spacer(Modifier.width(8.dp))
                     Button(
                         onClick = {
                             val options = selectionIntent.generateTypingOptions()
-                            router.navTo(ApplicationRoutes.Exercise.Training(options))
-
+                            router.navTo(
+                                dest = when (options.isCameraEnabled) {
+                                    true -> ApplicationRoutes.Exercise.Connection.QRCode(options)
+                                    false -> ApplicationRoutes.Exercise.Training(options)
+                                }
+                            )
                         }
                     ) {
                         Text(text = +RequiresTranslationI18N("Start Exercise"))
@@ -247,11 +277,13 @@ private fun ExerciseModeSubCard(
     descriptionText: String,
     timeLimit: Boolean
 ) {
-    Column {
+    Column(
+        modifier = Modifier.wrapContentSize()
+    ) {
         Text(text = descriptionText)
         Spacer(modifier = Modifier.height(25.dp))
+        val (duration, setDuration) = remember { selectionIntent.durationSelection }
         Row {
-            val (duration, setDuration) = remember { selectionIntent.durationSelection }
             val roundedCornerDp = 15.dp
             val shape = RoundedCornerShape(
                 topStart = roundedCornerDp,
@@ -270,6 +302,7 @@ private fun ExerciseModeSubCard(
                         modifier = Modifier.fillMaxWidth(0.6f),//.width(IntrinsicSize.Min),
                         options = ExerciseSelectionIntent.durationSelectionOptions,
                         optionTransform = @Composable {
+                            /*
                             if (it.key == i18n.str.exercise.selection.exerciseMode.customDuration.key) {
                                 CustomDurationInput(selectionIntent = selectionIntent, setSelectionIndex = {
                                     setDuration(ExerciseSelectionIntent.durationSelectionOptions.size)
@@ -277,14 +310,31 @@ private fun ExerciseModeSubCard(
                                 ""
                             } else {
                                 +it
-                            }
-
+                            }4
+                             */
+                            +it
                         },
                         selected = duration,
                         onSelectionChange = setDuration,
                         shape = shape
                     )
                 }
+            }
+        }
+        if (timeLimit && duration == ExerciseSelectionIntent.durationSelectionOptions.size - 1) {
+            Spacer(modifier = Modifier.height(15.dp))
+            Row(
+                modifier = Modifier.padding(start = 50.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Enter a duration:")
+                CustomDurationInput(
+                    selectionIntent = selectionIntent,
+                    setSelectionIndex = {
+                        //setDuration(ExerciseSelectionIntent.durationSelectionOptions.size)
+                    }
+                )
             }
         }
     }

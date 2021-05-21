@@ -3,7 +3,6 @@ package textgen.generators.impl
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import textgen.database.DatabaseFactory
 import textgen.database.DbTextsEnglish
 import textgen.database.DbTextsGerman
 import textgen.generators.ContinuousGenerator
@@ -13,9 +12,11 @@ import ui.util.i18n.LanguageDefinition
 import util.RandomUtil
 
 object RandomKnownTextGenerator : IGenerator<RandomKnownTextGenerator.RandomKnownTextOptions> {
-    override fun create(options: RandomKnownTextOptions): ContinuousGenerator {
-        DatabaseFactory.initWithDemoData()
 
+    private var fullText : String? = null
+    private var firstExec = true
+
+    override fun create(options: RandomKnownTextOptions): ContinuousGenerator {
         val table = when (options.language) {
             LanguageDefinition.English -> DbTextsEnglish
             LanguageDefinition.German -> DbTextsGerman
@@ -24,9 +25,33 @@ object RandomKnownTextGenerator : IGenerator<RandomKnownTextGenerator.RandomKnow
         val randomNextText = RandomUtil.nextIntInRemBoundAsClosure(options.seed, entries.toInt())
         return ContinuousGenerator {
             return@ContinuousGenerator transaction {
-                return@transaction table.select {
-                    (table.id eq randomNextText())
-                }.single()[table.content]
+                if (fullText.isNullOrEmpty()){
+                    fullText = table.select {
+                        (table.id eq randomNextText())
+                    }.single()[table.content]
+                }
+                val displayText = StringBuilder()
+                val remainingText = StringBuilder()
+                var appendDisplay = true
+                fullText!!.forEach {
+                    if (appendDisplay && !(displayText.isEmpty() && it == ' ') ){
+                        displayText.append(it)
+                    }
+                    if(!appendDisplay){
+                        remainingText.append(it)
+                    }
+                    if(displayText.length > 650 && it == '.'){
+                        appendDisplay = false
+                    }
+
+                }
+                if(!firstExec) {
+                    fullText = remainingText.toString()
+                }
+                else{
+                    firstExec = false
+                }
+                return@transaction displayText.toString()
             }
         }
     }

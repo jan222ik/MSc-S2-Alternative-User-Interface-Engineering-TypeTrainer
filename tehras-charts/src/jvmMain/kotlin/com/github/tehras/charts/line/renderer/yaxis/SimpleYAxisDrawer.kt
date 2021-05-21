@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.skija.Color4f
 import org.jetbrains.skija.TextLine
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -19,18 +20,18 @@ import kotlin.math.roundToInt
 typealias LabelFormatter = (value: Float) -> String
 
 class SimpleYAxisDrawer(
-  private val labelTextSize: TextUnit = 12.sp,
-  private val labelTextColor: Color = Color.Black,
-  private val labelRatio: Int = 3,
-  private val labelValueFormatter: LabelFormatter = { value -> "%.1f".format(value) },
-  private val axisLineThickness: Dp = 1.dp,
-  private val axisLineColor: Color = Color.Black
+    private val labelTextSize: TextUnit = 12.sp,
+    private val labelTextColor: Color = Color.Black,
+    private val labelRatio: Int = 3,
+    private val labelValueFormatter: LabelFormatter = { value -> "%.1f".format(value) },
+    private val axisLineThickness: Dp = 1.dp,
+    private val axisLineColor: Color = Color.Black
 ) : YAxisDrawer {
-  private val axisLinePaint = Paint().apply {
-    isAntiAlias = true
-    color = axisLineColor
-    style = PaintingStyle.Stroke
-  }
+    private val axisLinePaint = Paint().apply {
+        isAntiAlias = true
+        color = axisLineColor
+        style = PaintingStyle.Stroke
+    }
     /*
   private val textPaint = android.graphics.Paint().apply {
     isAntiAlias = true
@@ -40,60 +41,63 @@ class SimpleYAxisDrawer(
 
      */
 
-  override fun drawAxisLine(
-    drawScope: DrawScope,
-    canvas: Canvas,
-    drawableArea: Rect
-  ) = with(drawScope) {
-    val lineThickness = axisLineThickness.toPx()
-    val x = drawableArea.right - (lineThickness / 2f)
+    override fun drawAxisLine(
+        drawScope: DrawScope,
+        canvas: Canvas,
+        drawableArea: Rect
+    ) = with(drawScope) {
+        val lineThickness = axisLineThickness.toPx()
+        val x = drawableArea.right - (lineThickness / 2f)
 
-    canvas.drawLine(
-      p1 = Offset(
-        x = x,
-        y = drawableArea.top
-      ),
-      p2 = Offset(
-        x = x,
-        y = drawableArea.bottom
-      ),
-      paint = axisLinePaint.apply {
-        strokeWidth = lineThickness
-      }
-    )
-  }
-
-  override fun drawAxisLabels(
-    drawScope: DrawScope,
-    canvas: Canvas,
-    drawableArea: Rect,
-    minValue: Float,
-    maxValue: Float
-  ) = with(drawScope) {
-      /*
-    val labelPaint = textPaint.apply {
-      textSize = labelTextSize.toPx()
-      textAlign = android.graphics.Paint.Align.RIGHT
-    } */
-    val labelPaint = org.jetbrains.skija.Paint()
-
-    val minLabelHeight = (labelTextSize.toPx() * labelRatio.toFloat())
-    val totalHeight = drawableArea.height
-    val labelCount = max((drawableArea.height / minLabelHeight).roundToInt(), 2)
-
-    for (i in 0..labelCount) {
-      val value = minValue + (i * ((maxValue - minValue) / labelCount))
-
-      val label = labelValueFormatter(value)
-      val x =
-        drawableArea.right - axisLineThickness.toPx() - (labelTextSize.toPx() / 2f)
-
-      //labelPaint.getTextBounds(label, 0, label.length, textBounds)
-
-      val y = drawableArea.bottom - (i * (totalHeight / labelCount)) //+ (textBounds.height() / 2f) //TODO
-
-      canvas.nativeCanvas.drawTextLine(TextLine.make(label, org.jetbrains.skija.Font(null)), x, y, labelPaint)
-      //canvas.nativeCanvas.drawText(label, x, y, labelPaint)
+        canvas.drawLine(
+            p1 = Offset(
+                x = x,
+                y = drawableArea.top
+            ),
+            p2 = Offset(
+                x = x,
+                y = drawableArea.bottom
+            ),
+            paint = axisLinePaint.apply {
+                strokeWidth = lineThickness
+            }
+        )
     }
-  }
+
+    override fun drawAxisLabels(
+        drawScope: DrawScope,
+        canvas: Canvas,
+        drawableArea: Rect,
+        minValue: Float,
+        maxValue: Float
+    ) = with(drawScope) {
+        /*
+      val labelPaint = textPaint.apply {
+        textSize = labelTextSize.toPx()
+        textAlign = android.graphics.Paint.Align.RIGHT
+      } */
+        val labelPaint = org.jetbrains.skija.Paint().apply {
+            val (r, g, b, a) = labelTextColor
+            color4f = Color4f(r, g, b, a)
+        }
+
+        val minLabelHeight = (labelTextSize.toPx() * labelRatio.toFloat())
+        val totalHeight = drawableArea.height
+        val labelCount = max((drawableArea.height / minLabelHeight).roundToInt(), 2)
+
+        for (i in 0..labelCount) {
+            val value = minValue + (i * ((maxValue - minValue) / labelCount))
+
+            val label = labelValueFormatter(value)
+            val x =
+                drawableArea.right - axisLineThickness.toPx() - (labelTextSize.toPx() / 2f) - 40
+
+            //labelPaint.getTextBounds(label, 0, label.length, textBounds)
+
+            val y = drawableArea.bottom - (i * (totalHeight / labelCount)) //+ (textBounds.height() / 2f) //TODO
+
+            canvas.nativeCanvas.drawTextLine(TextLine.make(label, org.jetbrains.skija.Font(null)), x, y, labelPaint)
+            //canvas.nativeCanvas.drawText(label, x, y, labelPaint)
+        }
+    }
 }

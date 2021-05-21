@@ -1,9 +1,14 @@
 package com.github.jan222ik.android
 
+import androidx.lifecycle.LifecycleCoroutineScope
+import com.github.jan222ik.android.network.WSClient
 import com.github.jan222ik.common.FingerEnum
 import com.github.jan222ik.common.FingerTipLandmark
 import com.github.jan222ik.common.HandLandmark
 import com.google.mediapipe.formats.proto.LandmarkProto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 class FingerTipExtractor {
     companion object {
@@ -13,6 +18,13 @@ class FingerTipExtractor {
         private const val RING_TIP = 16
         private const val PINKY_TIP = 20
 
+        var lifecycle: LifecycleCoroutineScope? = null
+            set(value) {
+                field = value
+                WSClient.connect(value!!)
+            }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
         fun extractAndSend(multiHandLandmarks: MutableList<LandmarkProto.NormalizedLandmarkList>) {
             if (multiHandLandmarks.isEmpty()) return
 
@@ -36,11 +48,9 @@ class FingerTipExtractor {
                 hands.add(hand)
             }
 
-            send(hands)
-        }
-
-        private fun send(hands: MutableList<HandLandmark>) {
-            println(hands)
+            lifecycle!!.launch (Dispatchers.IO) {
+                WSClient.landmarks.emit(hands)
+            }
         }
     }
 }
