@@ -23,11 +23,11 @@ import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 object DatabaseFactory {
-    lateinit var dataSource: HikariDataSource
+    var dataSource: HikariDataSource? = null
 
     fun initWithDemoData() {
-        val datasource = hikari()
-        Database.connect(datasource)
+        dataSource = hikari()
+        Database.connect(dataSource!!)
         transaction {
             SchemaUtils.drop(DbHistorys, DbTextsEnglish, DbTextsGerman)
             SchemaUtils.create(DbHistorys)
@@ -99,12 +99,12 @@ object DatabaseFactory {
     }
 
     fun start() {
-        val datasource = hikari()
-        Database.connect(datasource)
+        dataSource = hikari()
+        Database.connect(dataSource!!)
     }
 
     fun stop() {
-        dataSource.close()
+        dataSource?.close()
     }
 
     private fun hikari(): HikariDataSource {
