@@ -5,7 +5,6 @@ package ui.general.window.container
 
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ui.general.window.container.impl.WCHeader
 
-@ExperimentalLayout
 @Composable
 fun WindowContainer(
     background: Color = MaterialTheme.colors.background,

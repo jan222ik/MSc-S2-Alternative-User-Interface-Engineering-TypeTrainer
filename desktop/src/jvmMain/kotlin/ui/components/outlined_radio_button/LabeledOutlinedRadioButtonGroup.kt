@@ -2,13 +2,12 @@
 
 package ui.components.outlined_radio_button
 
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -20,7 +19,23 @@ import androidx.compose.ui.unit.dp
 import ui.components.outlined_radio_button.internal.OptionText
 import ui.components.outlined_radio_button.internal.VDivider
 
-@ExperimentalLayout
+/**
+ * Bordered Radio Button Group.
+ *
+ * @param modifier for Card
+ * @param label text used as label
+ * @param forceLabelUnclipped if true assures that the label is always readable
+ * @param options to create a radio button for
+ * @param optionTransform transforms an option to a displayable unit
+ * @param selected current selection index
+ * @param onSelectionChange is invoked if the selection changes
+ * @param shape defines the outer shape of the group and its border
+ * @param primaryColor defines the color used for selection background and border color
+ * @param onPrimaryColor defines the color used on top of a primary-colored surface
+ * @param cardBackgroundColor defines the color used for the background of the card
+ * @param onCardBackgroundColor defines the color used on top of a background-colored surface
+ * @param optionTextPadding defines the padding of the option's text
+ */
 @Composable
 fun <T> LabeledOutlinedRadioButtonGroup(
     modifier: Modifier = Modifier,
@@ -51,7 +66,7 @@ fun <T> LabeledOutlinedRadioButtonGroup(
         optionTextPadding = optionTextPadding,
         labelProvider = { additionalVerticalPadding ->
             val labelWidthModifier = when {
-                forceLabelUnclipped -> Modifier.preferredWidth(IntrinsicSize.Min)
+                forceLabelUnclipped -> Modifier.width(IntrinsicSize.Min)
                 else -> Modifier.fillMaxWidth(1f / (options.size + 1))
             }
             Card(

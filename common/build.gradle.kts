@@ -1,10 +1,11 @@
 import org.jetbrains.compose.compose
 
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.3.0-build150"
     id("com.android.library")
-    id("kotlin-android-extensions")
+    kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.4.30"
+    id("org.jetbrains.compose")
+    id("org.jetbrains.dokka")
 }
 
 group = "com.github.jan222ik"
@@ -21,37 +22,79 @@ kotlin {
             kotlinOptions.jvmTarget = "11"
         }
     }
+
     sourceSets {
-        val commonMain by getting {
+        named("commonMain") {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material)
                 api(compose.materialIconsExtended)
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.1.0")
             }
         }
-        //val commonTest by getting
-        val androidMain by getting {
+        named("androidMain") {
+            kotlin.srcDirs("src/jvmMain/kotlin")
             dependencies {
-                api("androidx.appcompat:appcompat:1.2.0")
+                api("androidx.appcompat:appcompat:1.3.0-beta01")
                 api("androidx.core:core-ktx:1.3.1")
             }
         }
-        //val androidTest by getting {
-        //    dependencies {
-        //        implementation("junit:junit:4.13")
-        //    }
-        //}
-        val desktopMain by getting
-        //val desktopTest by getting
+        named("desktopMain") {
+            kotlin.srcDirs("src/jvmMain/kotlin")
+            resources.srcDirs("src/commonMain/resources")
+            dependencies {
+                api(compose.desktop.common)
+            }
+        }
     }
 }
 
 android {
-    compileSdkVersion(29)
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    compileSdkVersion(30)
+
     defaultConfig {
-        minSdkVersion(24)
-        targetSdkVersion(29)
+        minSdkVersion(28)
+        targetSdkVersion(30)
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        named("main") {
+            manifest.srcFile("src/androidMain/AndroidManifest.xml")
+            res.srcDirs("src/androidMain/res", "src/commonMain/resources")
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTask::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+            perPackageOption() {
+                matchingRegex.set(""".*\_learn.*""")
+                suppress.set(true)
+            }
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.dokka.gradle.DokkaTaskPartial::class).configureEach {
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets {
+        configureEach {
+            includeNonPublic.set(true)
+            perPackageOption() {
+                matchingRegex.set(""".*\_learn.*""")
+                suppress.set(true)
+            }
+        }
     }
 }

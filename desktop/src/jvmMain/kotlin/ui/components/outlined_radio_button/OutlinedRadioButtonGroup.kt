@@ -5,7 +5,6 @@ package ui.components.outlined_radio_button
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayout
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +23,22 @@ import androidx.compose.ui.unit.max
 import ui.components.outlined_radio_button.internal.OptionText
 import ui.components.outlined_radio_button.internal.VDivider
 
-@ExperimentalLayout
+/**
+ * Bordered Radio Button Group.
+ *
+ * @param modifier for Card
+ * @param options to create a radio button for
+ * @param optionTransform transforms an option to a displayable unit
+ * @param selected current selection index
+ * @param onSelectionChange is invoked if the selection changes
+ * @param shape defines the outer shape of the group and its border
+ * @param primaryColor defines the color used for selection background and border color
+ * @param onPrimaryColor defines the color used on top of a primary-colored surface
+ * @param cardBackgroundColor defines the color used for the background of the card
+ * @param onCardBackgroundColor defines the color used on top of a background-colored surface
+ * @param optionTextPadding defines the padding of the option's text
+ * @param labelProvider Optional lambda to provide a label on the start side of the component inside the border
+ */
 @Composable
 fun <T> OutlinedRadioButtonGroup(
     modifier: Modifier = Modifier,
