@@ -1,5 +1,7 @@
 package ui.util.i18n
 
+import ui.util.i18n.i18n.str.exercise.selection.textMode.i18Key
+
 
 @Suppress("ClassName", "MemberVisibilityCanBePrivate")
 sealed class i18n {
@@ -31,6 +33,19 @@ sealed class i18n {
                 val showMore: KeyI18N = "show_more".i18Key()
                 val description: KeyI18N = "description".i18Key()
             }
+
+            object goals : dashboard() {
+                override val path: String = super.path + ".goals"
+                val goalsTitle: KeyI18N = "title".i18Key()
+                val openAll: KeyI18N = "open_all".i18Key()
+                val composeNew: KeyI18N = "compose_new".i18Key()
+            }
+
+            object streak : dashboard() {
+                override val path: String = super.path + ".streak"
+                val streakTitle: KeyI18N = "title".i18Key()
+                val days: KeyI18N = "days".i18Key()
+            }
         }
 
         sealed class navigation : str() {
@@ -45,6 +60,7 @@ sealed class i18n {
                 val achievements: KeyI18N = "achievements".i18Key()
                 val app_benefits: KeyI18N = "app_benefits".i18Key()
                 val camera_setup: KeyI18N = "camera_setup".i18Key()
+                val exerciseSelection: KeyI18N = "exercise_selection".i18Key()
             }
         }
 
@@ -74,6 +90,12 @@ sealed class i18n {
 
             sealed class selection : exercise() {
                 override val path: String = super.path + ".selection"
+
+                object controls : selection() {
+                    override val path: String = super.path + ".controls"
+                    val useHandTracking = "use_hand_tracking".i18Key()
+                    val startBtn = "start_exercise".i18Key()
+                }
 
                 object textMode : selection() {
                     override val path: String = super.path + ".textMode"

@@ -35,7 +35,6 @@ import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
 import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
-import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 
 @Composable
@@ -132,7 +131,7 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                             )
                         )
                         Text(
-                            text = +RequiresTranslationI18N("Use Handtracking"),
+                            text = +i18n.str.exercise.selection.controls.useHandTracking,
                             style = MaterialTheme.typography.body1
                         )
                     }
@@ -148,7 +147,7 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                             )
                         }
                     ) {
-                        Text(text = +RequiresTranslationI18N("Start Exercise"))
+                        Text(text = +i18n.str.exercise.selection.controls.startBtn)
                     }
                 }
             }

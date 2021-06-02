@@ -69,7 +69,7 @@ internal fun QuickSettingsPopup(
                                     .align(Alignment.CenterEnd)
                                     .clickable(onClick = onDismissRequest),
                                 imageVector = Icons.Filled.Close,
-                                contentDescription = "Close settings ballon"
+                                contentDescription = "Close settings balloon"
                             )
                         }
                         Row {

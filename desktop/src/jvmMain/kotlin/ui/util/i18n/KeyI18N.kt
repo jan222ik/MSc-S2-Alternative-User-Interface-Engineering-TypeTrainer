@@ -23,7 +23,7 @@ open class KeyI18N(val key: String) {
 data class RequiresTranslationI18N(val value: String) : KeyI18N("") {
     override fun resolve(): String {
         ifDebug {
-            println("i18n > Requires Translation - \"$value\"")
+            System.err.println("i18n > Requires Translation - \"$value\"")
         }
         return value
     }

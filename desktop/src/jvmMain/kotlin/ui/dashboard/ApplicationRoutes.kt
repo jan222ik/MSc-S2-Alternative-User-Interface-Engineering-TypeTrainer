@@ -21,7 +21,7 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
 
     sealed class Exercise(title: KeyI18N) : ApplicationRoutes(title) {
 
-        object ExerciseSelection : Exercise(title = RequiresTranslationI18N("Exercise - Selection"))
+        object ExerciseSelection : Exercise(title = i18n.str.navigation.self.exerciseSelection)
 
 
         sealed class Connection(title: KeyI18N) : Exercise(title) {

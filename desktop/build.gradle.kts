@@ -34,6 +34,7 @@ kotlin {
                 implementation(project(":tehras-charts"))
                 implementation(project(":treemap"))
                 //implementation(project(":staakk-ccharts"))
+                implementation(project(":custom-line-charts"))
 
                 // Database
                 val exposedVersion = "0.26.2"

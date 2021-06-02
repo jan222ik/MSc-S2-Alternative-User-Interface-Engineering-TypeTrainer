@@ -3,7 +3,6 @@
 package ui.dashboard.content
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,13 +15,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.History
@@ -32,31 +27,21 @@ import androidx.compose.material.icons.filled.SentimentVerySatisfied
 import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.common.ui.util.router.Router
-import com.github.tehras.charts.line.LineChart
-import com.github.tehras.charts.line.LineChartData
-import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
-import com.github.tehras.charts.line.renderer.point.FilledCircularPointDrawer
-import com.github.tehras.charts.line.renderer.xaxis.SimpleXAxisDrawer
-import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.HoverIconDashboardCard
 import ui.dashboard.StreakAPI
 import ui.dashboard.goal_preview.DashboardGoalsPreviewCard
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageAmbient
-import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -212,7 +197,7 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                             tint = MaterialTheme.colors.primary
                         )
                         Text(
-                            text = streakapi.calcStreaks().toString() + " " + +RequiresTranslationI18N("Days"),
+                            text = streakapi.calcStreaks().toString() + " " + +i18n.str.dashboard.streak.days,
                             style = MaterialTheme.typography.h5
                         )
                     }
@@ -222,7 +207,7 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                     ) {
                         Text(
                             modifier = Modifier.padding(paddingValues = PaddingValues(start = 10.dp)),
-                            text = +RequiresTranslationI18N("Streak"),
+                            text = +i18n.str.dashboard.streak.streakTitle,
                             style = MaterialTheme.typography.h6
                         )
                         Text(
