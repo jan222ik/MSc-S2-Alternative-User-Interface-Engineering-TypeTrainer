@@ -50,7 +50,7 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
         object Overview : Competitions(title = RequiresTranslationI18N("Competitions - Overview"))
     }
 
-    object History : ApplicationRoutes(title = RequiresTranslationI18N("History"))
+    object History : ApplicationRoutes(title = i18n.str.navigation.self.history)
 
     object AppBenefits : ApplicationRoutes(title = i18n.str.navigation.self.app_benefits)
 

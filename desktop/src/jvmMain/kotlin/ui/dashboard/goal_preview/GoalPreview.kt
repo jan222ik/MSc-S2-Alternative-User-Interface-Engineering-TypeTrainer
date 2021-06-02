@@ -45,7 +45,6 @@ import kotlinx.coroutines.launch
 import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageConfiguration
-import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 
 @Composable
@@ -94,10 +93,12 @@ fun DashboardGoalsPreviewCard(goalIntend: GoalIntend = GoalIntend()) {
 fun ComposeNewGoalBtn() {
     val router = WindowRouterAmbient.current
     val onHover = remember { mutableStateOf(false) }
-    val color = animateColorAsState(when(onHover.value) {
-        true -> MaterialTheme.colors.primary
-        false -> MaterialTheme.colors.onBackground
-    })
+    val color = animateColorAsState(
+        when (onHover.value) {
+            true -> MaterialTheme.colors.primary
+            false -> MaterialTheme.colors.onBackground
+        }
+    )
     Box(
         modifier = Modifier
             .pointerMoveFilter(

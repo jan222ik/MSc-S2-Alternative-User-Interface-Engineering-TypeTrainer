@@ -133,6 +133,10 @@ sealed class i18n {
                 object base : results() {
                     override val path: String = super.path + ".base"
                     val returnToDashboard = "returnToDashboard".i18Key()
+                    val overview = "overview".i18Key()
+                    val analysis = "analysis".i18Key()
+                    val errorHeatmap = "error_heatmap".i18Key()
+                    val timeline = "timeline".i18Key()
                 }
             }
 
