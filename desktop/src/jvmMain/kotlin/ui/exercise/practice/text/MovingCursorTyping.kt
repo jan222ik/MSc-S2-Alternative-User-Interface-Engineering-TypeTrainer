@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,21 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import ui.exercise.practice.IPracticeIntend
 import ui.exercise.practice.ITextDisplayPracticeIntend
-import ui.util.debug.ifDebug
-import ui.util.i18n.RequiresTranslationI18N
 
 @Composable
 fun MovingCursorTyping(intend: ITextDisplayPracticeIntend) {
@@ -73,7 +63,7 @@ fun MovingCursorTyping(intend: ITextDisplayPracticeIntend) {
                 val str = text.value
                 val incIdx = idx.inc()
                 val content = when {
-                    str[idx] == '\n' -> str.replaceRange(idx .. idx, "\u2BB0\n")
+                    str[idx] == '\n' -> str.replaceRange(idx..idx, "\u2BB0\n")
                     str.length != incIdx && str[incIdx] == '\n' -> str.replaceRange(incIdx..incIdx, "\u2BB0\n")
                     else -> str
                 }
@@ -86,14 +76,7 @@ fun MovingCursorTyping(intend: ITextDisplayPracticeIntend) {
         }
         Text(text = annotatedString)
         if (!isFocused.value) {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(color = MaterialTheme.colors.background.copy(alpha = 0.8f))
-                    .padding(all = 5.dp),
-            ) {
-                Text(modifier = Modifier.align(Alignment.Center), text = +RequiresTranslationI18N("Click to enable keyboard!"))
-            }
+            TypingSetup(intend)
         }
     }
 }

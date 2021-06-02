@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.github.jan222ik"
-version = "1.0"
+version = "1.0.0"
 
 kotlin {
     jvm {
@@ -91,8 +91,8 @@ compose.desktop {
     application {
         mainClass = "MainKt"
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Deb)
-            packageName = "jvm"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "TypeTrainer"
         }
     }
 }
