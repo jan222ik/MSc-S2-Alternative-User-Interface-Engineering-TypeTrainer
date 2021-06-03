@@ -16,13 +16,13 @@ internal class RandomKnownTextGeneratorTest {
     @Test
     fun stableRngEnglish() {
         val gen0 = RandomKnownTextGenerator.create(
-            options = RandomKnownTextGenerator.RandomKnownTextOptions(
+            options = RandomKnownTextOptions(
                 seed = 1L,
                 language = LanguageDefinition.English
             )
         )
         val gen1 = RandomKnownTextGenerator.create(
-            options = RandomKnownTextGenerator.RandomKnownTextOptions(
+            options = RandomKnownTextOptions(
                 seed = 1L,
                 language = LanguageDefinition.English
             )
@@ -35,13 +35,13 @@ internal class RandomKnownTextGeneratorTest {
     @Test
     fun stableRngGerman() {
         val gen0 = RandomKnownTextGenerator.create(
-            options = RandomKnownTextGenerator.RandomKnownTextOptions(
+            options = RandomKnownTextOptions(
                 seed = 1L,
                 language = LanguageDefinition.German
             )
         )
         val gen1 = RandomKnownTextGenerator.create(
-            options = RandomKnownTextGenerator.RandomKnownTextOptions(
+            options = RandomKnownTextOptions(
                 seed = 1L,
                 language = LanguageDefinition.German
             )

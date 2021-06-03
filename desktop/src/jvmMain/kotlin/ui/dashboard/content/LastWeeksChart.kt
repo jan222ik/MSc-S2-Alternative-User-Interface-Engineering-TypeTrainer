@@ -54,6 +54,7 @@ fun LastWeeksChart() {
         val dateLabels = remember(langConfig) { i18n.str.dashboard.weeklyChart.daysOfWeek.resolve().split(" ") }
         val lineChartData = remember {
             listOf(
+                DataPoint(x = -1f, y = 110f),
                 DataPoint(x = 0f, y = 100f),
                 DataPoint(x = 1f, y = 84f),
                 DataPoint(x = 2f, y = 80f),

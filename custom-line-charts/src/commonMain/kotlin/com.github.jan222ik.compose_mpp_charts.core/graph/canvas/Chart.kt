@@ -165,7 +165,7 @@ fun Chart(
                 .forEach { (placeable, labelInChartSpace) ->
                     val halfComposableHeight = placeable.height.div(2)
                     val y =
-                        with(rendererContext) { labelInChartSpace.toRendererY() + halfComposableHeight }.roundToInt()
+                        with(rendererContext) { labelInChartSpace.toRendererY() - halfComposableHeight }.roundToInt()
                     if (y >= 0 && y <= constraints.maxHeight - spaceForBottomLabel - halfComposableHeight) {
                         placeable.placeRelative(
                             x = 0,

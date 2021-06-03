@@ -28,6 +28,7 @@ object DbHistorys : IntIdTable() {
     val histId = integer("histId").autoIncrement()
     val timestamp = varchar("timestamp", 45)
     val dataJson = blob("dataJson")
+    //val optionsJson = blob("optionsJson")
 
     override val primaryKey = PrimaryKey(histId)
 }

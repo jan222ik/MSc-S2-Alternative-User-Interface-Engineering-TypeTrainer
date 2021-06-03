@@ -1,14 +1,16 @@
 package textgen.generators.impl
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import textgen.generators.ContinuousGenerator
 import textgen.generators.IGenerator
-import textgen.generators.IGeneratorOptions
+import textgen.generators.AbstractGeneratorOptions
 import ui.util.i18n.LanguageDefinition
 import util.RandomUtil
 import java.io.InputStream
 import java.nio.charset.Charset
 
-object RandomKnownWordGenerator : IGenerator<RandomKnownWordGenerator.RandomKnownWordOptions> {
+object RandomKnownWordGenerator : IGenerator<RandomKnownWordOptions> {
 
     private fun InputStream.readLinesAndClose(charset: Charset = Charsets.UTF_8): List<String> {
         return this.bufferedReader(charset).use { it.readLines() }
@@ -20,13 +22,6 @@ object RandomKnownWordGenerator : IGenerator<RandomKnownWordGenerator.RandomKnow
     val s = "desktop/src/jvmMain/resources/eng.txt"
     private val eng: List<String> by lazy { "eng.txt".getResourceAsFile()!!.readLinesAndClose() }
     private val ger: List<String> by lazy { "ger2.txt".getResourceAsFile()!!.readLinesAndClose() }
-
-    data class RandomKnownWordOptions(
-        val seed: Long,
-        val delimiter: String = " ",
-        val language: LanguageDefinition,
-        val minimalSegmentLength: Int
-    ): IGeneratorOptions
 
     override fun create(options: RandomKnownWordOptions): ContinuousGenerator {
         val (seed, delimiter, language, minSegLen) = options
@@ -45,11 +40,20 @@ object RandomKnownWordGenerator : IGenerator<RandomKnownWordGenerator.RandomKnow
     }
 }
 
+@Serializable
+@SerialName("RandomKnownWordOptions")
+data class RandomKnownWordOptions(
+    val seed: Long,
+    val delimiter: String = " ",
+    val language: LanguageDefinition,
+    val minimalSegmentLength: Int
+): AbstractGeneratorOptions()
+
 
 
 fun main() {
     val gen0 = RandomKnownWordGenerator.create(
-        options = RandomKnownWordGenerator.RandomKnownWordOptions(
+        options = RandomKnownWordOptions(
             seed = 2L,
             language = LanguageDefinition.German,
             minimalSegmentLength = 100

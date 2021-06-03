@@ -1,10 +1,9 @@
 package ui.exercise.selection
 
 import androidx.compose.runtime.mutableStateOf
-import network.Server
-import textgen.generators.impl.RandomCharGenerator
-import textgen.generators.impl.RandomKnownTextGenerator
-import textgen.generators.impl.RandomKnownWordGenerator
+import textgen.generators.impl.RandomCharOptions
+import textgen.generators.impl.RandomKnownTextOptions
+import textgen.generators.impl.RandomKnownWordOptions
 import ui.exercise.ExerciseMode
 import ui.exercise.TypingOptions
 import ui.util.i18n.LanguageDefinition
@@ -27,22 +26,22 @@ class ExerciseSelectionIntent {
             1 -> LanguageDefinition.German
             else -> throw RuntimeException("Invalid language option while selecting an exercise")
         }
-        val duration = when(durationSelection.value) {
-            0, 1 -> durationSelection.value + 1L
-            else -> customDurationSelection.value.toLongOrNull() ?: 0L
-        }.times(60000) // Min to millis
+        val duration = when (durationSelection.value) {
+            0, 1 -> (durationSelection.value + 1L).times(60000L)
+            else -> customDurationSelection.value.toDoubleOrNull()?.times(60000L) ?: 0L
+        } // Min to millis
         return TypingOptions(
             generatorOptions = when (textModeSelection.value) {
-                0 -> RandomKnownTextGenerator.RandomKnownTextOptions(
+                0 -> RandomKnownTextOptions(
                     seed = seed,
                     language = language
                 )
-                1 -> RandomKnownWordGenerator.RandomKnownWordOptions(
+                1 -> RandomKnownWordOptions(
                     seed = seed,
                     language = language,
                     minimalSegmentLength = 300
                 )
-                2 -> RandomCharGenerator.RandomCharOptions(
+                2 -> RandomCharOptions(
                     seed = seed,
                     segmentMinimumLength = 300,
                     wordLengthWeightMap = englishContentWordLengthDistribution,
@@ -50,8 +49,8 @@ class ExerciseSelectionIntent {
                 )
                 else -> throw RuntimeException("Invalid option in text-mode while selecting an exercise")
             },
-            durationMillis = duration,
-            type = when (exerciseModeSelection.value){
+            durationMillis = duration.toLong(),
+            exerciseMode = when (exerciseModeSelection.value) {
                 0 -> ExerciseMode.Speed
                 1 -> ExerciseMode.Accuracy
                 2 -> ExerciseMode.NoTimelimit

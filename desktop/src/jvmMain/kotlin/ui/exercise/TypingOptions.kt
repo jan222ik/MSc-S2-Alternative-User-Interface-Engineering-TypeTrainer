@@ -1,22 +1,26 @@
 package ui.exercise
 
-import textgen.generators.IGeneratorOptions
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import textgen.generators.AbstractGeneratorOptions
 
+@Serializable
+@SerialName("@typeTypingOptions")
 data class TypingOptions(
-    override val generatorOptions: IGeneratorOptions,
+    override val generatorOptions: AbstractGeneratorOptions,
     override val durationMillis: Long,
-    override val type: ExerciseMode,
+    override val exerciseMode: ExerciseMode,
     override val isCameraEnabled: Boolean,
-) : ITypingOptions {
+) : AbstractTypingOptions() {
     override fun copyOptions(
-        generatorOptions: IGeneratorOptions,
+        generatorOptions: AbstractGeneratorOptions,
         durationMillis: Long,
-        type: ExerciseMode,
+        exerciseMode: ExerciseMode,
         isCameraEnabled: Boolean
     ) = this.copy(
         generatorOptions = generatorOptions,
         durationMillis = durationMillis,
-        type = type,
+        exerciseMode = exerciseMode,
         isCameraEnabled = isCameraEnabled
     )
 }

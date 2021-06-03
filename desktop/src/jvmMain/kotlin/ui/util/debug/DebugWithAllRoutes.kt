@@ -7,8 +7,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import textgen.error.ExerciseEvaluation
-import textgen.generators.impl.RandomKnownWordGenerator
+import textgen.database.DatabaseFactory
+import textgen.generators.impl.RandomKnownWordOptions
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.ExerciseMode
 import ui.exercise.TypingOptions
@@ -33,8 +33,8 @@ fun DebugWithAllRoutes() {
                 ApplicationRoutes.Settings,
                 ApplicationRoutes.User.Login,
                 ApplicationRoutes.Exercise.ExerciseSelection,
-                //ApplicationRoutes.Exercise.Connection.QRCode,
-                //ApplicationRoutes.Exercise.Connection.SetupInstructions,
+                    //ApplicationRoutes.Exercise.Connection.QRCode,
+                    //ApplicationRoutes.Exercise.Connection.SetupInstructions,
                 ApplicationRoutes.Goals.Overview,
                 ApplicationRoutes.Goals.Compose,
                 ApplicationRoutes.Achievements,
@@ -56,13 +56,13 @@ fun DebugWithAllRoutes() {
                     ApplicationRoutes.Exercise.Training::class -> {
                         val dest = ApplicationRoutes.Exercise.Training(
                             TypingOptions(
-                                generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(
+                                generatorOptions = RandomKnownWordOptions(
                                     seed = 1L,
                                     minimalSegmentLength = 300,
                                     language = LanguageDefinition.German
                                 ),
                                 durationMillis = 1 * 60_000,
-                                type = ExerciseMode.Speed,
+                                exerciseMode = ExerciseMode.Speed,
                                 isCameraEnabled = true
                             )
                         )
@@ -71,7 +71,7 @@ fun DebugWithAllRoutes() {
                         }
                     }
                     ApplicationRoutes.Exercise.ExerciseResults::class -> {
-                        val dest = ApplicationRoutes.Exercise.ExerciseResults(ExerciseEvaluation())
+                        val dest = ApplicationRoutes.Exercise.ExerciseResults(DatabaseFactory.demoData)
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)
                         }

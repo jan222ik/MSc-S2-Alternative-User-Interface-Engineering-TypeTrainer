@@ -1,10 +1,14 @@
 package textgen.error
 
+import com.github.jan222ik.compose_mpp_charts.core.data.DataPoint
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ui.exercise.AbstractTypingOptions
 
 @Serializable
 data class ExerciseEvaluation(
-    val texts: MutableList<TextEvaluation> = mutableListOf()
+    val texts: MutableList<TextEvaluation> = mutableListOf(),
+    val options: AbstractTypingOptions
 ) {
     // Use @Transient if sth has a backing field and should not be serialized
 
@@ -21,6 +25,20 @@ data class ExerciseEvaluation(
             tEval.chars.sumBy { cEval ->
                 0.takeIf { cEval.getExpectedChar(tEval.text) != ' ' } ?: 1
             }
+        }
+    }
+
+    val wps: Float by lazy {
+        wordsTyped / options.durationMillis.div(1000f)
+    }
+
+    val timesBetweenKeyStrokes: List<DataPoint> by lazy {
+        val times = texts.map { it.chars.map { c -> c.timeRemaining } }.flatten()
+        var prev: Long = options.durationMillis
+        times.mapIndexed { idx, time ->
+            val tween = prev - time
+            prev = time
+            DataPoint(x = idx.toFloat(), y = tween.toFloat())
         }
     }
 

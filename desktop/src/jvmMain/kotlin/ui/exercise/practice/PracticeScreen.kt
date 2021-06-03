@@ -43,10 +43,11 @@ import androidx.compose.ui.window.Popup
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import textgen.generators.impl.RandomKnownWordGenerator
+import textgen.generators.impl.RandomKnownWordOptions
 import ui.components.progress.practice.CountDownProgressBar
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.ExerciseMode
-import ui.exercise.ITypingOptions
+import ui.exercise.AbstractTypingOptions
 import ui.exercise.TypingOptions
 import ui.exercise.practice.text.MovingCursorTyping
 import ui.exercise.practice.text.MovingTextTyping
@@ -55,7 +56,7 @@ import ui.util.debug.ifDebugCompose
 import ui.util.i18n.LanguageDefinition
 
 @Composable
-fun PracticeScreen(typingOptions: ITypingOptions) {
+fun PracticeScreen(typingOptions: AbstractTypingOptions) {
     /*
     val intend = PracticeIntendImpl(
         typingOptions = TypingOptions(
@@ -271,13 +272,13 @@ fun main() {
             Surface(Modifier.fillMaxSize()) {
                 PracticeScreen(
                     TypingOptions(
-                        generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(
+                        generatorOptions = RandomKnownWordOptions(
                             seed = 1L,
                             language = LanguageDefinition.German,
                             minimalSegmentLength = 300
                         ),
                         durationMillis = 60 * 1000,
-                        type = ExerciseMode.Speed,
+                        exerciseMode = ExerciseMode.Speed,
                         isCameraEnabled = false
                     )
                 )

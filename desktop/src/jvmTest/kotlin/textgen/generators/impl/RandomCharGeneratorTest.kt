@@ -8,7 +8,7 @@ class RandomCharGeneratorTest {
 
     @Test
     fun repeatedInvocationProducesSameResult() {
-        val options = RandomCharGenerator.RandomCharOptions(
+        val options = RandomCharOptions(
             seed = 1L,
             segmentMinimumLength = 10,
             wordLengthWeightMap = mapOf(
@@ -37,7 +37,7 @@ class RandomCharGeneratorTest {
 
     @Test
     fun stableGenerationWithDifferentMinimumSegmentLength() {
-        val options = RandomCharGenerator.RandomCharOptions(
+        val options = RandomCharOptions(
             seed = 1L,
             segmentMinimumLength = 20,
             wordLengthWeightMap = mapOf(

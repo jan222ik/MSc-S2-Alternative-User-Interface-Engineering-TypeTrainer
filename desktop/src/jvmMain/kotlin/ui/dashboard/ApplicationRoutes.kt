@@ -1,7 +1,7 @@
 package ui.dashboard
 
 import textgen.error.ExerciseEvaluation
-import ui.exercise.ITypingOptions
+import ui.exercise.AbstractTypingOptions
 import ui.exercise.results.ResultsRoutes
 import ui.util.i18n.KeyI18N
 import ui.util.i18n.RequiresTranslationI18N
@@ -25,12 +25,12 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
 
 
         sealed class Connection(title: KeyI18N) : Exercise(title) {
-            data class QRCode(val trainingOptions: ITypingOptions) : Connection(title = RequiresTranslationI18N("Connection with Companion"))
-            data class SetupInstructions(val trainingOptions: ITypingOptions?) : Connection(title = RequiresTranslationI18N("Exercise - Setup Camera"))
+            data class QRCode(val trainingOptions: AbstractTypingOptions) : Connection(title = RequiresTranslationI18N("Connection with Companion"))
+            data class SetupInstructions(val trainingOptions: AbstractTypingOptions?) : Connection(title = RequiresTranslationI18N("Exercise - Setup Camera"))
         }
 
         data class Training(
-            val trainingOptions: ITypingOptions
+            val trainingOptions: AbstractTypingOptions
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Training"))
 
         data class ExerciseResults(

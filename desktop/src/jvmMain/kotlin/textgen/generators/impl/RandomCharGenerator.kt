@@ -1,11 +1,13 @@
 package textgen.generators.impl
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import textgen.generators.ContinuousGenerator
 import textgen.generators.IGenerator
-import textgen.generators.IGeneratorOptions
+import textgen.generators.AbstractGeneratorOptions
 import util.RandomUtil
 
-object RandomCharGenerator : IGenerator<RandomCharGenerator.RandomCharOptions> {
+object RandomCharGenerator : IGenerator<RandomCharOptions> {
 
     override fun create(options: RandomCharOptions): ContinuousGenerator {
         val (seed, delimiter, segmentMinimumLength, wordLengthWeightMap, characterWeightMap) = options
@@ -48,11 +50,14 @@ object RandomCharGenerator : IGenerator<RandomCharGenerator.RandomCharOptions> {
         return Pair(weightSum, weightedList)
     }
 
-    data class RandomCharOptions(
-        val seed: Long,
-        val delimiter: String = " ",
-        val segmentMinimumLength: Int,
-        val wordLengthWeightMap: Map<Int, Int>,
-        val characterWeightMap: Map<Char, Int>
-    ) : IGeneratorOptions
 }
+
+@Serializable
+@SerialName("RandomCharOptions")
+data class RandomCharOptions(
+    val seed: Long,
+    val delimiter: String = " ",
+    val segmentMinimumLength: Int,
+    val wordLengthWeightMap: Map<Int, Int>,
+    val characterWeightMap: Map<Char, Int>
+) : AbstractGeneratorOptions()
