@@ -25,6 +25,7 @@ import textgen.generators.impl.RandomKnownWordOptions
 import ui.exercise.AbstractTypingOptions
 import ui.exercise.ExerciseMode
 import ui.exercise.TypingOptions
+import ui.exercise.TypingType
 import ui.util.i18n.LanguageDefinition
 import java.io.File
 import java.time.LocalDate
@@ -194,7 +195,8 @@ object DatabaseFactory {
         ),
         durationMillis = 60_000,
         exerciseMode = ExerciseMode.Accuracy,
-        isCameraEnabled = false
+        isCameraEnabled = false,
+        typingType = TypingType.MovingCursor
     )
     val demoData = ExerciseEvaluation(
         options = demoOptions

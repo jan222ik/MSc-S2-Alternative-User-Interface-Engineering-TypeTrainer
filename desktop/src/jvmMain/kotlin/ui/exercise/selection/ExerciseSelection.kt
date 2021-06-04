@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
@@ -113,6 +114,12 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                     )
                 }
                 Spacer(Modifier.height(50.dp))
+                TypingType(
+                    intent = selectionIntent,
+                    headerShape = headerShape,
+                    bodyShape = bodyShape
+                )
+                Spacer(Modifier.height(50.dp))
                 Row(
                     modifier = Modifier.align(Alignment.End),
                     verticalAlignment = Alignment.CenterVertically
@@ -151,6 +158,37 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun TypingType(intent: ExerciseSelectionIntent, headerShape: RoundedCornerShape, bodyShape: RoundedCornerShape) {
+    val (typingType, setTypingType) = remember { intent.typingTypeSelection }
+    LabeledOutlinedRadioButtonGroup(
+        modifier = Modifier,
+        label = +i18n.str.exercise.selection.typingType.typingType + ":",
+        forceLabelUnclipped = false,
+        options = ExerciseSelectionIntent.typingTypeSelectionOptions,
+        optionTransform = @Composable { +it },
+        selected = typingType,
+        onSelectionChange = setTypingType,
+        shape = headerShape
+    )
+    ExerciseSelectionBodyWithSlot(
+        shape = bodyShape
+    ) {
+        when (typingType) {
+            0 -> TextModeSubCard(
+                selectionIntent = intent,
+                descriptionText = +i18n.str.exercise.selection.typingType.movingCursorDescription,
+                languageSelection = false
+            )
+            1 -> TextModeSubCard(
+                selectionIntent = intent,
+                descriptionText = +i18n.str.exercise.selection.typingType.movingTextDescription,
+                languageSelection = false
+            )
         }
     }
 }

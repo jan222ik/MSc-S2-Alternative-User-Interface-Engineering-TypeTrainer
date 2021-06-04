@@ -123,6 +123,16 @@ sealed class i18n {
                     fun getAll() = listOf(speed, accuracy, noTimeLimit)
                     fun getDurations() = listOf(oneMin, twoMin, customDuration)
                 }
+
+                object typingType : selection() {
+                    override val path: String = super.path + ".typingType"
+                    val typingType: KeyI18N = RequiresTranslationI18N("Typing Type")
+                    val movingCursor: KeyI18N = RequiresTranslationI18N("Moving Cursor")
+                    val movingCursorDescription: KeyI18N = RequiresTranslationI18N("Type with a moving cursor in a static text")
+                    val movingText: KeyI18N = RequiresTranslationI18N("Moving Text")
+                    val movingTextDescription: KeyI18N = RequiresTranslationI18N("Type with a static cursor in a moving text")
+                    fun getAll() = listOf(movingCursor, movingText)
+                }
             }
 
             sealed class results : exercise() {

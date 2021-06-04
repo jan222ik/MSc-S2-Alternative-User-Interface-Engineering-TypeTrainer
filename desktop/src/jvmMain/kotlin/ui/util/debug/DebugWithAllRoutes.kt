@@ -55,16 +55,7 @@ fun DebugWithAllRoutes() {
                     }
                     ApplicationRoutes.Exercise.Training::class -> {
                         val dest = ApplicationRoutes.Exercise.Training(
-                            TypingOptions(
-                                generatorOptions = RandomKnownWordOptions(
-                                    seed = 1L,
-                                    minimalSegmentLength = 300,
-                                    language = LanguageDefinition.German
-                                ),
-                                durationMillis = 1 * 60_000,
-                                exerciseMode = ExerciseMode.Speed,
-                                isCameraEnabled = true
-                            )
+                            DatabaseFactory.demoOptions
                         )
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)

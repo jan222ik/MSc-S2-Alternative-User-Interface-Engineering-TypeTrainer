@@ -11,6 +11,7 @@ data class TypingOptions(
     override val durationMillis: Long,
     override val exerciseMode: ExerciseMode,
     override val isCameraEnabled: Boolean,
+    override val typingType: TypingType,
 ) : AbstractTypingOptions() {
     override fun copyOptions(
         generatorOptions: AbstractGeneratorOptions,

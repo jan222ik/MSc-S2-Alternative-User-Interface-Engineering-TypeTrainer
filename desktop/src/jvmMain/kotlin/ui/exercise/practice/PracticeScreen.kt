@@ -42,13 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
-import textgen.generators.impl.RandomKnownWordGenerator
 import textgen.generators.impl.RandomKnownWordOptions
 import ui.components.progress.practice.CountDownProgressBar
 import ui.dashboard.ApplicationRoutes
-import ui.exercise.ExerciseMode
 import ui.exercise.AbstractTypingOptions
+import ui.exercise.ExerciseMode
 import ui.exercise.TypingOptions
+import ui.exercise.TypingType
 import ui.exercise.practice.text.MovingCursorTyping
 import ui.exercise.practice.text.MovingTextTyping
 import ui.general.WindowRouterAmbient
@@ -57,57 +57,39 @@ import ui.util.i18n.LanguageDefinition
 
 @Composable
 fun PracticeScreen(typingOptions: AbstractTypingOptions) {
-    /*
-    val intend = PracticeIntendImpl(
-        typingOptions = TypingOptions(
-            generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(
-                seed = 1L,
-                language = LanguageDefinition.German,
-                minimalSegmentLength = 1000
-            ),
-            durationMillis = 60 * 1000,
-            type = ExerciseMode.Speed
-        )
-    )
-     */
-    val mode = remember { mutableStateOf(0) }
-    val intend = remember(mode.value, typingOptions) {
-        when (mode.value) {
-            1 -> MovingCursorTypingIntend(typingOptions = typingOptions)
-            2 -> MovingTextTypingIntend(typingOptions = typingOptions)
-            else -> null
+    val intend = remember(typingOptions) {
+        when (typingOptions.typingType) {
+            TypingType.MovingCursor -> MovingCursorTypingIntend(typingOptions = typingOptions)
+            TypingType.MovingText -> MovingTextTypingIntend(typingOptions = typingOptions)
         }
     }
     DisposableEffect(intend) {
         onDispose {
-            intend?.cancelRunningJobs()
+            intend.cancelRunningJobs()
         }
     }
     val localWindow = LocalAppWindow.current
-    if (intend != null) {
-        ifDebugCompose {
-            DisposableEffect(intend) {
-                var closeWindow: (() -> Unit)? = null
-                PracticeScreenDebuggable(
-                    intend = intend as IDebugPracticeIntend,
-                    parentWindowLocation = IntOffset(localWindow.x, localWindow.y),
-                    parentWindowWidth = localWindow.width,
-                    parentWindowHeight = localWindow.height,
-                    windowClose = {
-                        closeWindow = it
-                        localWindow.events.onClose = it
-                    }
-                )
 
-                onDispose {
-                    closeWindow?.invoke()
+    ifDebugCompose {
+        DisposableEffect(intend) {
+            var closeWindow: (() -> Unit)? = null
+            PracticeScreenDebuggable(
+                intend = intend as IDebugPracticeIntend,
+                parentWindowLocation = IntOffset(localWindow.x, localWindow.y),
+                parentWindowWidth = localWindow.width,
+                parentWindowHeight = localWindow.height,
+                windowClose = {
+                    closeWindow = it
+                    localWindow.events.onClose = it
                 }
+            )
+
+            onDispose {
+                closeWindow?.invoke()
             }
         }
-        PracticeScreenContent(intend)
-    } else {
-        SelectTypingMode(mode)
     }
+    PracticeScreenContent(intend)
 }
 
 @Composable
@@ -181,37 +163,6 @@ private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
 
 }
 
-@Composable
-fun SelectTypingMode(mode: MutableState<Int>) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-    ) {
-        Card(
-            modifier = Modifier.align(Alignment.Center)
-        ) {
-            Row {
-                Button(
-                    onClick = {
-                        mode.value = 1
-                    }
-                ) {
-                    Text("Moving Cursor Typing")
-                }
-                Button(
-                    onClick = {
-                        mode.value = 2
-                    }
-                ) {
-                    Text("Moving Text Typing")
-                }
-            }
-        }
-    }
-
-}
-
 /**
  * Expanding Card fo collapsable Video feed
  * TODO
@@ -279,7 +230,8 @@ fun main() {
                         ),
                         durationMillis = 60 * 1000,
                         exerciseMode = ExerciseMode.Speed,
-                        isCameraEnabled = false
+                        isCameraEnabled = false,
+                        typingType = TypingType.MovingCursor
                     )
                 )
             }

@@ -13,6 +13,8 @@ abstract class AbstractTypingOptions {
 
     abstract val isCameraEnabled: Boolean
 
+    abstract val typingType: TypingType
+
     abstract fun copyOptions(
         generatorOptions: AbstractGeneratorOptions = this.generatorOptions,
         durationMillis: Long = this.durationMillis,

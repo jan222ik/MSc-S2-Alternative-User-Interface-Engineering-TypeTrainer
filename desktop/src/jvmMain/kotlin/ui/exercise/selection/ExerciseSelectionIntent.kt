@@ -6,6 +6,7 @@ import textgen.generators.impl.RandomKnownTextOptions
 import textgen.generators.impl.RandomKnownWordOptions
 import ui.exercise.ExerciseMode
 import ui.exercise.TypingOptions
+import ui.exercise.TypingType
 import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
 import util.weightedAt
@@ -15,6 +16,7 @@ class ExerciseSelectionIntent {
     val withFingerTracking = mutableStateOf(false)
     val textModeSelection = mutableStateOf(0)
     val exerciseModeSelection = mutableStateOf(0)
+    val typingTypeSelection = mutableStateOf(0)
     val languageSelection = mutableStateOf(0)
     val durationSelection = mutableStateOf(0)
     val customDurationSelection = mutableStateOf("")
@@ -56,13 +58,19 @@ class ExerciseSelectionIntent {
                 2 -> ExerciseMode.NoTimelimit
                 else -> throw RuntimeException("Invalid option in exercise-mode while selecting an exercise")
             },
-            isCameraEnabled = withFingerTracking.value
+            isCameraEnabled = withFingerTracking.value,
+            typingType = when (exerciseModeSelection.value) {
+                0 -> TypingType.MovingCursor
+                1 -> TypingType.MovingText
+                else -> throw RuntimeException("Invalid option in typing-type while selecting an exercise")
+            }
         )
     }
 
     companion object {
         val textModeSelectionOptions = i18n.str.exercise.selection.textMode.getAll()
         val exerciseModeSelectionOptions = i18n.str.exercise.selection.exerciseMode.getAll()
+        val typingTypeSelectionOptions = i18n.str.exercise.selection.typingType.getAll()
         val languageSelectionOptions = i18n.str.settings.languages.getAll()
         val durationSelectionOptions = i18n.str.exercise.selection.exerciseMode.getDurations()
 
