@@ -33,7 +33,7 @@ fun ConnectionScreen(server: Server, trainingOptions: AbstractTypingOptions) {
 
     when (hasConnection.value) {
         true -> {
-            router.navTo(ApplicationRoutes.Exercise.Training(trainingOptions = trainingOptions))
+            router.navTo(dest = ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation(trainingOptions))
         }
         false -> {
             val ndsStateFlow = remember { MutableStateFlow(NDSState.STARTING) }

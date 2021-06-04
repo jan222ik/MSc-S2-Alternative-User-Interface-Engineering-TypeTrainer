@@ -1,7 +1,5 @@
 package ui.util.i18n
 
-import ui.util.i18n.i18n.str.exercise.selection.textMode.i18Key
-
 
 @Suppress("ClassName", "MemberVisibilityCanBePrivate")
 sealed class i18n {
@@ -140,12 +138,23 @@ sealed class i18n {
                 }
             }
 
-            object connection : exercise(){
+            object connection : exercise() {
                 override val path: String = super.path + ".connection"
 
-                val ndsStarting = "nds_starting".i18Key()
-                val ndsStarted = "nds_started".i18Key()
-                val continueWithoutHandtracking : KeyI18N= "continue_without_handtracking".i18Key()
+                val ndsStarting: KeyI18N = "nds_starting".i18Key()
+                val ndsStarted: KeyI18N = "nds_started".i18Key()
+                val continueWithoutHandtracking: KeyI18N = "continue_without_handtracking".i18Key()
+
+            }
+
+            object keyboard_sync : exercise() {
+                override val path: String = super.path + ".keyboard_synchronisation"
+
+                val step1: KeyI18N = RequiresTranslationI18N("1. Place your camera above the keyboard")
+                val step2: KeyI18N =
+                    RequiresTranslationI18N("2. Press the <span>'ESC'<\\span> key with your <span>left pinky finger<\\span>")
+                val step3: KeyI18N =
+                    RequiresTranslationI18N("3. Press the <span>right 'CTRL'<\\span> key with your <span>right pinky finger<\\span>")
             }
         }
 

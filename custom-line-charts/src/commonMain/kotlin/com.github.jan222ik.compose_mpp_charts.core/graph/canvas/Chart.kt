@@ -100,7 +100,7 @@ fun Chart(
                     .fillMaxSize()
                     .pointerInput(viewport) {
                         detectTransformGestures { _, pan, zoom, direction ->
-                            println("Gesture detected: Zoom: $zoom")
+                            //println("Gesture detected: Zoom: $zoom")
                             val current = if (enableZoom) {
                                 viewport.value.applyZoom(
                                     zoom = zoom,

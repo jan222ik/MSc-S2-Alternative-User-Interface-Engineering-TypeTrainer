@@ -44,6 +44,7 @@ import ui.components.AnimatedLogo
 import ui.connection.ConnectionScreen
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.content.DashboardContent
+import ui.exercise.connection.KeyboardSynchronisationScreen
 import ui.exercise.practice.PracticeScreen
 import ui.exercise.results.ResultsScreen
 import ui.exercise.selection.ExerciseSelection
@@ -112,6 +113,9 @@ object DesktopApplication {
                                                 trainingOptions = current.trainingOptions
                                             )
                                         is ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
+                                        is ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation -> KeyboardSynchronisationScreen(
+                                            trainingOptions = current.trainingOptions
+                                        )
                                         is ApplicationRoutes.Exercise.Training -> PracticeScreen(current.trainingOptions)
                                         is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
                                             current.exerciseResults,

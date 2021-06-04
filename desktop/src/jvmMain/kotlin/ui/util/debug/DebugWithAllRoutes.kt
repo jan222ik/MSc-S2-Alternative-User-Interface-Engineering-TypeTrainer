@@ -76,6 +76,12 @@ fun DebugWithAllRoutes() {
                             Text(text = +dest.title)
                         }
                     }
+                    ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation::class -> {
+                        val dest = ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation(DatabaseFactory.demoOptions)
+                        Button(onClick = { router.navTo(dest) }) {
+                            Text(text = +dest.title)
+                        }
+                    }
                     else -> {
                         Text(text = "Missing path in debug for class $it")
                     }

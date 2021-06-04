@@ -117,7 +117,7 @@ fun t(exerciseEvaluation: ExerciseEvaluation) {
         }
         label(
             slot = ChartLabelSlot.BOTTOM,
-            labelProvider = intLabelProvider()
+            labelProvider = intLabelProvider(step = 3u)
         ) {
             Text(text = it.first)
         }
