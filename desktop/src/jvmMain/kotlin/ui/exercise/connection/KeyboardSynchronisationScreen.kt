@@ -16,19 +16,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,12 +33,14 @@ import ui.exercise.AbstractTypingOptions
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
-import ui.util.span_parse.SpanStringParser.parseForSpans
-import java.awt.event.KeyEvent.KEY_LOCATION_RIGHT
-import java.awt.event.KeyEvent.KEY_LOCATION_STANDARD
+import ui.util.span_parse.parseForSpans
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 
+/**
+ * Screen for Keyboard location in camera view.
+ * @param trainingOptions [AbstractTypingOptions] to be used for the exercise.
+ */
 @Composable
 fun KeyboardSynchronisationScreen(
     trainingOptions: AbstractTypingOptions
@@ -142,41 +138,3 @@ private fun KeyboardSynchronisationScreenContent(
         }
     }
 }
-
-class SynchronisationIntent(
-    private val onFinishSync: () -> Unit
-) {
-
-    private val mutableStep: MutableState<Int> = mutableStateOf(0)
-    val step: State<Int>
-        get() = mutableStep
-
-    fun handleInput(evt: KeyEvent) {
-        if (evt.type == KeyEventType.KeyDown) {
-            val nativeKeyEvt = evt.nativeKeyEvent
-            when {
-                // Right Control
-                nativeKeyEvt.keyCode == 17 && nativeKeyEvt.keyLocation == KEY_LOCATION_RIGHT -> {
-                    if (step.value == 1) {
-                        // TODO Save Location or something
-                        // TODO IF OTHER STEPS MOVE TO LAST STEP
-                        mutableStep.value = 2 // Useless unless above necessary
-                        onFinishSync.invoke()
-                    }
-                }
-                // Escape
-                nativeKeyEvt.keyCode == 27 && nativeKeyEvt.keyLocation == KEY_LOCATION_STANDARD -> {
-                    if (step.value == 0) {
-                        // TODO Save Location or something
-                        mutableStep.value = 1
-                    }
-                }
-                else -> {
-                    println("Other button pressed! -> $evt")
-                }
-            }
-        }
-    }
-}
-
-
