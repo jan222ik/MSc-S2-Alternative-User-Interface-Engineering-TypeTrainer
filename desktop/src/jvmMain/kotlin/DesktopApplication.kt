@@ -66,20 +66,8 @@ object DesktopApplication {
     fun start() {
         val initSize = IntSize(width = 1920, height = 1080)
         Window(size = initSize, undecorated = !Debug.isDebug) {
-            val applicationScale = remember { mutableStateOf(1f to 1f) }
-            /*
-            LocalAppWindow.current.apply {
-                this.events.onResize = { size ->
-                    val xScale = size.width.toFloat().div(initSize.width)
-                    val yScale = size.height.toFloat().div(initSize.height)
-                    println("xScale = ${xScale} yScale = ${yScale}")
-    
-                    applicationScale.value = xScale to yScale
-                }
-            }
-            */
             TypeTrainerTheme {
-                StartupApplication(applicationScale.value) { server ->
+                StartupApplication { server ->
                     LanguageConfiguration {
                         WindowRouter(
                             initialRoute = ApplicationRoutes.Dashboard
@@ -143,7 +131,7 @@ object DesktopApplication {
     @ExperimentalCoroutinesApi
     @KtorExperimentalAPI
     @Composable
-    fun StartupApplication(scale: Pair<Float, Float>, afterStartUp: @Composable (server: Server) -> Unit) {
+    fun StartupApplication(afterStartUp: @Composable (server: Server) -> Unit) {
         val server = remember { Server() }
         val startUpScope = rememberCoroutineScope()
         val loadingStateFlow = remember { MutableStateFlow<StartUpLoading>(StartUpLoading.START) }
@@ -188,14 +176,11 @@ object DesktopApplication {
             color = MaterialTheme.colors.background
         ) {
             Box(
-                modifier = Modifier.scale(
-                    scale.first,
-                    scale.second
-                ),//.background(androidx.compose.ui.graphics.Color.Companion.Cyan),
+                modifier = Modifier.scale(1f),
                 contentAlignment = Alignment.TopStart
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize(),//.background(androidx.compose.ui.graphics.Color.Companion.Red),
+                    modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (!animOnce.component1() || loading.value != StartUpLoading.DONE) {

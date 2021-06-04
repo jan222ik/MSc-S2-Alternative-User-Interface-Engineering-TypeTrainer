@@ -11,6 +11,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -85,9 +86,9 @@ object DatabaseFactory {
             SchemaUtils.create(DbTextsGerman)
 
             val fileEng = File("desktop/src/jvmMain/resources/literature_eng.csv")
-            readTextsFromFile(fileEng)
+            readTextsFromFile(file = fileEng, table = DbTextsEnglish)
             val fileGer = File("desktop/src/jvmMain/resources/literature_ger.csv")
-            readTextsFromFile(fileGer)
+            readTextsFromFile(file = fileGer, table = DbTextsGerman)
         }
     }
 
@@ -115,7 +116,14 @@ object DatabaseFactory {
 
     suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction { block.invoke() }
 
-    fun readTextsFromFile(file: File, delimiter: Char = ';', escapeChar: Char = '\\') {
+
+    private fun <T> readTextsFromFile(
+        file: File,
+        table: T,
+        delimiter: Char = ';',
+        escapeChar: Char = '\\'
+    ) where T: Table, T: DbTexts {
+        require(file.exists()) { "The provided file does not exit." }
         require(file.isFile) { "The provided file is not a file." }
         try {
             csvReader {
@@ -123,7 +131,7 @@ object DatabaseFactory {
                 this.escapeChar = escapeChar
             }.open(file) {
                 readAllWithHeaderAsSequence().forEach { csv ->
-                    println("csv = ${csv}")
+                    //println("csv = ${csv}")
                     val toString = csv["Content"].toString().let {
                         it
                         //    .replace(regex = Regex("^$\r\n"), replacement = "")
@@ -131,7 +139,7 @@ object DatabaseFactory {
                     }
 
                     //if (toString.length <= 400) {
-                    DbTextsGerman.insert {
+                    table.insert {
                         it[content] = toString
                     }
                     //}
