@@ -12,12 +12,9 @@ import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
-import textgen.error.TextEvaluation
 import textgen.generators.AbstractGeneratorOptions
 import textgen.generators.impl.RandomCharOptions
 import textgen.generators.impl.RandomKnownTextOptions
@@ -25,14 +22,8 @@ import textgen.generators.impl.RandomKnownWordOptions
 import ui.exercise.AbstractTypingOptions
 import ui.exercise.ExerciseMode
 import ui.exercise.TypingOptions
-import ui.exercise.TypingType
 import ui.util.i18n.LanguageDefinition
 import java.io.File
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 object DatabaseFactory {
     val serializer: SerializersModule = SerializersModule {
@@ -84,7 +75,7 @@ object DatabaseFactory {
 
     var dataSource: HikariDataSource? = null
 
-    fun initWithDemoData() {
+    fun init() {
         dataSource = hikari()
         Database.connect(dataSource!!)
         transaction {
@@ -93,73 +84,10 @@ object DatabaseFactory {
             SchemaUtils.create(DbTextsEnglish)
             SchemaUtils.create(DbTextsGerman)
 
-            var file = File("desktop/src/jvmMain/resources/literature_eng.csv")
-            try {
-                val csvReader = csvReader {
-                    delimiter = ';'
-                    escapeChar = '\\'
-                }
-                csvReader.open(file) {
-                    readAllWithHeaderAsSequence().forEach { csv ->
-                        println("csv = ${csv}")
-                        var toString = csv["Content"].toString()
-
-//                        toString = toString.replace(regex = Regex("^$\r\n"), replacement = "")
-//                        toString = toString.replace(regex = Regex("\r\n"), replacement = " ")
-
-                        if (toString.length <= 400 || true) {
-                            DbTextsEnglish.insert {
-                                it[content] = toString
-                            }
-                        }
-                    }
-                }
-            } catch (e: CSVFieldNumDifferentException) {
-                e.printStackTrace()
-            }
-
-            file = File("desktop/src/jvmMain/resources/literature_ger.csv")
-            try {
-                val csvReader = csvReader {
-                    delimiter = ';'
-                    escapeChar = '\\'
-                }
-                csvReader.open(file) {
-                    readAllWithHeaderAsSequence().forEach { csv ->
-                        println("csv = ${csv}")
-                        var toString = csv["Content"].toString()
-
-//                        toString = toString.replace(regex = Regex("^$\r\n"), replacement = "")
-//                        toString = toString.replace(regex = Regex("\r\n"), replacement = " ")
-
-                        if (toString.length <= 400 || true) {
-                            DbTextsGerman.insert {
-                                it[content] = toString
-                            }
-                        }
-                    }
-                }
-            } catch (e: CSVFieldNumDifferentException) {
-                e.printStackTrace()
-            }
-
-
-            for (i in 0..45) {
-                if (Random.nextInt(100) < 25) {
-                    DbHistory.new {
-                        val today = LocalDate.now()
-                        timestamp = LocalDateTime.of(today.minusDays(i.toLong()), LocalTime.MIDNIGHT)
-                            .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                        dataJson =
-                            ExposedBlob(
-                                Json() {
-                                    serializersModule = serializer
-                                }.encodeToString(value = demoData)
-                                    .toByteArray()
-                            )
-                    }
-                }
-            }
+            val fileEng = File("desktop/src/jvmMain/resources/literature_eng.csv")
+            readTextsFromFile(fileEng)
+            val fileGer = File("desktop/src/jvmMain/resources/literature_ger.csv")
+            readTextsFromFile(fileGer)
         }
     }
 
@@ -187,44 +115,40 @@ object DatabaseFactory {
 
     suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction { block.invoke() }
 
-    val demoOptions = TypingOptions(
-        generatorOptions = RandomKnownWordOptions(
-            seed = 1L,
-            language = LanguageDefinition.English,
-            minimalSegmentLength = 450
-        ),
-        durationMillis = 60_000,
-        exerciseMode = ExerciseMode.Accuracy,
-        isCameraEnabled = false,
-        typingType = TypingType.MovingCursor
-    )
-    val demoData = ExerciseEvaluation(
-        options = demoOptions
-    ).apply {
-        texts.add(
-            TextEvaluation(text = "a".repeat(200)).apply {
-                chars.add(CharEvaluation.TypingError(60_000, 0, 'b'))
-                chars.add(CharEvaluation.TypingError(59_530, 0, 'b'))
-                chars.add(CharEvaluation.TypingError(59_103, 0, 'b'))
-                chars.add(CharEvaluation.TypingError(58_810, 0, 'b'))
+    fun readTextsFromFile(file: File, delimiter: Char = ';', escapeChar: Char = '\\') {
+        require(file.isFile) { "The provided file is not a file." }
+        try {
+            csvReader {
+                this.delimiter = delimiter
+                this.escapeChar = escapeChar
+            }.open(file) {
+                readAllWithHeaderAsSequence().forEach { csv ->
+                    println("csv = ${csv}")
+                    val toString = csv["Content"].toString().let {
+                        it
+                        //    .replace(regex = Regex("^$\r\n"), replacement = "")
+                        //    .replace(regex = Regex("\r\n"), replacement = " ")
+                    }
+
+                    //if (toString.length <= 400) {
+                    DbTextsGerman.insert {
+                        it[content] = toString
+                    }
+                    //}
+                }
             }
-        )
-        texts.add(
-            TextEvaluation(text = "b".repeat(200)).apply {
-                chars.add(CharEvaluation.TypingError(58_401, 0, 'c'))
-                chars.add(CharEvaluation.TypingError(57_993, 0, 'c'))
-                chars.add(CharEvaluation.TypingError(57_333, 0, 'c'))
-                chars.add(CharEvaluation.TypingError(56_931, 0, 'c'))
-            }
-        )
+        } catch (e: CSVFieldNumDifferentException) {
+            e.printStackTrace()
+        }
     }
+
 }
 
 fun main() {
     //DatabaseFactory.initWithDemoData()
     val json = Json() {
         this.serializersModule = DatabaseFactory.serializer
-    }.encodeToString(value = DatabaseFactory.demoData)
+    }.encodeToString(value = DEMO.demoData)
     println("json = ${json}")
     Json() {
         this.serializersModule = DatabaseFactory.serializer

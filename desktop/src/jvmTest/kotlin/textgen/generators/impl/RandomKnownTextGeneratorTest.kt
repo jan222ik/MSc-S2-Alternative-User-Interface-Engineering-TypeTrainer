@@ -2,6 +2,7 @@ package textgen.generators.impl
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import textgen.database.DEMO
 import textgen.database.DatabaseFactory
 import ui.util.i18n.LanguageDefinition
 import kotlin.test.BeforeTest
@@ -10,7 +11,8 @@ internal class RandomKnownTextGeneratorTest {
 
     @BeforeTest
     fun beforeEach() {
-        DatabaseFactory.initWithDemoData()
+        DatabaseFactory.init()
+        DEMO.demoTrainingEntries()
     }
 
     @Test

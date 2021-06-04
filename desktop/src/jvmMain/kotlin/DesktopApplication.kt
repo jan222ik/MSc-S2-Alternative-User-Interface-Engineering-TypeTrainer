@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import network.Server
 import network.ServerApplication
+import textgen.database.DEMO
 import textgen.database.DatabaseFactory
 import ui.components.AnimatedLogo
 import ui.connection.ConnectionScreen
@@ -150,7 +151,8 @@ object DesktopApplication {
             var engine: NettyApplicationEngine? = null
             startUpScope.launch(Dispatchers.IO) {
                 loadingStateFlow.emit(StartUpLoading.DATABASE)
-                DatabaseFactory.initWithDemoData()
+                DatabaseFactory.init()
+                DEMO.demoTrainingEntries()
                 //DatabaseFactory.start()
                 loadingStateFlow.emit(StartUpLoading.NETWORK)
                 engine = embeddedServer(Netty, port = ServerConfig.PORT) {

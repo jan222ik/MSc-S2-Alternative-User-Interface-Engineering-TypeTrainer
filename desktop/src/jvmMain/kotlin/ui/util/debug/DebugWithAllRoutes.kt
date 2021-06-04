@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package ui.util.debug
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -7,13 +9,9 @@ import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import textgen.database.DatabaseFactory
-import textgen.generators.impl.RandomKnownWordOptions
+import textgen.database.DEMO
 import ui.dashboard.ApplicationRoutes
-import ui.exercise.ExerciseMode
-import ui.exercise.TypingOptions
 import ui.general.WindowRouterAmbient
-import ui.util.i18n.LanguageDefinition
 import kotlin.reflect.KClass
 
 
@@ -55,20 +53,20 @@ fun DebugWithAllRoutes() {
                     }
                     ApplicationRoutes.Exercise.Training::class -> {
                         val dest = ApplicationRoutes.Exercise.Training(
-                            DatabaseFactory.demoOptions
+                            DEMO.demoOptions
                         )
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)
                         }
                     }
                     ApplicationRoutes.Exercise.ExerciseResults::class -> {
-                        val dest = ApplicationRoutes.Exercise.ExerciseResults(DatabaseFactory.demoData)
+                        val dest = ApplicationRoutes.Exercise.ExerciseResults(DEMO.demoData)
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)
                         }
                     }
                     ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation::class -> {
-                        val dest = ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation(DatabaseFactory.demoOptions)
+                        val dest = ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation(DEMO.demoOptions)
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)
                         }
