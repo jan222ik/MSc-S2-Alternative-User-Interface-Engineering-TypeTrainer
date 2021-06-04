@@ -168,12 +168,16 @@ object DesktopApplication {
         val loading = loadingStateFlow.collectAsState()
         val animOnce = remember { mutableStateOf(false) }
         val window = LocalAppWindow.current
-        DisposableEffect(window) {
+        DisposableEffect(window, animOnce.value) {
             val keySet = KeysSet(Key.E)
             val keyboard = window.keyboard
-            keyboard.setShortcut(keySet) {
-                animOnce.component2()(true)
-                println("Skip Animation must run once to end!")
+            if (animOnce.value) {
+                keyboard.removeShortcut(keySet)
+            } else {
+                keyboard.setShortcut(keySet) {
+                    animOnce.component2()(true)
+                    println("Skip Animation must run once to end!")
+                }
             }
             onDispose {
                 keyboard.removeShortcut(keySet)
