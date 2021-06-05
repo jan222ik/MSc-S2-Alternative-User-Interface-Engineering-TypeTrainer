@@ -12,9 +12,13 @@ import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import textgen.database.schema.DbTexts
+import textgen.database.schema.DbTextsEnglish
+import textgen.database.schema.DbTextsGerman
 import textgen.error.ExerciseEvaluation
 import textgen.generators.AbstractGeneratorOptions
 import textgen.generators.impl.RandomCharOptions
@@ -95,6 +99,10 @@ object DatabaseFactory {
     fun start() {
         dataSource = hikari()
         Database.connect(dataSource!!)
+        val missingTables = transaction {
+            listOf(DbHistorys, DbTextsEnglish, DbTextsGerman).any { !it.exists() }
+        }
+        //require(missingTables) { "The current setup is missing tables in the database" }
     }
 
     fun stop() {
@@ -122,7 +130,7 @@ object DatabaseFactory {
         table: T,
         delimiter: Char = ';',
         escapeChar: Char = '\\'
-    ) where T: Table, T: DbTexts {
+    ) where T : Table, T : DbTexts {
         require(file.exists()) { "The provided file does not exit." }
         require(file.isFile) { "The provided file is not a file." }
         try {

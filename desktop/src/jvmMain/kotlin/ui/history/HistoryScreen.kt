@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import org.jetbrains.exposed.sql.transactions.transaction
-import textgen.database.DbHistory
+import textgen.database.DbHistoryDAO
 import ui.exercise.results.ResultsRoutes
 import ui.exercise.results.ResultsScreen
 import ui.util.debug.ifDebugCompose
@@ -35,7 +35,14 @@ import kotlin.math.absoluteValue
 @ExperimentalFoundationApi
 @Composable
 fun HistoryScreen() {
-    val items = remember { transaction { DbHistory.all().toList().sortedByDescending { it.timestampDate.value } } }
+    val items = remember {
+        transaction {
+            DbHistoryDAO
+                .all()
+                .map(DbHistoryDAO::toModel)
+                .sortedByDescending { it.timestamp }
+        }
+    }
     val currItem = remember(items) { mutableStateOf(0) }
     Row(
         modifier = Modifier.fillMaxSize()
@@ -56,7 +63,7 @@ fun HistoryScreen() {
                 var lastMonth = true
                 var older = true
                 items.forEachIndexed { index, item ->
-                    val date = item.timestampDate.value
+                    val date = item.timestamp
                     val untilToday =
                         date.truncatedTo(ChronoUnit.DAYS).until(local, ChronoUnit.DAYS).toInt().absoluteValue
                     println("date: $date   - $untilToday")
@@ -117,7 +124,7 @@ fun HistoryScreen() {
                                     .verticalScroll(rememberScrollState())
                             ) {
                                 Text("histId:" + item.histId.value)
-                                Text("timestamp:" + item.timestampDate.value)
+                                Text("timestamp:" + item.timestamp)
                                 Text("dataJson:" + item.dataJson)
                                 Text("data:" + item.data.value)
                             }

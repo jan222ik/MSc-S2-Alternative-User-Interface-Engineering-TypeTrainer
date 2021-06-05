@@ -10,14 +10,13 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.transaction
 import textgen.database.DatabaseFactory
-import textgen.database.DbHistory
+import textgen.database.DbHistoryDAO
 import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
 import ui.exercise.AbstractTypingOptions
 import util.RandomUtil
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import kotlin.concurrent.fixedRateTimer
 
 class MovingCursorTypingIntend(
@@ -101,8 +100,8 @@ class MovingCursorTypingIntend(
 
     override fun onTimerFinished() {
         transaction {
-            DbHistory.new {
-                timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            DbHistoryDAO.new {
+                timestamp = LocalDateTime.now()
                 dataJson = ExposedBlob(
                     Json{serializersModule = DatabaseFactory.serializer}
                         .encodeToString(exerciseEvaluation)

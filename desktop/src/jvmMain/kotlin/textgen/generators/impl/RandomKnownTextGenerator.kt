@@ -5,17 +5,17 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import textgen.database.DbTextsEnglish
-import textgen.database.DbTextsGerman
+import textgen.database.schema.DbTextsEnglish
+import textgen.database.schema.DbTextsGerman
+import textgen.generators.AbstractGeneratorOptions
 import textgen.generators.ContinuousGenerator
 import textgen.generators.IGenerator
-import textgen.generators.AbstractGeneratorOptions
 import ui.util.i18n.LanguageDefinition
 import util.RandomUtil
 
 object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
 
-    private var fullText : String? = null
+    private var fullText: String? = null
     private var firstExec = true
 
     override fun create(options: RandomKnownTextOptions): ContinuousGenerator {
@@ -27,7 +27,7 @@ object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
         val randomNextText = RandomUtil.nextIntInRemBoundAsClosure(options.seed, entries.toInt())
         return ContinuousGenerator {
             return@ContinuousGenerator transaction {
-                if (fullText.isNullOrEmpty()){
+                if (fullText.isNullOrEmpty()) {
                     fullText = table.select {
                         (table.id eq randomNextText())
                     }.single()[table.content]
@@ -36,21 +36,20 @@ object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
                 val remainingText = StringBuilder()
                 var appendDisplay = true
                 fullText!!.forEach {
-                    if (appendDisplay && !(displayText.isEmpty() && it == ' ') ){
+                    if (appendDisplay && !(displayText.isEmpty() && it == ' ')) {
                         displayText.append(it)
                     }
-                    if(!appendDisplay){
+                    if (!appendDisplay) {
                         remainingText.append(it)
                     }
-                    if(displayText.length > 650 && it == '.'){
+                    if (displayText.length > 650 && it == '.') {
                         appendDisplay = false
                     }
 
                 }
-                if(!firstExec) {
+                if (!firstExec) {
                     fullText = remainingText.toString()
-                }
-                else{
+                } else {
                     firstExec = false
                 }
                 return@transaction displayText.toString()

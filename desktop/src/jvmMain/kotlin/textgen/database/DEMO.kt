@@ -15,7 +15,6 @@ import ui.util.i18n.LanguageDefinition
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 object DEMO {
@@ -56,10 +55,9 @@ object DEMO {
         transaction {
             for (i in 0..45) {
                 if (Random.nextInt(100) < 25) {
-                    DbHistory.new {
+                    DbHistoryDAO.new {
                         val today = LocalDate.now()
                         timestamp = LocalDateTime.of(today.minusDays(i.toLong()), LocalTime.MIDNIGHT)
-                            .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
                         dataJson =
                             ExposedBlob(
                                 Json() {

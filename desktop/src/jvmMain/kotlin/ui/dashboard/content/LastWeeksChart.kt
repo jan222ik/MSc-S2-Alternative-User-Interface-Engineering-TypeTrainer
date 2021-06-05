@@ -18,6 +18,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,7 +30,6 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
-import com.github.jan222ik.compose_mpp_charts.core.data.DataPoint
 import com.github.jan222ik.compose_mpp_charts.core.graph.canvas.Chart
 import com.github.jan222ik.compose_mpp_charts.core.graph.dsl.ChartLabelSlot
 import com.github.jan222ik.compose_mpp_charts.core.grid.intGridRenderer
@@ -42,16 +42,19 @@ import com.github.jan222ik.compose_mpp_charts.core.series.compositeRenderer
 import com.github.jan222ik.compose_mpp_charts.core.viewport.Viewport
 import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.i18n
+import java.time.DayOfWeek
+import java.time.LocalDate
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalUnsignedTypes::class)
 @Composable
-fun LastWeeksChart() {
+fun LastWeeksChart(statsIntent: DashboardStatsIntent) {
     BaseDashboardCard {
         val langConfig = LanguageAmbient.current
         val dateLabels = remember(langConfig) { i18n.str.dashboard.weeklyChart.daysOfWeek.resolve().split(" ") }
+        /*
         val lineChartData = remember {
             listOf(
                 DataPoint(x = -1f, y = 110f),
@@ -64,7 +67,18 @@ fun LastWeeksChart() {
                 DataPoint(x = 6f, y = 80f),
             )
         }
-        val (minVP, maxVP) = remember(lineChartData) { lineChartData.minOf { it.y } to lineChartData.maxOf { it.y } }
+         */
+        val lineChartData = statsIntent.weekData.collectAsState()
+        val maxViewport = remember(lineChartData.value) {
+            val data = lineChartData.value
+            val pair = if (data.isEmpty()) {
+                0f to 20f
+            } else {
+                data.minOf { it.y } to data.maxOf { it.y }
+            }
+            mutableStateOf(pair)
+        }
+        val (minVP, maxVP) = remember(maxViewport.value) { maxViewport.value }
         Layout(
             content = {
                 Box(
@@ -84,12 +98,12 @@ fun LastWeeksChart() {
                         Text(text = +i18n.str.dashboard.weeklyChart.showMore)
                     }
                 }
-                val viewport = remember {
+                val viewport = remember(minVP, maxVP) {
                     mutableStateOf(
                         Viewport(
                             minX = -0.5f,
                             maxX = 6.5f,
-                            minY = minVP - 20f,
+                            minY = max(minVP - 20f, -0.5f),
                             maxY = maxVP + 20f
                         )
                     )
@@ -106,7 +120,7 @@ fun LastWeeksChart() {
                     val step = 10
                     grid(renderer = intGridRenderer(stepAbscissa = step))
                     series(
-                        data = lineChartData,
+                        data = lineChartData.value,
                         renderer = compositeRenderer(
                             lineRenderer(
                                 simplePathDrawer(brush = SolidColor(lineColor))
@@ -127,9 +141,18 @@ fun LastWeeksChart() {
                         labelProvider = { min: Float, max: Float ->
                             if (max < 0 || min.roundToInt() > 7) listOf()
                             else {
+                                val dateLabelsSorted = when(
+                                    val weekdayIdxOffset = LocalDate.now().dayOfWeek.value - 1
+                                ) {
+                                    DayOfWeek.SUNDAY.value.dec() -> dateLabels
+                                    else -> listOf(
+                                        *dateLabels.subList(weekdayIdxOffset.inc(), dateLabels.size).toTypedArray(),
+                                        *dateLabels.subList(0, weekdayIdxOffset.inc()).toTypedArray(),
+                                    )
+                                }
                                 val sIdx = max(0.0, min.toDouble()).toInt()
                                 val eIdx = min(7.0, max.roundToInt().toDouble()).toInt()
-                                dateLabels.subList(sIdx, eIdx).mapIndexed { idx, it -> it to sIdx + idx.toFloat() }
+                                dateLabelsSorted.subList(sIdx, eIdx).mapIndexed { idx, it -> it to sIdx + idx.toFloat() }
                             }
                         }
                     ) {

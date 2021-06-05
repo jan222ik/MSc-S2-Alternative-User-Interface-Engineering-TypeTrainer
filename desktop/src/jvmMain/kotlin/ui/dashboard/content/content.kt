@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.SentimentVerySatisfied
 import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.common.ui.util.router.Router
+import kotlinx.coroutines.GlobalScope
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.HoverIconDashboardCard
 import ui.dashboard.StreakAPI
@@ -133,7 +135,11 @@ fun DashStartBtnGroup(router: Router<ApplicationRoutes>) {
 }
 
 @Composable
-fun DashboardContent() {
+fun DashboardContent(
+    initStatsIntent: DashboardStatsIntent? = null
+) {
+    val statsIntent =
+        remember(initStatsIntent) { initStatsIntent ?: DashboardStatsIntent().apply { init(GlobalScope) } }
     val router = WindowRouterAmbient.current
     val density = LocalDensity.current
     Layout(
@@ -142,7 +148,7 @@ fun DashboardContent() {
             .padding(vertical = 48.dp),
         content = {
             DashStartBtnGroup(router)
-            LastWeeksChart()
+            LastWeeksChart(statsIntent)
             DashboardGoalsPreviewCard()
             StreakAndBtns(router)
         }
@@ -172,8 +178,6 @@ fun DashboardContent() {
         }
     }
 }
-
-
 
 
 @Composable

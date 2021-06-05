@@ -139,9 +139,9 @@ object DesktopApplication {
             var engine: NettyApplicationEngine? = null
             startUpScope.launch(Dispatchers.IO) {
                 loadingStateFlow.emit(StartUpLoading.DATABASE)
-                DatabaseFactory.init()
-                DEMO.demoTrainingEntries()
-                //DatabaseFactory.start()
+                //DatabaseFactory.init()
+                //DEMO.demoTrainingEntries()
+                DatabaseFactory.start()
                 loadingStateFlow.emit(StartUpLoading.NETWORK)
                 engine = embeddedServer(Netty, port = ServerConfig.PORT) {
                     ServerApplication(server).apply { create() }
