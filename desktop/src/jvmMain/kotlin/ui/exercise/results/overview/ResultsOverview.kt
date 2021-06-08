@@ -34,13 +34,9 @@ import ui.util.i18n.RequiresTranslationI18N
 
 @Composable
 fun ColumnScope.ResultsOverview(intent: ResultIntent, isStandalone: Boolean) {
-    val widthFraction = when (isStandalone) {
-        true -> 0.7f
-        false -> 1f
-    }
     Row(
         modifier = Modifier
-            .fillMaxWidth(widthFraction)
+            .fillMaxWidth(0.8f.takeIf { isStandalone } ?: 1f)
             .fillMaxHeight()
             .align(Alignment.CenterHorizontally),
         horizontalArrangement = Arrangement.spacedBy(32.dp)

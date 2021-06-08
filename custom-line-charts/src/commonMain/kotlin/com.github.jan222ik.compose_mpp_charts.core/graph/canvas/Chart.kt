@@ -46,34 +46,38 @@ fun Chart(
     val activePopupsAt = remember { mutableStateOf<Pair<Offset, IBoundingShape2D?>?>(null) }
 
     SubcomposeLayout(modifier) { constraints ->
+        val constraintsWithoutLowerBound = constraints.copy(minWidth = 0, minHeight = 0)
 
         val (spaceForStartLabel, startSlotResults) = labelSubcompose(
             slot = ChartLabelSlot.START,
             viewport = viewport.value,
             graphScopeImpl = graphScopeImpl,
-            constraints = constraints
+            constraints = constraintsWithoutLowerBound
         )
 
         val (spaceForEndLabel, endSlotResults) = labelSubcompose(
             slot = ChartLabelSlot.END,
             viewport = viewport.value,
             graphScopeImpl = graphScopeImpl,
-            constraints = constraints
+            constraints = constraintsWithoutLowerBound
         )
 
         val (spaceForBottomLabel, bottomSlotResults) = labelSubcompose(
             slot = ChartLabelSlot.BOTTOM,
             viewport = viewport.value,
             graphScopeImpl = graphScopeImpl,
-            constraints = constraints
+            constraints = constraintsWithoutLowerBound
         )
 
         val (spaceForTopLabel, topSlotResults) = labelSubcompose(
             slot = ChartLabelSlot.TOP,
             viewport = viewport.value,
             graphScopeImpl = graphScopeImpl,
-            constraints = constraints
+            constraints = constraintsWithoutLowerBound
         )
+
+        //println("spaceForStartLabel: $spaceForStartLabel, spaceForEndLabel: $spaceForEndLabel," +
+        //        " spaceForBottomLabel: $spaceForBottomLabel, spaceForTopLabel: $spaceForTopLabel")
 
         val pPopupsWithOffset = subcompose("popups") {
             activePopupsAt.value?.let { (offset: Offset, shape2D: IBoundingShape2D?) ->
@@ -85,13 +89,13 @@ fun Chart(
                 }
             }
         }.firstOrNull()?.let {
-            it.measure(constraints) to activePopupsAt.value?.first
+            it.measure(constraintsWithoutLowerBound) to activePopupsAt.value?.first
         }
 
         val canvasSize = Size(
             width = constraints.maxWidth.toFloat() - spaceForStartLabel - spaceForEndLabel,
             height = constraints.maxHeight.toFloat() - spaceForBottomLabel - spaceForTopLabel
-        )
+        ).also { print("Canvas Size: $it") }
         val rendererContext = ChartContext.of(viewport.value, canvasSize)
 
         val mCanvas = subcompose(slotCanvas) {

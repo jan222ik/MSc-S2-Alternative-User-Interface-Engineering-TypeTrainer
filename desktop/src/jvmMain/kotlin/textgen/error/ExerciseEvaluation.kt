@@ -42,6 +42,22 @@ data class ExerciseEvaluation(
         }
     }
 
+    val longestTimeTweenStrokes: Float? by lazy {
+        timesBetweenKeyStrokes.maxByOrNull { it.y }?.y
+    }
+
+    val shortestTimeTweenStrokes: Float? by lazy {
+        timesBetweenKeyStrokes.minByOrNull { it.y.takeUnless { it == 0f } ?: Float.MAX_VALUE  }?.y
+    }
+
+    val averageTimeTweenStrokes: Float? by lazy {
+        timesBetweenKeyStrokes
+            .filter { it.y != 0f }
+            .let {
+                it.sumByDouble { item -> item.y.toDouble() }.div(it.size).toFloat()
+            }
+    }
+
     val falseCharsTyped
         get() = totalCharsTyped - correctCharsTyped
 

@@ -20,6 +20,17 @@ sealed class i18n {
             val notImplementedYet: KeyI18N = "not_implemented_yet".i18Key()
         }
 
+        object history : str() {
+            override val path: String = "history"
+
+            val today: KeyI18N = "today".i18Key()
+            val yesterday: KeyI18N = "yesterday".i18Key()
+            val thisWeek: KeyI18N = "thisWeek".i18Key()
+            val lastWeek: KeyI18N = "lastWeek".i18Key()
+            val lastMonth: KeyI18N = "lastMonth".i18Key()
+            val older: KeyI18N = "older".i18Key()
+        }
+
         sealed class dashboard : str() {
             override val path: String = "dashboard"
 
