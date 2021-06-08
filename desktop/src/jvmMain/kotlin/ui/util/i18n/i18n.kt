@@ -120,29 +120,34 @@ sealed class i18n {
 
                 object exerciseMode : selection() {
                     override val path: String = super.path + ".exerciseMode"
+
                     val exerciseMode = "exercise_mode".i18Key()
                     val duration = "duration".i18Key()
                     val oneMin = "one_min".i18Key()
                     val twoMin = "two_min".i18Key()
                     val customDuration = "custom_duration".i18Key()
                     val enterDuration = "enter_duration".i18Key()
+                    val customDurationError = "custom_duration_error".i18Key()
                     val speed = "speed".i18Key()
                     val speedDescription = "speed_description".i18Key()
                     val accuracy = "accuracy".i18Key()
                     val accuracyDescription = "accuracy_description".i18Key()
                     val noTimeLimit = "no_time_limit".i18Key()
                     val noTimeLimitDescription = "no_time_limit_description".i18Key()
+
                     fun getAll() = listOf(speed, accuracy, noTimeLimit)
                     fun getDurations() = listOf(oneMin, twoMin, customDuration)
                 }
 
                 object typingType : selection() {
                     override val path: String = super.path + ".typingType"
-                    val typingType: KeyI18N = RequiresTranslationI18N("Typing Type")
-                    val movingCursor: KeyI18N = RequiresTranslationI18N("Moving Cursor")
-                    val movingCursorDescription: KeyI18N = RequiresTranslationI18N("Type with a moving cursor in a static text")
-                    val movingText: KeyI18N = RequiresTranslationI18N("Moving Text")
-                    val movingTextDescription: KeyI18N = RequiresTranslationI18N("Type with a static cursor in a moving text")
+
+                    val typingType: KeyI18N = "typing_type".i18Key()
+                    val movingCursor: KeyI18N = "moving_cursor".i18Key()
+                    val movingCursorDescription: KeyI18N = "moving_cursor_description".i18Key()
+                    val movingText: KeyI18N = "moving_text".i18Key()
+                    val movingTextDescription: KeyI18N = "moving_text_description".i18Key()
+
                     fun getAll() = listOf(movingCursor, movingText)
                 }
             }

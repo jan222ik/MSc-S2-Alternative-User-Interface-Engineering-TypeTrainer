@@ -2,6 +2,8 @@
 
 package ui.exercise.selection
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +43,7 @@ import ui.general.WindowRouterAmbient
 import ui.util.i18n.i18n
 import ui.util.span_parse.parseForSpans
 
+@ExperimentalAnimationApi
 @Composable
 fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelectionIntent()) {
     val selectionIntent = remember(selectionIntentO) { selectionIntentO }
@@ -104,12 +107,13 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                 ExerciseSelectionBodyWithSlot(
                     shape = bodyShape
                 ) {
+                    val boldHighlightSpan = SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
                     ExerciseModeSubCard(
                         selectionIntent = selectionIntent,
                         descriptionText = when (exerciseMode) {
-                            0 -> +i18n.str.exercise.selection.exerciseMode.speedDescription
-                            1 -> +i18n.str.exercise.selection.exerciseMode.accuracyDescription
-                            2 -> +i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription
+                            0 -> (+i18n.str.exercise.selection.exerciseMode.speedDescription).parseForSpans(boldHighlightSpan)
+                            1 -> (+i18n.str.exercise.selection.exerciseMode.accuracyDescription).parseForSpans(boldHighlightSpan)
+                            2 -> (+i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription).parseForSpans(boldHighlightSpan)
                             else -> throw IndexOutOfBoundsException()
                         },
                         timeLimit = exerciseMode < 2
@@ -297,13 +301,20 @@ private fun TextModeSubCard(
     }
 }
 
+
+@ExperimentalAnimationApi
 @Composable
 private fun CustomDurationInput(selectionIntent: ExerciseSelectionIntent, setSelectionIndex: () -> Unit) {
     val (customDuration, setCustomDuration) = remember { selectionIntent.customDurationSelection }
+    val hasError = remember(customDuration) {
+        val dur = customDuration.toDoubleOrNull()
+        dur == null || dur <= 0.0
+    }
     TextField(
         modifier = Modifier.onPreviewKeyEvent { setSelectionIndex.invoke(); false },
         value = customDuration,
         placeholder = { +i18n.str.exercise.selection.exerciseMode.customDuration },
+        isError = hasError,
         singleLine = true,
         trailingIcon = {
             Text(text = " min")
@@ -312,12 +323,21 @@ private fun CustomDurationInput(selectionIntent: ExerciseSelectionIntent, setSel
             setCustomDuration.invoke(it)
         }
     )
+    AnimatedVisibility(
+        visible = hasError
+    ) {
+        Text(
+            text = +i18n.str.exercise.selection.exerciseMode.customDurationError,
+            color = MaterialTheme.colors.error
+        )
+    }
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun ExerciseModeSubCard(
     selectionIntent: ExerciseSelectionIntent,
-    descriptionText: String,
+    descriptionText: AnnotatedString,
     timeLimit: Boolean
 ) {
     Column(
@@ -342,7 +362,7 @@ private fun ExerciseModeSubCard(
                     Text(text = +i18n.str.exercise.selection.exerciseMode.duration + ":")
                     Spacer(modifier = Modifier.width(15.dp))
                     OutlinedRadioButtonGroup(
-                        modifier = Modifier.fillMaxWidth(0.6f),//.width(IntrinsicSize.Min),
+                        modifier = Modifier.fillMaxWidth(0.6f),
                         options = ExerciseSelectionIntent.durationSelectionOptions,
                         optionTransform = @Composable { +it },
                         selected = duration,
