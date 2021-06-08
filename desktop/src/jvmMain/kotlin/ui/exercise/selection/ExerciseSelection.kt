@@ -28,8 +28,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
@@ -37,6 +39,7 @@ import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
 import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.i18n
+import ui.util.span_parse.parseForSpans
 
 @Composable
 fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelectionIntent()) {
@@ -101,16 +104,15 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                 ExerciseSelectionBodyWithSlot(
                     shape = bodyShape
                 ) {
-                    val param = when (exerciseMode) {
-                        0 -> i18n.str.exercise.selection.exerciseMode.speedDescription to true
-                        1 -> i18n.str.exercise.selection.exerciseMode.accuracyDescription to true
-                        2 -> i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription to false
-                        else -> throw IndexOutOfBoundsException()
-                    }
                     ExerciseModeSubCard(
                         selectionIntent = selectionIntent,
-                        descriptionText = +param.first,
-                        timeLimit = param.second
+                        descriptionText = when (exerciseMode) {
+                            0 -> +i18n.str.exercise.selection.exerciseMode.speedDescription
+                            1 -> +i18n.str.exercise.selection.exerciseMode.accuracyDescription
+                            2 -> +i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription
+                            else -> throw IndexOutOfBoundsException()
+                        },
+                        timeLimit = exerciseMode < 2
                     )
                 }
                 Spacer(Modifier.height(50.dp))
@@ -181,12 +183,14 @@ fun TypingType(intent: ExerciseSelectionIntent, headerShape: RoundedCornerShape,
         when (typingType) {
             0 -> TextModeSubCard(
                 selectionIntent = intent,
-                descriptionText = +i18n.str.exercise.selection.typingType.movingCursorDescription,
+                descriptionText = (+i18n.str.exercise.selection.typingType.movingCursorDescription)
+                    .parseForSpans(null),
                 languageSelection = false
             )
             1 -> TextModeSubCard(
                 selectionIntent = intent,
-                descriptionText = +i18n.str.exercise.selection.typingType.movingTextDescription,
+                descriptionText = (+i18n.str.exercise.selection.typingType.movingTextDescription)
+                    .parseForSpans(null),
                 languageSelection = false
             )
         }
@@ -228,30 +232,32 @@ private fun ExerciseSelectionBodyWithSlot(
     }
 }
 
-
 @Composable
 private fun LiteratureSelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    val boldHighlightSpan = SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
     TextModeSubCard(
         selectionIntent = selectionIntent,
-        descriptionText = +i18n.str.exercise.selection.textMode.literatureDescription,
+        descriptionText = (+i18n.str.exercise.selection.textMode.literatureDescription).parseForSpans(boldHighlightSpan),
         languageSelection = true
     )
 }
 
 @Composable
 private fun CharRngSelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    val boldHighlightSpan = SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
     TextModeSubCard(
         selectionIntent = selectionIntent,
-        descriptionText = +i18n.str.exercise.selection.textMode.randomCharsDescription,
+        descriptionText = (+i18n.str.exercise.selection.textMode.randomCharsDescription).parseForSpans(boldHighlightSpan),
         languageSelection = false
     )
 }
 
 @Composable
 private fun WordRngSelectionBody(selectionIntent: ExerciseSelectionIntent) {
+    val boldHighlightSpan = SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
     TextModeSubCard(
         selectionIntent = selectionIntent,
-        descriptionText = +i18n.str.exercise.selection.textMode.randomWordsDescription,
+        descriptionText = (+i18n.str.exercise.selection.textMode.randomWordsDescription).parseForSpans(boldHighlightSpan),
         languageSelection = true
     )
 }
@@ -259,7 +265,7 @@ private fun WordRngSelectionBody(selectionIntent: ExerciseSelectionIntent) {
 @Composable
 private fun TextModeSubCard(
     selectionIntent: ExerciseSelectionIntent,
-    descriptionText: String,
+    descriptionText: AnnotatedString,
     languageSelection: Boolean
 ) {
     Column {
@@ -338,19 +344,7 @@ private fun ExerciseModeSubCard(
                     OutlinedRadioButtonGroup(
                         modifier = Modifier.fillMaxWidth(0.6f),//.width(IntrinsicSize.Min),
                         options = ExerciseSelectionIntent.durationSelectionOptions,
-                        optionTransform = @Composable {
-                            /*
-                            if (it.key == i18n.str.exercise.selection.exerciseMode.customDuration.key) {
-                                CustomDurationInput(selectionIntent = selectionIntent, setSelectionIndex = {
-                                    setDuration(ExerciseSelectionIntent.durationSelectionOptions.size)
-                                })
-                                ""
-                            } else {
-                                +it
-                            }4
-                             */
-                            +it
-                        },
+                        optionTransform = @Composable { +it },
                         selected = duration,
                         onSelectionChange = setDuration,
                         shape = shape
@@ -365,7 +359,7 @@ private fun ExerciseModeSubCard(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Enter a duration:")
+                Text(text = +i18n.str.exercise.selection.exerciseMode.enterDuration)
                 CustomDurationInput(
                     selectionIntent = selectionIntent,
                     setSelectionIndex = {

@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.exercise.results.ResultIntent
-import ui.util.i18n.RequiresTranslationI18N
+import ui.util.i18n.i18n
 
 @Composable
 fun ColumnScope.ResultsOverview(intent: ResultIntent, isStandalone: Boolean) {
@@ -67,7 +67,7 @@ fun KeyPoints(modifier: Modifier, keyPoints: List<KeyPoint>) {
         modifier = modifier
     ) {
         Column {
-            Text(text = +RequiresTranslationI18N("KeyPoints") + ":")
+            Text(text = +i18n.str.exercise.results.overview.keyPoints)
             Row {
                 LazyColumn(
                     contentPadding = PaddingValues(end = 15.dp),
@@ -94,7 +94,7 @@ fun KeyPoints(modifier: Modifier, keyPoints: List<KeyPoint>) {
                             )
                             Icon(
                                 imageVector = it.icon,
-                                contentDescription = "Icon",
+                                contentDescription = null,
                                 tint = MaterialTheme.colors.primary,
                                 modifier = Modifier.size(15.dp)
                             )
@@ -112,7 +112,7 @@ fun Goals(modifier: Modifier) {
     BaseDashboardCard(
         modifier = modifier
     ) {
-        Text(text = +RequiresTranslationI18N("Goals") + ":")
+        Text(text = +i18n.str.exercise.results.overview.goals)
     }
 }
 
@@ -121,13 +121,20 @@ fun Achievements(modifier: Modifier, achievements: List<List<String>>) {
     BaseDashboardCard(
         modifier = modifier
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-                Text(text = +RequiresTranslationI18N("Achievements") + ":")
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                Text(text = +i18n.str.exercise.results.overview.achievements)
                 val color = MaterialTheme.colors.primary
-                Text(text = achievements.size.toString(), modifier = Modifier.drawBehind {
-                    drawCircle(color = color, radius = 13f)
-                })
+                Text(
+                    text = achievements.size.toString(),
+                    modifier = Modifier.drawBehind {
+                        drawCircle(color = color, radius = 13f)
+                    }
+                )
 
             }
             LazyColumn(

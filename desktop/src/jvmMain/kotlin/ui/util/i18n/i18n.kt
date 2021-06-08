@@ -125,6 +125,7 @@ sealed class i18n {
                     val oneMin = "one_min".i18Key()
                     val twoMin = "two_min".i18Key()
                     val customDuration = "custom_duration".i18Key()
+                    val enterDuration = "enter_duration".i18Key()
                     val speed = "speed".i18Key()
                     val speedDescription = "speed_description".i18Key()
                     val accuracy = "accuracy".i18Key()
@@ -156,6 +157,13 @@ sealed class i18n {
                     val analysis = "analysis".i18Key()
                     val errorHeatmap = "error_heatmap".i18Key()
                     val timeline = "timeline".i18Key()
+                }
+
+                object overview : results() {
+                    override val path: String = super.path + ".overview"
+                    val keyPoints: KeyI18N = RequiresTranslationI18N("KeyPoints:")
+                    val goals: KeyI18N = RequiresTranslationI18N("Goals:")
+                    val achievements: KeyI18N = RequiresTranslationI18N("Achievements:")
                 }
             }
 
