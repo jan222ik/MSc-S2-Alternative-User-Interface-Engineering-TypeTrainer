@@ -44,6 +44,7 @@ import ui.dashboard.StreakAPI
 import ui.dashboard.goal_preview.DashboardGoalsPreviewCard
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageAmbient
+import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -200,8 +201,19 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                             contentDescription = null,
                             tint = MaterialTheme.colors.primary
                         )
+                        val calcStreaks = streakapi.calcStreaks()
+                        val lang = LanguageAmbient.current
                         Text(
-                            text = streakapi.calcStreaks().toString() + " " + +i18n.str.dashboard.streak.days,
+                            text = "$calcStreaks " + i18n.str.dashboard.streak.days.observedString()
+                                .let {
+                                    val singleDayLastLetterTrunc =
+                                        lang.language == LanguageDefinition.English ||
+                                                lang.language == LanguageDefinition.German
+                                    if (calcStreaks == 1 && singleDayLastLetterTrunc) {
+                                        // Truncate last letter is value is 1 "Tage" -> "Tag"; "Days" -> "Day"
+                                        it.substring(0, it.length.dec())
+                                    } else it
+                                },
                             style = MaterialTheme.typography.h5
                         )
                     }
@@ -240,7 +252,7 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                             Icon(
                                 modifier = Modifier.fillMaxSize(fraction = iconFraction),
                                 imageVector = Icons.Filled.PhotoCamera,
-                                contentDescription = "Open Camera Setup",
+                                contentDescription = null,
                                 tint = MaterialTheme.colors.onBackground
                             )
                         },
@@ -255,7 +267,7 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                             Icon(
                                 modifier = Modifier.fillMaxSize(fraction = iconFraction),
                                 imageVector = Icons.Filled.SentimentVerySatisfied,
-                                contentDescription = "Open AppBenefits",
+                                contentDescription = null,
                                 tint = MaterialTheme.colors.onBackground
                             )
                         },
