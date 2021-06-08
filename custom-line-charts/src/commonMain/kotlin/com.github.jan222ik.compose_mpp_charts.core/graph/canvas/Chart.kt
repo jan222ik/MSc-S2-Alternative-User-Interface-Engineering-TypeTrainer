@@ -95,7 +95,7 @@ fun Chart(
         val canvasSize = Size(
             width = constraints.maxWidth.toFloat() - spaceForStartLabel - spaceForEndLabel,
             height = constraints.maxHeight.toFloat() - spaceForBottomLabel - spaceForTopLabel
-        ).also { print("Canvas Size: $it") }
+        )
         val rendererContext = ChartContext.of(viewport.value, canvasSize)
 
         val mCanvas = subcompose(slotCanvas) {
