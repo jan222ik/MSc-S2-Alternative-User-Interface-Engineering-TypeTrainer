@@ -449,11 +449,11 @@ $dokka.location:ui.exercise.results/ResultsRoutes/title/#/PointingToDeclaration/
 $dokka.location:ui.exercise.selection////PointingToDeclaration/desktop/ui.exercise.selection/index.html
 $dokka.location:ui.exercise.selection//CharRngSelectionBody/#ui.exercise.selection.ExerciseSelectionIntent/PointingToDeclaration/desktop/ui.exercise.selection/-char-rng-selection-body.html
 $dokka.location:ui.exercise.selection//CustomDurationInput/#ui.exercise.selection.ExerciseSelectionIntent#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/desktop/ui.exercise.selection/-custom-duration-input.html
-$dokka.location:ui.exercise.selection//ExerciseModeSubCard/#ui.exercise.selection.ExerciseSelectionIntent#kotlin.String#kotlin.Boolean/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-mode-sub-card.html
+$dokka.location:ui.exercise.selection//ExerciseModeSubCard/#ui.exercise.selection.ExerciseSelectionIntent#androidx.compose.ui.text.AnnotatedString#kotlin.Boolean/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-mode-sub-card.html
 $dokka.location:ui.exercise.selection//ExerciseSelection/#ui.exercise.selection.ExerciseSelectionIntent/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection.html
 $dokka.location:ui.exercise.selection//ExerciseSelectionBodyWithSlot/#androidx.compose.ui.Modifier#androidx.compose.foundation.shape.RoundedCornerShape#androidx.compose.ui.graphics.Color#androidx.compose.ui.graphics.Color#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-body-with-slot.html
 $dokka.location:ui.exercise.selection//LiteratureSelectionBody/#ui.exercise.selection.ExerciseSelectionIntent/PointingToDeclaration/desktop/ui.exercise.selection/-literature-selection-body.html
-$dokka.location:ui.exercise.selection//TextModeSubCard/#ui.exercise.selection.ExerciseSelectionIntent#kotlin.String#kotlin.Boolean/PointingToDeclaration/desktop/ui.exercise.selection/-text-mode-sub-card.html
+$dokka.location:ui.exercise.selection//TextModeSubCard/#ui.exercise.selection.ExerciseSelectionIntent#androidx.compose.ui.text.AnnotatedString#kotlin.Boolean/PointingToDeclaration/desktop/ui.exercise.selection/-text-mode-sub-card.html
 $dokka.location:ui.exercise.selection//TypingType/#ui.exercise.selection.ExerciseSelectionIntent#androidx.compose.foundation.shape.RoundedCornerShape#androidx.compose.foundation.shape.RoundedCornerShape/PointingToDeclaration/desktop/ui.exercise.selection/-typing-type.html
 $dokka.location:ui.exercise.selection//WordRngSelectionBody/#ui.exercise.selection.ExerciseSelectionIntent/PointingToDeclaration/desktop/ui.exercise.selection/-word-rng-selection-body.html
 $dokka.location:ui.exercise.selection/ExerciseSelectionIntent.Companion///PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/-companion/index.html
@@ -622,6 +622,11 @@ $dokka.location:ui.util.i18n/i18n.str.exercise.results.base/overview/#/PointingT
 $dokka.location:ui.util.i18n/i18n.str.exercise.results.base/path/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/base/path.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.results.base/returnToDashboard/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/base/return-to-dashboard.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.results.base/timeline/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/base/timeline.html
+$dokka.location:ui.util.i18n/i18n.str.exercise.results.overview///PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/overview/index.html
+$dokka.location:ui.util.i18n/i18n.str.exercise.results.overview/achievements/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/overview/achievements.html
+$dokka.location:ui.util.i18n/i18n.str.exercise.results.overview/goals/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/overview/goals.html
+$dokka.location:ui.util.i18n/i18n.str.exercise.results.overview/keyPoints/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/overview/key-points.html
+$dokka.location:ui.util.i18n/i18n.str.exercise.results.overview/path/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/overview/path.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.results///PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/index.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.results/path/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/path.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.results/results/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/results/results.html
@@ -633,7 +638,9 @@ $dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode///Pointing
 $dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/accuracy/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/accuracy.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/accuracyDescription/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/accuracy-description.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/customDuration/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/custom-duration.html
+$dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/customDurationError/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/custom-duration-error.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/duration/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/duration.html
+$dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/enterDuration/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/enter-duration.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/exerciseMode/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/exercise-mode.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/getAll/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/get-all.html
 $dokka.location:ui.util.i18n/i18n.str.exercise.selection.exerciseMode/getDurations/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/str/exercise/selection/exercise-mode/get-durations.html
@@ -709,8 +716,8 @@ $dokka.location:ui.util.i18n/i18n/i18Key/kotlin.String#/PointingToDeclaration/d
 $dokka.location:ui.util.i18n/i18n/i18n/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/i18n.html
 $dokka.location:ui.util.i18n/i18n/path/#/PointingToDeclaration/desktop/ui.util.i18n/i18n/path.html
 $dokka.location:ui.util.span_parse////PointingToDeclaration/desktop/ui.util.span_parse/index.html
-$dokka.location:ui.util.span_parse//parseForSpans/kotlin.String#androidx.compose.ui.text.SpanStyle/PointingToDeclaration/desktop/ui.util.span_parse/parse-for-spans.html
-$dokka.location:ui.util.span_parse//parseForSpans/kotlin.String#kotlin.Function2[kotlin.Int,kotlin.String,androidx.compose.ui.text.SpanStyle]/PointingToDeclaration/desktop/ui.util.span_parse/parse-for-spans.html
+$dokka.location:ui.util.span_parse//parseForSpans/kotlin.String#androidx.compose.ui.text.SpanStyle?/PointingToDeclaration/desktop/ui.util.span_parse/parse-for-spans.html
+$dokka.location:ui.util.span_parse//parseForSpans/kotlin.String#kotlin.Function2[kotlin.Int,kotlin.String,androidx.compose.ui.text.SpanStyle?]/PointingToDeclaration/desktop/ui.util.span_parse/parse-for-spans.html
 $dokka.location:util////PointingToDeclaration/desktop/util/index.html
 $dokka.location:util//weightedAt/TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/desktop/util/weighted-at.html
 $dokka.location:util/ImageUtils///PointingToDeclaration/desktop/util/-image-utils/index.html
