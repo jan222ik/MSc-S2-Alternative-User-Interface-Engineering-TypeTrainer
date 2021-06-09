@@ -55,7 +55,7 @@ object RandomCharGenerator : IGenerator<RandomCharOptions> {
 @Serializable
 @SerialName("RandomCharOptions")
 data class RandomCharOptions(
-    val seed: Long,
+    override val seed: Long,
     val delimiter: String = " ",
     val segmentMinimumLength: Int,
     val wordLengthWeightMap: Map<Int, Int>,

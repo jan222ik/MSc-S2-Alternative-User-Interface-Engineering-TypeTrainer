@@ -45,7 +45,7 @@ import ui.util.span_parse.parseForSpans
 
 @ExperimentalAnimationApi
 @Composable
-fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelectionIntent()) {
+fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelectionIntent(null)) {
     val selectionIntent = remember(selectionIntentO) { selectionIntentO }
     Box(
         modifier = Modifier.fillMaxSize(),

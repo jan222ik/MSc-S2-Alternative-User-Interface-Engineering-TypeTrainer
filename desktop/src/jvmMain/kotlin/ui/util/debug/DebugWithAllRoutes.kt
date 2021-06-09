@@ -30,7 +30,6 @@ fun DebugWithAllRoutes() {
                 ApplicationRoutes.Dashboard,
                 ApplicationRoutes.Settings,
                 ApplicationRoutes.User.Login,
-                ApplicationRoutes.Exercise.ExerciseSelection,
                     //ApplicationRoutes.Exercise.Connection.QRCode,
                     //ApplicationRoutes.Exercise.Connection.SetupInstructions,
                 ApplicationRoutes.Goals.Overview,
@@ -45,6 +44,12 @@ fun DebugWithAllRoutes() {
                     }
                 }
                 null -> when (it) {
+                    ApplicationRoutes.Exercise.ExerciseSelection::class -> {
+                        val dest = ApplicationRoutes.Exercise.ExerciseSelection(DEMO.demoOptions)
+                        Button(onClick = { router.navTo(dest) }) {
+                            Text(text = +dest.title)
+                        }
+                    }
                     ApplicationRoutes.User.AccountManagement::class -> {
                         val dest = ApplicationRoutes.User.AccountManagement(Any())
                         Button(onClick = { router.navTo(dest) }) {

@@ -62,6 +62,6 @@ object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
 @Serializable
 @SerialName("RandomKnownTextOptions")
 data class RandomKnownTextOptions(
-    val seed: Long,
+    override val seed: Long,
     val language: LanguageDefinition
 ) : AbstractGeneratorOptions()
