@@ -163,6 +163,7 @@ $dokka.location:textgen.generators.impl/RandomKnownWordOptions/seed/#/PointingTo
 $dokka.location:textgen.generators////PointingToDeclaration/desktop/textgen.generators/index.html
 $dokka.location:textgen.generators/AbstractGeneratorOptions///PointingToDeclaration/desktop/textgen.generators/-abstract-generator-options/index.html
 $dokka.location:textgen.generators/AbstractGeneratorOptions/AbstractGeneratorOptions/#/PointingToDeclaration/desktop/textgen.generators/-abstract-generator-options/-abstract-generator-options.html
+$dokka.location:textgen.generators/AbstractGeneratorOptions/seed/#/PointingToDeclaration/desktop/textgen.generators/-abstract-generator-options/seed.html
 $dokka.location:textgen.generators/ContinuousGenerator///PointingToDeclaration/desktop/textgen.generators/-continuous-generator/index.html
 $dokka.location:textgen.generators/ContinuousGenerator/ContinuousGenerator/#kotlin.Function0[kotlin.String]/PointingToDeclaration/desktop/textgen.generators/-continuous-generator/-continuous-generator.html
 $dokka.location:textgen.generators/ContinuousGenerator/generateSegment/#/PointingToDeclaration/desktop/textgen.generators/-continuous-generator/generate-segment.html
@@ -258,6 +259,8 @@ $dokka.location:ui.dashboard/ApplicationRoutes.Exercise.ExerciseResults/Exercise
 $dokka.location:ui.dashboard/ApplicationRoutes.Exercise.ExerciseResults/exerciseResults/#/PointingToDeclaration/desktop/ui.dashboard/-application-routes/-exercise/-exercise-results/exercise-results.html
 $dokka.location:ui.dashboard/ApplicationRoutes.Exercise.ExerciseResults/initialPage/#/PointingToDeclaration/desktop/ui.dashboard/-application-routes/-exercise/-exercise-results/initial-page.html
 $dokka.location:ui.dashboard/ApplicationRoutes.Exercise.ExerciseSelection///PointingToDeclaration/desktop/ui.dashboard/-application-routes/-exercise/-exercise-selection/index.html
+$dokka.location:ui.dashboard/ApplicationRoutes.Exercise.ExerciseSelection/ExerciseSelection/#ui.exercise.AbstractTypingOptions?/PointingToDeclaration/desktop/ui.dashboard/-application-routes/-exercise/-exercise-selection/-exercise-selection.html
+$dokka.location:ui.dashboard/ApplicationRoutes.Exercise.ExerciseSelection/initData/#/PointingToDeclaration/desktop/ui.dashboard/-application-routes/-exercise/-exercise-selection/init-data.html
 $dokka.location:ui.dashboard/ApplicationRoutes.Exercise.Training///PointingToDeclaration/desktop/ui.dashboard/-application-routes/-exercise/-training/index.html
 $dokka.location:ui.dashboard/ApplicationRoutes.Exercise.Training/Training/#ui.exercise.AbstractTypingOptions/PointingToDeclaration/desktop/ui.dashboard/-application-routes/-exercise/-training/-training.html
 $dokka.location:ui.dashboard/ApplicationRoutes.Exercise.Training/trainingOptions/#/PointingToDeclaration/desktop/ui.dashboard/-application-routes/-exercise/-training/training-options.html
@@ -418,6 +421,9 @@ $dokka.location:ui.exercise.results.overview//Achievements/#androidx.compose.ui.
 $dokka.location:ui.exercise.results.overview//Goals/#androidx.compose.ui.Modifier/PointingToDeclaration/desktop/ui.exercise.results.overview/-goals.html
 $dokka.location:ui.exercise.results.overview//KeyPoints/#androidx.compose.ui.Modifier#kotlin.collections.List[ui.exercise.results.overview.KeyPoint]/PointingToDeclaration/desktop/ui.exercise.results.overview/-key-points.html
 $dokka.location:ui.exercise.results.overview//ResultsOverview/androidx.compose.foundation.layout.ColumnScope#ui.exercise.results.ResultIntent#kotlin.Boolean/PointingToDeclaration/desktop/ui.exercise.results.overview/-results-overview.html
+$dokka.location:ui.exercise.results.overview//SessionOptions/#androidx.compose.ui.Modifier#ui.exercise.AbstractTypingOptions/PointingToDeclaration/desktop/ui.exercise.results.overview/-session-options.html
+$dokka.location:ui.exercise.results.overview//SessionOptionsItem/#ui.util.i18n.KeyI18N#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/desktop/ui.exercise.results.overview/-session-options-item.html
+$dokka.location:ui.exercise.results.overview//convertToMinSecString/#/PointingToDeclaration/desktop/ui.exercise.results.overview/convert-to-min-sec-string.html
 $dokka.location:ui.exercise.results.overview/KeyPoint.Companion///PointingToDeclaration/desktop/ui.exercise.results.overview/-key-point/-companion/index.html
 $dokka.location:ui.exercise.results.overview/KeyPoint.Companion/images/#/PointingToDeclaration/desktop/ui.exercise.results.overview/-key-point/-companion/images.html
 $dokka.location:ui.exercise.results.overview/KeyPoint.Companion/random/#/PointingToDeclaration/desktop/ui.exercise.results.overview/-key-point/-companion/random.html
@@ -466,7 +472,7 @@ $dokka.location:ui.exercise.selection/ExerciseSelectionIntent.Companion/shiftInt
 $dokka.location:ui.exercise.selection/ExerciseSelectionIntent.Companion/textModeSelectionOptions/#/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/-companion/text-mode-selection-options.html
 $dokka.location:ui.exercise.selection/ExerciseSelectionIntent.Companion/typingTypeSelectionOptions/#/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/-companion/typing-type-selection-options.html
 $dokka.location:ui.exercise.selection/ExerciseSelectionIntent///PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/index.html
-$dokka.location:ui.exercise.selection/ExerciseSelectionIntent/ExerciseSelectionIntent/#/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/-exercise-selection-intent.html
+$dokka.location:ui.exercise.selection/ExerciseSelectionIntent/ExerciseSelectionIntent/#ui.exercise.AbstractTypingOptions?/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/-exercise-selection-intent.html
 $dokka.location:ui.exercise.selection/ExerciseSelectionIntent/customDurationSelection/#/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/custom-duration-selection.html
 $dokka.location:ui.exercise.selection/ExerciseSelectionIntent/durationSelection/#/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/duration-selection.html
 $dokka.location:ui.exercise.selection/ExerciseSelectionIntent/exerciseModeSelection/#/PointingToDeclaration/desktop/ui.exercise.selection/-exercise-selection-intent/exercise-mode-selection.html
