@@ -96,7 +96,7 @@ object DesktopApplication {
                                         ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
                                         is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
                                         ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection()
-                                        is ApplicationRoutes.Exercise.Connection.QRCode ->
+                                        is ApplicationRoutes.Exercise.Connection.SetupConnection ->
                                             ConnectionScreen(
                                                 server = server,
                                                 trainingOptions = current.trainingOptions

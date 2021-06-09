@@ -24,7 +24,7 @@ fun handleInput(
             }
             IPracticeIntend.TypingClockState.PREVIEW -> {
                 scope.launch(Dispatchers.IO) {
-                    TODO("Get starting position of fingers here and launch keyboard")
+                    //TODO("Get starting position of fingers here")
                     intend.start()
                     intend.checkChar(char)
                 }

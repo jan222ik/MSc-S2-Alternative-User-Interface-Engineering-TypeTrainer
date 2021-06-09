@@ -34,6 +34,9 @@ import ui.general.WindowRouterAmbient
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 import ui.util.span_parse.parseForSpans
+import util.KeyboardUtil
+import java.awt.event.KeyEvent.KEY_LOCATION_RIGHT
+import java.awt.event.KeyEvent.KEY_LOCATION_STANDARD
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 

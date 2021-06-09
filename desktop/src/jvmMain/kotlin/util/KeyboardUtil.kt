@@ -23,7 +23,8 @@ object KeyboardUtil {
     /* http://www.keyboard-layout-editor.com/#/ */
     /* !ATTENTION! Space will be "" -> therefore change file to contain "Space" instead! */
     fun readKeyboard(): Keyboard {
-        val keyboardLines = "keyboards/keyboard-relevant-layout_iso-105_de.json".getResourceAsFile()!!.readLinesAndClose()
+        val keyboardLines =
+            "keyboards/keyboard-relevant-layout_iso-105_de.json".getResourceAsFile()!!.readLinesAndClose()
         val array: JsonArray = Json.decodeFromString(keyboardLines)
         var keyboard = Keyboard()
 
@@ -63,8 +64,9 @@ object KeyboardUtil {
             keyboard.keys.add(keys)
         }
 
-        keyboard.init()
-        return keyboard
+        Keyboard.Instance = keyboard
+        Keyboard.Instance.init()
+        return Keyboard.Instance
     }
 }
 

@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package ui.exercise.practice.text
 
 import androidx.compose.foundation.background

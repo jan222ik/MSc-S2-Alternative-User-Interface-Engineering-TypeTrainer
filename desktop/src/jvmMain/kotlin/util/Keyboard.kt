@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent.VK_ESCAPE
 import java.awt.event.KeyEvent.VK_SHIFT
 import java.awt.event.KeyEvent.VK_SPACE
 import java.awt.event.KeyEvent.VK_TAB
+import java.security.Key
 
 class Keyboard {
     companion object {
@@ -23,6 +24,8 @@ class Keyboard {
             "SHIFT" to VK_SHIFT,
             "SPACE" to VK_SPACE
         ) as HashMap
+
+        lateinit var Instance: Keyboard
     }
 
     data class Key(

@@ -154,7 +154,7 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                             val options = selectionIntent.generateTypingOptions()
                             router.navTo(
                                 dest = when (options.isCameraEnabled) {
-                                    true -> ApplicationRoutes.Exercise.Connection.QRCode(options)
+                                    true -> ApplicationRoutes.Exercise.Connection.SetupConnection(options)
                                     false -> ApplicationRoutes.Exercise.Training(options)
                                 }
                             )
