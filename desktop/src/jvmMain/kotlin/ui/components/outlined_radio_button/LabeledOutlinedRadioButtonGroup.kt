@@ -71,14 +71,14 @@ fun <T> LabeledOutlinedRadioButtonGroup(
             }
             Card(
                 modifier = labelWidthModifier,
-                backgroundColor = MaterialTheme.colors.background,
+                backgroundColor = MaterialTheme.colors.primary,
                 shape = shape.copy(topEnd = CornerSize(0.dp), bottomEnd = CornerSize(0.dp)),
                 elevation = 0.dp
             ) {
                 Row {
                     OptionText(
                         text = label,
-                        color = MaterialTheme.colors.primary,
+                        color = MaterialTheme.colors.onPrimary,
                         textModifier = Modifier.padding(optionTextPadding)
                     )
                     VDivider(additionalVerticalPadding)
