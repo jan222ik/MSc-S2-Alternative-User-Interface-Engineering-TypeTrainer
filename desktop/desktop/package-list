@@ -105,12 +105,21 @@ $dokka.location:textgen.error/CharEvaluation.TypingError/toString/#/PointingToDe
 $dokka.location:textgen.error/CharEvaluation///PointingToDeclaration/desktop/textgen.error/-char-evaluation/index.html
 $dokka.location:textgen.error/CharEvaluation/CharEvaluation/#/PointingToDeclaration/desktop/textgen.error/-char-evaluation/-char-evaluation.html
 $dokka.location:textgen.error/CharEvaluation/expected/#/PointingToDeclaration/desktop/textgen.error/-char-evaluation/expected.html
+$dokka.location:textgen.error/CharEvaluation/expectedChar/#/PointingToDeclaration/desktop/textgen.error/-char-evaluation/expected-char.html
 $dokka.location:textgen.error/CharEvaluation/getExpectedChar/#kotlin.String/PointingToDeclaration/desktop/textgen.error/-char-evaluation/get-expected-char.html
 $dokka.location:textgen.error/CharEvaluation/timeRemaining/#/PointingToDeclaration/desktop/textgen.error/-char-evaluation/time-remaining.html
+$dokka.location:textgen.error/ChartErrorKey///PointingToDeclaration/desktop/textgen.error/-chart-error-key/index.html
+$dokka.location:textgen.error/ChartErrorKey/ChartErrorKey/#kotlin.Int#kotlin.String#kotlin.Int#kotlin.Int/PointingToDeclaration/desktop/textgen.error/-chart-error-key/-chart-error-key.html
+$dokka.location:textgen.error/ChartErrorKey/amount/#/PointingToDeclaration/desktop/textgen.error/-chart-error-key/amount.html
+$dokka.location:textgen.error/ChartErrorKey/char/#/PointingToDeclaration/desktop/textgen.error/-chart-error-key/char.html
+$dokka.location:textgen.error/ChartErrorKey/dataPoint/#/PointingToDeclaration/desktop/textgen.error/-chart-error-key/data-point.html
+$dokka.location:textgen.error/ChartErrorKey/idx/#/PointingToDeclaration/desktop/textgen.error/-chart-error-key/idx.html
+$dokka.location:textgen.error/ChartErrorKey/sum/#/PointingToDeclaration/desktop/textgen.error/-chart-error-key/sum.html
 $dokka.location:textgen.error/ExerciseEvaluation///PointingToDeclaration/desktop/textgen.error/-exercise-evaluation/index.html
 $dokka.location:textgen.error/ExerciseEvaluation/ExerciseEvaluation/#kotlin.collections.MutableList[textgen.error.TextEvaluation]#ui.exercise.AbstractTypingOptions/PointingToDeclaration/desktop/textgen.error/-exercise-evaluation/-exercise-evaluation.html
 $dokka.location:textgen.error/ExerciseEvaluation/averageTimeTweenStrokes/#/PointingToDeclaration/desktop/textgen.error/-exercise-evaluation/average-time-tween-strokes.html
 $dokka.location:textgen.error/ExerciseEvaluation/correctCharsTyped/#/PointingToDeclaration/desktop/textgen.error/-exercise-evaluation/correct-chars-typed.html
+$dokka.location:textgen.error/ExerciseEvaluation/errorRateOfKeys/#/PointingToDeclaration/desktop/textgen.error/-exercise-evaluation/error-rate-of-keys.html
 $dokka.location:textgen.error/ExerciseEvaluation/falseCharsTyped/#/PointingToDeclaration/desktop/textgen.error/-exercise-evaluation/false-chars-typed.html
 $dokka.location:textgen.error/ExerciseEvaluation/falseKeyStrokes/#/PointingToDeclaration/desktop/textgen.error/-exercise-evaluation/false-key-strokes.html
 $dokka.location:textgen.error/ExerciseEvaluation/longestTimeTweenStrokes/#/PointingToDeclaration/desktop/textgen.error/-exercise-evaluation/longest-time-tween-strokes.html
@@ -411,6 +420,20 @@ $dokka.location:ui.exercise.practice/PracticeIntendImpl/typingOptions/#/Pointing
 $dokka.location:ui.exercise.practice/PracticeIntendImpl/update/#/PointingToDeclaration/desktop/ui.exercise.practice/-practice-intend-impl/update.html
 $dokka.location:ui.exercise.result////PointingToDeclaration/desktop/ui.exercise.result/index.html
 $dokka.location:ui.exercise.result//TypingErrorTreeMap/#androidx.compose.ui.Modifier#kotlin.collections.List[textgen.error.TextEvaluation]/PointingToDeclaration/desktop/ui.exercise.result/-typing-error-tree-map.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist////PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/index.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist//ErrorPerKey/androidx.compose.foundation.lazy.LazyItemScope#textgen.error.ExerciseEvaluation#kotlin.Boolean/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-error-per-key.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist//ErrorPerKeyChart/#kotlin.collections.List[textgen.error.ChartErrorKey]#androidx.compose.ui.Modifier/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-error-per-key-chart.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist//barDrawer/#kotlin.Float#androidx.compose.ui.graphics.Brush#kotlin.Float#androidx.compose.ui.graphics.drawscope.DrawStyle#androidx.compose.ui.graphics.ColorFilter?#androidx.compose.ui.graphics.BlendMode/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/bar-drawer.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist//barRenderer/#ui.exercise.results.analysis.error_per_key_dist.IBarDrawer/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/bar-renderer.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/BoundingRect///PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-bounding-rect/index.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/BoundingRect/BoundingRect/#com.github.jan222ik.compose_mpp_charts.core.data.DataPoint#com.github.jan222ik.compose_mpp_charts.core.data.DrawPoint#androidx.compose.ui.geometry.Offset#androidx.compose.ui.geometry.Size/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-bounding-rect/-bounding-rect.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/BoundingRect/anchorRenderPoint/#/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-bounding-rect/anchor-render-point.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/BoundingRect/containtsOffset/#androidx.compose.ui.geometry.Offset/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-bounding-rect/containts-offset.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/BoundingRect/dataPoint/#/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-bounding-rect/data-point.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/BoundingRect/size/#/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-bounding-rect/size.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/BoundingRect/topLeftOffset/#/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-bounding-rect/top-left-offset.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/IBarDrawer///PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-i-bar-drawer/index.html
+$dokka.location:ui.exercise.results.analysis.error_per_key_dist/IBarDrawer/draw/com.github.jan222ik.compose_mpp_charts.core.graph.canvas.ChartDrawScope#com.github.jan222ik.compose_mpp_charts.core.data.DrawPoint/PointingToDeclaration/desktop/ui.exercise.results.analysis.error_per_key_dist/-i-bar-drawer/draw.html
 $dokka.location:ui.exercise.results.analysis.keyinterval////PointingToDeclaration/desktop/ui.exercise.results.analysis.keyinterval/index.html
 $dokka.location:ui.exercise.results.analysis.keyinterval//KeyInterval/androidx.compose.foundation.lazy.LazyItemScope#textgen.error.ExerciseEvaluation#kotlin.Boolean/PointingToDeclaration/desktop/ui.exercise.results.analysis.keyinterval/-key-interval.html
 $dokka.location:ui.exercise.results.analysis.keyinterval//KeyIntervalChart/#kotlin.collections.List[com.github.jan222ik.compose_mpp_charts.core.data.DataPoint]#androidx.compose.ui.Modifier/PointingToDeclaration/desktop/ui.exercise.results.analysis.keyinterval/-key-interval-chart.html
@@ -758,6 +781,7 @@ ui.exercise.practice.text
 ui.exercise.result
 ui.exercise.results
 ui.exercise.results.analysis
+ui.exercise.results.analysis.error_per_key_dist
 ui.exercise.results.analysis.keyinterval
 ui.exercise.results.overview
 ui.exercise.results.timeline
