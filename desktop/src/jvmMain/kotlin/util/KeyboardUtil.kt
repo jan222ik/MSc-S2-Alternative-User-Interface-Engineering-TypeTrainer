@@ -136,7 +136,7 @@ class FingerMatcher(
         get() = mulSyncStep
 
     private val escPoints = mutableListOf<Offset>()
-    private var topLeft: Offset? = null
+     var topLeft: Offset? = null
 
     fun syncInput(evt: KeyEvent) {
         if (evt.type == KeyEventType.KeyDown) {

@@ -4,6 +4,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.unit.IntSize
@@ -36,6 +43,7 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import network.Server
 import network.ServerApplication
@@ -56,6 +64,7 @@ import ui.history.HistoryScreen
 import ui.util.debug.Debug
 import ui.util.debug.DebugWithAllRoutes
 import ui.util.i18n.LanguageConfiguration
+import util.FingerMatcher
 
 @ExperimentalAnimationApi
 object DesktopApplication {
@@ -109,10 +118,15 @@ object DesktopApplication {
                                             trainingOptions = current.trainingOptions,
                                             server = server
                                         )
-                                        is ApplicationRoutes.Exercise.Training -> PracticeScreen(
-                                            typingOptions = current.trainingOptions,
-                                            fingerMatcher = current.fingerMatcher
-                                        )
+                                        is ApplicationRoutes.Exercise.Training -> {
+                                            PracticeScreen(
+                                                typingOptions = current.trainingOptions,
+                                                fingerMatcher = current.fingerMatcher
+                                            )
+                                            if (current.trainingOptions.isCameraEnabled) {
+                                                FingerCanvas(server = server, fingerMatcher = current.fingerMatcher)
+                                            }
+                                        }
                                         is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
                                             current.exerciseResults,
                                             current.initialPage
@@ -216,7 +230,48 @@ object DesktopApplication {
     enum class StartUpLoading {
         START, NETWORK, DATABASE, DONE
     }
+
+    @Composable
+    fun FingerCanvas(server: Server, fingerMatcher: FingerMatcher?) {
+        fingerMatcher ?: return
+        LaunchedEffect(server, fingerMatcher) {
+            Window {
+                TypeTrainerTheme {
+                    Surface(color = MaterialTheme.colors.surface) {
+                        val hands = server.handLandMarks.receiveAsFlow().collectAsState(listOf())
+                        Canvas(modifier = Modifier.fillMaxSize()) {
+                            clipRect {
+                                val (w, h) = this.size
+                                println("w: $w h: $h")
+                                val colors = listOf(
+                                    Color.Red,
+                                    Color.Green,
+                                    Color.Cyan
+                                )
+                                hands.value.forEachIndexed { idx, it ->
+                                    println("Hand $idx")
+                                    val c = colors[idx.rem(colors.size)]
+                                    it.fingerLandmarks.values.map {
+                                        val point = it.toKeyBoardRef( Offset.Zero)
+                                        val x = point.x * w
+                                        val y = point.y * h
+                                        println("Finger ${it.finger} x: $x y: $y")
+                                        Offset(x, y)
+                                    }.let {
+                                        drawPoints(points = it, brush = SolidColor(c), pointMode = PointMode.Points, strokeWidth = 4f, cap = StrokeCap.Round)
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
+
 
 
 
