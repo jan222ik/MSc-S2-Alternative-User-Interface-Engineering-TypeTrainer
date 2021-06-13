@@ -120,7 +120,7 @@ fun HistoryScreen() {
                     }
                     item {
                         HistoryEntry(
-                            index = index,
+                            index = items.size - index,
                             dateTime = date,
                             isCurrent = index == currItem.value,
                             onClick = {
@@ -190,7 +190,7 @@ fun LazyItemScope.HistoryEntry(index: Int, dateTime: LocalDateTime, isCurrent: B
                     .padding(horizontal = 5.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(modifier = Modifier.fillMaxHeight(), text = index.inc().toString()) // Shift visual index by +1
+                Text(modifier = Modifier.fillMaxHeight(), text = index.toString())
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp))

@@ -3,6 +3,7 @@ package textgen.error
 import com.github.jan222ik.compose_mpp_charts.core.data.DataPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import ui.exercise.AbstractTypingOptions
 
 @Serializable
@@ -58,6 +59,30 @@ data class ExerciseEvaluation(
             }
     }
 
+    val errorRateOfKeys: List<ChartErrorKey> by lazy {
+        texts
+            .flatMap { txt ->
+                txt.chars
+                    .filterIsInstance<CharEvaluation.TypingError>()
+                    .onEach { it.getExpectedChar(txt.text) }
+            }
+            .let { errors ->
+                errors
+                    .groupBy { it.expectedChar }
+                    .entries
+                    .sortedByDescending { it.value.size }
+                    .mapIndexed{index: Int, entry: Map.Entry<Char?, List<CharEvaluation.TypingError>> ->
+                        ChartErrorKey(
+                            idx = index,
+                            char = entry.key.toString(),
+                            amount = entry.value.size,
+                            sum = errors.size
+                        )
+                    }
+            }
+
+    }
+
     val falseCharsTyped
         get() = totalCharsTyped - correctCharsTyped
 
@@ -68,6 +93,17 @@ data class ExerciseEvaluation(
         get() = 1f - (totalErrors / totalCharsTyped.toFloat())
 
     val falseKeyStrokes: Int by lazy { 0 }
+}
+
+@Serializable
+data class ChartErrorKey(
+    val idx: Int,
+    val char: String,
+    val amount: Int,
+    val sum: Int
+) {
+    @Transient
+    val dataPoint = DataPoint(idx.toFloat(), amount.toFloat().div(sum.toFloat()).times(100f))
 }
 
 @Serializable
@@ -111,7 +147,12 @@ sealed class CharEvaluation {
         }
     }
 
+    @Transient
+    var expectedChar: Char? = null
+
     fun getExpectedChar(text: String): Char {
-        return text[expected]
+        val c = text[expected]
+        expectedChar = c
+        return c
     }
 }

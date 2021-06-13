@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import network.Server
 import network.ServerApplication
-import textgen.database.DEMO
 import textgen.database.DatabaseFactory
 import ui.components.AnimatedLogo
 import ui.connection.ConnectionScreen
@@ -49,6 +48,7 @@ import ui.exercise.connection.KeyboardSynchronisationScreen
 import ui.exercise.practice.PracticeScreen
 import ui.exercise.results.ResultsScreen
 import ui.exercise.selection.ExerciseSelection
+import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowRouter
 import ui.general.window.container.WindowContainer
 import ui.goals.GoalComposeScreen
@@ -57,6 +57,7 @@ import ui.util.debug.Debug
 import ui.util.debug.DebugWithAllRoutes
 import ui.util.i18n.LanguageConfiguration
 
+@ExperimentalAnimationApi
 object DesktopApplication {
 
     @ExperimentalCoroutinesApi
@@ -95,7 +96,9 @@ object DesktopApplication {
                                         ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
                                         ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
                                         is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection()
+                                        is ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection(
+                                            ExerciseSelectionIntent(current.initData)
+                                        )
                                         is ApplicationRoutes.Exercise.Connection.SetupConnection ->
                                             ConnectionScreen(
                                                 server = server,
@@ -127,7 +130,7 @@ object DesktopApplication {
     }
 
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @ExperimentalAnimationApi
     @ExperimentalCoroutinesApi
     @KtorExperimentalAPI
     @Composable

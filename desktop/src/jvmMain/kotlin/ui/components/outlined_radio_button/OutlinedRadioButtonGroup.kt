@@ -81,8 +81,13 @@ fun <T> OutlinedRadioButtonGroup(
                     else -> RectangleShape
                 }
 
+                //val colorCombi = when (selected) {
+                //    index -> primaryColor to onPrimaryColor
+                //    else -> cardBackgroundColor to onCardBackgroundColor
+                //}
+
                 val colorCombi = when (selected) {
-                    index -> primaryColor to onPrimaryColor
+                    index -> primaryColor.copy(alpha = 0.6f) to onPrimaryColor //#62729B TODO
                     else -> cardBackgroundColor to onCardBackgroundColor
                 }
 

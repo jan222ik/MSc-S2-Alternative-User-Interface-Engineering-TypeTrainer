@@ -49,7 +49,7 @@ fun KeyIntervalChart(data: List<DataPoint>, modifier: Modifier = Modifier) {
             maxY = yMaxVP * 1.1f
         )
     }
-    val viewport = remember {
+    val viewport = remember(data, yMinVP, yMaxVP) {
         mutableStateOf(
             Viewport(
                 minX = -0.5f,

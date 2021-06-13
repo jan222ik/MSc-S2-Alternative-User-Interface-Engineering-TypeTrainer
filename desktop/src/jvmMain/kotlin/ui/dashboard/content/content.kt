@@ -67,7 +67,7 @@ fun DashStartBtnGroup(router: Router<ApplicationRoutes>) {
         ) {
             HoverIconDashboardCard(
                 modifier = Modifier.width(btnWidth).heightIn(max = this@BoxWithConstraints.maxHeight),
-                onClick = { router.navTo(ApplicationRoutes.Exercise.ExerciseSelection) },
+                onClick = { router.navTo(ApplicationRoutes.Exercise.ExerciseSelection(null)) },
                 icon = {
                     Icon(
                         modifier = Modifier.fillMaxSize(fraction = iconFraction),

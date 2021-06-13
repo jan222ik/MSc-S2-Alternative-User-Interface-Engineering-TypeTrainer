@@ -43,7 +43,7 @@ object RandomKnownWordGenerator : IGenerator<RandomKnownWordOptions> {
 @Serializable
 @SerialName("RandomKnownWordOptions")
 data class RandomKnownWordOptions(
-    val seed: Long,
+    override val seed: Long,
     val delimiter: String = " ",
     val language: LanguageDefinition,
     val minimalSegmentLength: Int
