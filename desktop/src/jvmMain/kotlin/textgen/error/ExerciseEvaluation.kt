@@ -5,6 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ui.exercise.AbstractTypingOptions
+import util.FingerUsed
 
 @Serializable
 data class ExerciseEvaluation(
@@ -144,6 +145,17 @@ sealed class CharEvaluation {
     ) : CharEvaluation() {
         override fun toString(): String {
             return "CharEvaluation.TypingError[time: $timeRemaining, expected: $expected, actual: $actual]"
+        }
+    }
+
+    @Serializable
+    class FingerError(
+        override val timeRemaining: Long,
+        override val expected: Int,
+        val fingerUsed: FingerUsed? = null
+    ) : CharEvaluation() {
+        override fun toString(): String {
+            return "CharEvaluation.FingerError[time: $timeRemaining, expected: $expected, fingerUsed: $fingerUsed]"
         }
     }
 

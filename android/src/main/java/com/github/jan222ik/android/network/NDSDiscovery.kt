@@ -6,6 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.github.jan222ik.common.network.NDService
 import io.ktor.utils.io.core.ByteOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -16,13 +19,16 @@ import javax.jmdns.ServiceListener
 object NDSDiscovery {
     @Composable
     fun start(callback: (ip: String) -> Unit) {
-        val jmdns = JmDNS.create(getLocalWifiIpAddress(), NDService.SERVICE_NAME)
-        jmdns.addServiceListener(
-            NDService.SERVICE_TYPE,
-            ConnectionListener(callback) {
-                jmdns.unregisterAllServices()
-                jmdns.close()
-            })
+        val localWifiIpAddress = getLocalWifiIpAddress()
+        GlobalScope.launch(Dispatchers.IO) {
+            val jmdns = JmDNS.create(localWifiIpAddress, NDService.SERVICE_NAME)
+            jmdns.addServiceListener(
+                NDService.SERVICE_TYPE,
+                ConnectionListener(callback) {
+                    jmdns.unregisterAllServices()
+                    jmdns.close()
+                })
+        }
     }
 
     private class ConnectionListener(externCallback: (ip: String) -> Unit, stopCall: () -> Unit) : ServiceListener {

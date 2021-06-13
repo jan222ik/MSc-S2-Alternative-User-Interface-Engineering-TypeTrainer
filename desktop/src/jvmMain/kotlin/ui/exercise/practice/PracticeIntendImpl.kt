@@ -16,10 +16,13 @@ import textgen.generators.impl.RandomKnownTextOptions
 import textgen.generators.impl.RandomKnownWordGenerator
 import textgen.generators.impl.RandomKnownWordOptions
 import ui.exercise.AbstractTypingOptions
+import util.FingerMatcher
+import util.FingerUsed
 
 
 abstract class PracticeIntendImpl(
-    final override val typingOptions: AbstractTypingOptions
+    final override val typingOptions: AbstractTypingOptions,
+    private val fingerMatcher: FingerMatcher?
 ) : IPracticeIntend, IDebugPracticeIntend {
     private val generator: ContinuousGenerator
     private var typingClockJob: Job? = null
@@ -114,5 +117,12 @@ abstract class PracticeIntendImpl(
 
     override suspend fun forceNextText() {
         _textStateFlow.emit(generator.generateSegment())
+    }
+
+    override val hasFingerTracking: Boolean
+        get() = fingerMatcher != null
+
+    override fun checkFingerForChar(char: String): FingerUsed? {
+        return fingerMatcher?.matchFingerOverKey(char)
     }
 }

@@ -15,13 +15,15 @@ import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
 import ui.exercise.AbstractTypingOptions
+import util.FingerMatcher
 import util.RandomUtil
 import java.time.LocalDateTime
 import kotlin.concurrent.fixedRateTimer
 
 class MovingTextTypingIntend(
-    typingOptions: AbstractTypingOptions
-) : PracticeIntendImpl(typingOptions = typingOptions), ITextDisplayPracticeIntend {
+    typingOptions: AbstractTypingOptions,
+    fingerMatcher: FingerMatcher?
+) : PracticeIntendImpl(typingOptions = typingOptions, fingerMatcher), ITextDisplayPracticeIntend {
 
     override val exerciseEvaluation = ExerciseEvaluation(options = typingOptions)
     lateinit var textEvaluation: TextEvaluation

@@ -52,13 +52,20 @@ import ui.exercise.practice.text.MovingTextTyping
 import ui.general.WindowRouterAmbient
 import ui.util.debug.ifDebugCompose
 import ui.util.i18n.LanguageDefinition
+import util.FingerMatcher
 
 @Composable
-fun PracticeScreen(typingOptions: AbstractTypingOptions) {
+fun PracticeScreen(typingOptions: AbstractTypingOptions, fingerMatcher: FingerMatcher?) {
     val intend = remember(typingOptions) {
         when (typingOptions.typingType) {
-            TypingType.MovingCursor -> MovingCursorTypingIntend(typingOptions = typingOptions)
-            TypingType.MovingText -> MovingTextTypingIntend(typingOptions = typingOptions)
+            TypingType.MovingCursor -> MovingCursorTypingIntend(
+                typingOptions = typingOptions,
+                fingerMatcher = fingerMatcher
+            )
+            TypingType.MovingText -> MovingTextTypingIntend(
+                typingOptions = typingOptions,
+                fingerMatcher = fingerMatcher
+            )
         }
     }
     DisposableEffect(intend) {
@@ -230,7 +237,8 @@ fun main() {
                         exerciseMode = ExerciseMode.Speed,
                         isCameraEnabled = false,
                         typingType = TypingType.MovingCursor
-                    )
+                    ),
+                    null
                 )
             }
         }

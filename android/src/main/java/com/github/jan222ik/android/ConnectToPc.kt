@@ -1,6 +1,12 @@
 package com.github.jan222ik.android
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.github.jan222ik.android.network.NDSDiscovery
 import com.github.jan222ik.android.network.WSClient
@@ -9,6 +15,7 @@ import com.github.jan222ik.common.ui.router.Connection
 import com.github.jan222ik.common.ui.router.MobileRouterAmbient
 import com.github.jan222ik.common.ui.router.MobileRoutes
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -24,6 +31,22 @@ fun ConnectToPc() {
             }
         }
     })
+
+    Column {
+        val text = remember { mutableStateOf("") }
+        TextField(text.value, onValueChange = text.component2())
+        Button(onClick = {
+            GlobalScope.launch(Dispatchers.IO) {
+                val ip = text.value
+                if (WSClient.canConnect(ip)) {
+                    WSClient.url = ServerConfig.getWebsocketUrl(ip)
+                    router.navTo(MobileRoutes.Exercise(Connection(true)))
+                }
+            }
+        }) {
+            Text(text = "Try from Textbox")
+        }
+    }
 
 //    val router = MobileRouterAmbient.current
 //

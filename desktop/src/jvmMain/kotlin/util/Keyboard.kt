@@ -1,5 +1,7 @@
 package util
 
+import androidx.compose.ui.geometry.Offset
+import com.github.jan222ik.common.FingerTipLandmark
 import java.awt.event.KeyEvent.VK_BACK_SPACE
 import java.awt.event.KeyEvent.VK_ENTER
 import java.awt.event.KeyEvent.VK_ESCAPE
@@ -43,6 +45,16 @@ class Keyboard {
         fun getHeight(): Double = if (y == DEFAULT_Y) h else y
         fun getBounds(): Pair<Double, Double> = Pair(getWidth(), getHeight())
         fun getCoords(): Pair<Double, Double> = Pair(xCoord, yCoord)
+
+        fun contains(fingerTip: FingerTipLandmark): Boolean {
+            val (startX, startY) = getCoords()
+            val endX = startX.plus(w)
+            val endY = startY.plus(h)
+            val inX = (startX..endX).contains(fingerTip.x)
+            val inY = (startY..endY).contains(fingerTip.y)
+            return inX && inY
+        }
+
     }
 
     val keys: MutableList<MutableList<Key>> = mutableListOf()

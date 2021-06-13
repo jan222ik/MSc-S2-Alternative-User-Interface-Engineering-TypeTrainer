@@ -6,6 +6,7 @@ import ui.exercise.results.ResultsRoutes
 import ui.util.i18n.KeyI18N
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
+import util.FingerMatcher
 
 sealed class ApplicationRoutes(val title: KeyI18N) {
 
@@ -31,7 +32,8 @@ sealed class ApplicationRoutes(val title: KeyI18N) {
         }
 
         data class Training(
-            val trainingOptions: AbstractTypingOptions
+            val trainingOptions: AbstractTypingOptions,
+            val fingerMatcher: FingerMatcher? = null
         ) : Exercise(title = RequiresTranslationI18N("Exercise - Training"))
 
         data class ExerciseResults(

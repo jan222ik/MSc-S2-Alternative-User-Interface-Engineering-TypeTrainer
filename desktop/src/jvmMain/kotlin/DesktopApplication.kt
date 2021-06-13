@@ -106,9 +106,13 @@ object DesktopApplication {
                                             )
                                         is ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
                                         is ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation -> KeyboardSynchronisationScreen(
-                                            trainingOptions = current.trainingOptions
+                                            trainingOptions = current.trainingOptions,
+                                            server = server
                                         )
-                                        is ApplicationRoutes.Exercise.Training -> PracticeScreen(current.trainingOptions)
+                                        is ApplicationRoutes.Exercise.Training -> PracticeScreen(
+                                            typingOptions = current.trainingOptions,
+                                            fingerMatcher = current.fingerMatcher
+                                        )
                                         is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
                                             current.exerciseResults,
                                             current.initialPage

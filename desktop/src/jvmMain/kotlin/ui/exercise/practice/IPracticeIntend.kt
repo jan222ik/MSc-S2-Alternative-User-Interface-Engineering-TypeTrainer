@@ -3,6 +3,7 @@ package ui.exercise.practice
 import androidx.compose.runtime.State
 import kotlinx.coroutines.flow.StateFlow
 import ui.exercise.AbstractTypingOptions
+import util.FingerUsed
 
 interface IPracticeIntend {
     val typingOptions: AbstractTypingOptions
@@ -14,6 +15,10 @@ interface IPracticeIntend {
 
     fun start()
     fun cancelRunningJobs()
+
+
+    val hasFingerTracking: Boolean
+    fun checkFingerForChar(char: String) : FingerUsed?
 
     enum class TypingClockState {
         PREVIEW, ACTIVE, FINISHED

@@ -15,13 +15,15 @@ import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
 import ui.exercise.AbstractTypingOptions
+import util.FingerMatcher
 import util.RandomUtil
 import java.time.LocalDateTime
 import kotlin.concurrent.fixedRateTimer
 
 class MovingCursorTypingIntend(
-    typingOptions: AbstractTypingOptions
-) : PracticeIntendImpl(typingOptions = typingOptions), ITextDisplayPracticeIntend {
+    typingOptions: AbstractTypingOptions,
+    fingerMatcher: FingerMatcher?
+) : PracticeIntendImpl(typingOptions = typingOptions, fingerMatcher = fingerMatcher), ITextDisplayPracticeIntend {
 
     override val exerciseEvaluation = ExerciseEvaluation(options = typingOptions)
     lateinit var textEvaluation: TextEvaluation
@@ -61,12 +63,27 @@ class MovingCursorTypingIntend(
         println("Char: $char - Current Expected: $currentChar")
         if (char == currentChar) {
             _currentIsError.compareAndSet(expect = true, update = false)
-            textEvaluation.chars.add(
+            val res = if (hasFingerTracking) {
+                val checkFingerForChar = checkFingerForChar(char = char.toString())
+                if (checkFingerForChar == null) {
+                    CharEvaluation.Correct(
+                        timeRemaining = timerStateFlow.value,
+                        expected = inTextIndex.dec()
+                    )
+                } else {
+                    CharEvaluation.FingerError(
+                        timeRemaining = timerStateFlow.value,
+                        expected = inTextIndex.dec(),
+                        fingerUsed = checkFingerForChar
+                    )
+                }
+            } else {
                 CharEvaluation.Correct(
                     timeRemaining = timerStateFlow.value,
                     expected = inTextIndex.dec()
                 )
-            )
+            }
+            textEvaluation.chars.add(res)
             inTextIndex++
             _textTypedIndex.emit(inTextIndex)
             println("inTextIndex = $inTextIndex endOfTextIndex = $endOfTextIndex")

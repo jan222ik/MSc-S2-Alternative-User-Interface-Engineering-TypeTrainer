@@ -3,6 +3,7 @@
 package ui.exercise.connection
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,15 +29,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import kotlinx.coroutines.time.delay
+import network.Server
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.AbstractTypingOptions
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 import ui.util.span_parse.parseForSpans
-import util.KeyboardUtil
-import java.awt.event.KeyEvent.KEY_LOCATION_RIGHT
-import java.awt.event.KeyEvent.KEY_LOCATION_STANDARD
+import util.FingerMatcher
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 
@@ -46,14 +46,24 @@ import java.time.temporal.ChronoUnit
  */
 @Composable
 fun KeyboardSynchronisationScreen(
-    trainingOptions: AbstractTypingOptions
+    trainingOptions: AbstractTypingOptions,
+    server: Server
 ) {
     val router = WindowRouterAmbient.current
-    val synchronisationIntent = remember {
+    val synchronisationIntent = remember(server) {
+        val fingerMatcher = FingerMatcher(
+            channel = server.handLandMarks
+        )
         SynchronisationIntent(
             onFinishSync = {
-                router.navTo(ApplicationRoutes.Exercise.Training(trainingOptions = trainingOptions))
-            }
+                router.navTo(
+                    ApplicationRoutes.Exercise.Training(
+                        trainingOptions = trainingOptions,
+                        fingerMatcher = fingerMatcher
+                    )
+                )
+            },
+            fingerMatcher = fingerMatcher
         )
     }
 
@@ -101,7 +111,7 @@ private fun KeyboardSynchronisationScreenContent(
                     modifier = Modifier
                         .size(50.dp)
                         .background(Color.Red)
-                        //.clickable { focusRequester.requestFocus() }
+                        .clickable { focusRequester.requestFocus() }
                         .focusRequester(focusRequester)
                         .focusable()
                         .onPreviewKeyEvent { evt ->

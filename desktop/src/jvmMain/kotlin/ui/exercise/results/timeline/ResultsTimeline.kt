@@ -17,11 +17,13 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircleOutline
+import androidx.compose.material.icons.filled.CleanHands
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import textgen.error.CharEvaluation
@@ -75,6 +77,7 @@ fun TimelineItem(index: Int, eval: CharEvaluation, text: String) {
         val imageVectorToColor = when (eval) {
             is CharEvaluation.Correct -> Icons.Filled.CheckCircleOutline to MaterialTheme.colors.onBackground
             is CharEvaluation.TypingError -> Icons.Filled.ErrorOutline to MaterialTheme.colors.error
+            is CharEvaluation.FingerError -> Icons.Filled.CleanHands to Color.Yellow
         }
         Icon(
             imageVector = imageVectorToColor.first,
@@ -86,6 +89,10 @@ fun TimelineItem(index: Int, eval: CharEvaluation, text: String) {
         Text(text = "Expected: ${eval.getExpectedChar(text)}")
         if (eval is CharEvaluation.TypingError) {
             Text(text = "Actual: ${eval.actual}")
+        }
+        if (eval is CharEvaluation.FingerError) {
+            Text(text = "Expected Finger: ${eval.fingerUsed?.expected}")
+            Text(text = "Actual Finger: ${eval.fingerUsed?.actual}")
         }
     }
 }
