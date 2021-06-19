@@ -76,6 +76,13 @@ class ServerApplication(private val server: Server) {
                 val testConnect = server.testConnect("test")
                 call.respond(if (!testConnect) "Connected" else "Disconnected")
             }
+
+            get(ServerConfig.ROUTE_FETCH_WEEKLY) {
+                println("Requested stats for mobile")
+                val data = server.getStatsForMobile()
+                println("data = ${data}")
+                call.respond(data)
+            }
         }
     }
 

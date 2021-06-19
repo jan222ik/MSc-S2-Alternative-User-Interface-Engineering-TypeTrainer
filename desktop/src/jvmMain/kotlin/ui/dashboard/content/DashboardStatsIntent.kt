@@ -6,6 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.exposed.sql.transactions.transaction
+import textgen.database.DbHistory
+import textgen.database.DbHistoryDAO
 import textgen.database.DbHistorys
 import textgen.database.getWeekly
 import java.time.Duration
@@ -37,5 +40,16 @@ class DashboardStatsIntent {
                 val offsetFromToday = 6.minus(Period.between(it.first, today).days)
                 DataPoint(x = offsetFromToday.toFloat(), it.second.times(60).toFloat())
             }
+    }
+
+    fun totalExercises(): Int {
+        return transaction {
+            DbHistoryDAO.count().toInt()
+        }
+    }
+
+    fun streakDays(): Int {
+        System.err.println("TODO get days of streak")
+        return -1
     }
 }

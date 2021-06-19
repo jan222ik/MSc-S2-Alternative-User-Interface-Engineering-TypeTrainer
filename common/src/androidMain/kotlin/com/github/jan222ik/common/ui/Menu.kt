@@ -2,6 +2,8 @@
 
 package com.github.jan222ik.common.ui
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -39,16 +41,26 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.dto.MobileStatsData
+import com.github.jan222ik.common.dto.SHARED_STATS_PREF_KEY
 import com.github.jan222ik.common.ui.components.Logo
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.common.ui.dashboard.IconDashboardCard
 import com.github.jan222ik.common.ui.router.MobileRouterAmbient
 import com.github.jan222ik.common.ui.router.MobileRoutes
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import kotlin.math.max
 import kotlin.math.min
 
 @Composable
-fun MobileMenu() {
+fun MobileMenu(activity: Activity) {
+    val data: MobileStatsData? = activity
+        .getPreferences(Context.MODE_PRIVATE)
+        .getString(SHARED_STATS_PREF_KEY, null)
+        ?.let {
+            Json.decodeFromString<MobileStatsData>(it)
+        }
     val router = MobileRouterAmbient.current
     Column {
         Box(modifier = Modifier.fillMaxWidth()) {
@@ -138,13 +150,13 @@ fun MobileMenu() {
                                 item(
                                     title = "Streak",
                                     imageVector = Icons.Filled.Whatshot,
-                                    text = "13 Days",
+                                    text = "${data?.streak ?: "?"} Days",
                                     widthFraction = 0.5f
                                 )
                                 item(
                                     title = "Total Exercises",
                                     imageVector = Icons.Filled.Functions,
-                                    text = "4711",
+                                    text = data?.totalExercises?.toString() ?: "?",
                                     widthFraction = 1f
                                 )
 

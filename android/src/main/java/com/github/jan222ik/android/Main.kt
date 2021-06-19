@@ -3,6 +3,7 @@
 package com.github.jan222ik.android
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.github.jan222ik.common.ui.MobileMenu
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
@@ -23,6 +27,7 @@ import com.github.jan222ik.common.ui.util.router.Router
 
 @Composable
 fun mobileMain(activity: Activity, supplyRouter: @Composable (Router<MobileRoutes>) -> Unit) {
+    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     TypeTrainerTheme {
         Surface(color = MaterialTheme.colors.background) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -32,13 +37,13 @@ fun mobileMain(activity: Activity, supplyRouter: @Composable (Router<MobileRoute
                 ) { current, router ->
                     supplyRouter(router)
                     when (current) {
-                        MobileRoutes.Menu -> MobileMenu()
-                        MobileRoutes.Scanner -> ConnectToPc()
+                        MobileRoutes.Menu -> MobileMenu(activity)
+                        MobileRoutes.Scanner -> ConnectToPc(sharedPref)
                         is MobileRoutes.Exercise -> {
                             if(current.connection.canConnect)
                                 HandTracking(activity)
                             else
-                                ConnectToPc()
+                                ConnectToPc(sharedPref)
                         }
                         MobileRoutes.CameraSetup -> Column {
                             CurrentlyMissing("Camera Setup")

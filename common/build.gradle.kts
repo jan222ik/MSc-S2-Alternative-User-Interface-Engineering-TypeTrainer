@@ -31,6 +31,7 @@ kotlin {
                 api(compose.material)
                 api(compose.materialIconsExtended)
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.1.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
                 implementation(project(":custom-line-charts"))
             }
         }

@@ -1,5 +1,8 @@
+@file:Suppress("FunctionName")
+
 package com.github.jan222ik.android
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -19,7 +22,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun ConnectToPc() {
+fun ConnectToPc(sharedPref: SharedPreferences) {
     val router = MobileRouterAmbient.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -27,6 +30,7 @@ fun ConnectToPc() {
         coroutineScope.launch(Dispatchers.IO) {
             if (WSClient.canConnect(it)) {
                 WSClient.url = ServerConfig.getWebsocketUrl(it)
+                WSClient.loadWeekly(it, sharedPref)
                 router.navTo(MobileRoutes.Exercise(Connection(true)))
             }
         }
@@ -35,18 +39,23 @@ fun ConnectToPc() {
     Column {
         val text = remember { mutableStateOf("") }
         TextField(text.value, onValueChange = text.component2())
-        Button(onClick = {
-            GlobalScope.launch(Dispatchers.IO) {
-                val ip = text.value
-                if (WSClient.canConnect(ip)) {
-                    WSClient.url = ServerConfig.getWebsocketUrl(ip)
-                    router.navTo(MobileRoutes.Exercise(Connection(true)))
+        Button(
+            onClick = {
+                GlobalScope.launch(Dispatchers.IO) {
+                    val ip = text.value
+                    if (WSClient.canConnect(ip)) {
+                        WSClient.url = ServerConfig.getWebsocketUrl(ip)
+                        WSClient.loadWeekly(ip, sharedPref)
+                        router.navTo(MobileRoutes.Exercise(Connection(true)))
+                    }
                 }
             }
-        }) {
+        ) {
             Text(text = "Try from Textbox")
         }
     }
+}
+
 
 //    val router = MobileRouterAmbient.current
 //
@@ -103,4 +112,4 @@ fun ConnectToPc() {
 //            previewView
 //        },
 //    )
-}
+

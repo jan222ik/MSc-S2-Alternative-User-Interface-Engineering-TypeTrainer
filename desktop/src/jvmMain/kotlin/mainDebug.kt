@@ -1,8 +1,10 @@
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ui.util.debug.ifDebug
 
+@ExperimentalAnimationApi
 @KtorExperimentalAPI
 @ExperimentalCoroutinesApi
 @ExperimentalStdlibApi

@@ -3,6 +3,9 @@ package network
 import com.github.jan222ik.common.FingerEnum
 import com.github.jan222ik.common.FingerTipLandmark
 import com.github.jan222ik.common.HandLandmark
+import com.github.jan222ik.common.dto.MobileStatsData
+import com.github.jan222ik.common.dto.toPointDTO
+import com.github.jan222ik.compose_mpp_charts.core.data.DataPoint
 import io.ktor.websocket.DefaultWebSocketServerSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -12,10 +15,16 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import textgen.database.DatabaseFactory
+import ui.dashboard.content.DashboardStatsIntent
 import kotlin.concurrent.fixedRateTimer
 
 class Server {
@@ -73,7 +82,24 @@ class Server {
         return connected
     }
 
+    private val jsonParser = Json() {
+        serializersModule = DatabaseFactory.serializer
+    }
+
+    fun getStatsForMobile(): String {
+        val statsIntent = DashboardStatsIntent()
+            .also { runBlocking(Dispatchers.IO) { it.init(this) } }
+        val weeklyData = statsIntent
+            .weekData.value
+            .also { println(it) }
+            .map { it.toPointDTO() }
+        val totalExercises = statsIntent.totalExercises()
+        val streakDays = statsIntent.streakDays()
+        return jsonParser.encodeToString(MobileStatsData(weeklyData, totalExercises, streakDays))
+    }
+
 }
+
 
 @OptIn(ExperimentalSerializationApi::class)
 fun main() {
@@ -83,7 +109,8 @@ fun main() {
             val list = listOf(
                 HandLandmark().also {
                     it.fingerLandmarks[FingerEnum.INDEX] = FingerTipLandmark(
-                        FingerEnum.INDEX, idx, idx, idx)
+                        FingerEnum.INDEX, idx, idx, idx
+                    )
                 }
             )
             idx++
