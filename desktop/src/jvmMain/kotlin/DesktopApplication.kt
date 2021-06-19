@@ -48,6 +48,7 @@ import kotlinx.coroutines.launch
 import network.Server
 import network.ServerApplication
 import textgen.database.DatabaseFactory
+import ui.camera.CameraSetupScreen
 import ui.components.AnimatedLogo
 import ui.connection.ConnectionScreen
 import ui.dashboard.ApplicationRoutes
@@ -113,7 +114,7 @@ object DesktopApplication {
                                                 server = server,
                                                 trainingOptions = current.trainingOptions
                                             )
-                                        is ApplicationRoutes.Exercise.Connection.SetupInstructions -> Text("Missing Screen: " + +current.title)
+                                        is ApplicationRoutes.Exercise.Connection.SetupInstructions -> CameraSetupScreen()
                                         is ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation -> KeyboardSynchronisationScreen(
                                             trainingOptions = current.trainingOptions,
                                             server = server

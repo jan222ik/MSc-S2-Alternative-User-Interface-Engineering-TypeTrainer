@@ -73,6 +73,18 @@ sealed class i18n {
             }
         }
 
+        sealed class camera : str() {
+            override val path = "camera"
+
+            object setup : camera() {
+                override val path = super.path + ".setup"
+                val instruction_header = "instruction_header".i18Key()
+                val first_point = "first_point".i18Key()
+                val second_point = "second_point".i18Key()
+                val third_point = "third_point".i18Key()
+            }
+        }
+
         sealed class settings : str() {
             override val path = "settings"
 
