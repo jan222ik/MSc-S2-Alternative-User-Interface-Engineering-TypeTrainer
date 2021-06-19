@@ -286,16 +286,20 @@ private fun TextModeSubCard(
             )
             Spacer(modifier = Modifier.width(15.dp))
             if (languageSelection) {
-                LabeledOutlinedRadioButtonGroup(
-                    modifier = Modifier,
-                    label = +i18n.str.settings.languages.language + ":",
-                    forceLabelUnclipped = false,
-                    options = ExerciseSelectionIntent.languageSelectionOptions,
-                    optionTransform = @Composable { +it },
-                    selected = language,
-                    onSelectionChange = setLanguage,
-                    shape = shape
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(+i18n.str.settings.languages.language + ":")
+                    Spacer(modifier = Modifier.width(15.dp))
+                    OutlinedRadioButtonGroup(
+                        modifier = Modifier.fillMaxWidth(0.6f),
+                        options = ExerciseSelectionIntent.languageSelectionOptions,
+                        optionTransform = @Composable { +it },
+                        selected = language,
+                        onSelectionChange = setLanguage,
+                        shape = shape
+                    )
+                }
             }
         }
     }
