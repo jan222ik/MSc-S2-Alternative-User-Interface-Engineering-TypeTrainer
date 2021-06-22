@@ -16,7 +16,7 @@ class StreakAPI {
         var streakGoing = true
 
         while (streakGoing) {
-            if (sorted.contains(today().minusDays(minusDays))) {
+            if (sorted.contains(today.minusDays(minusDays))) {
                 streak += 1
             } else if (minusDays != 0L) {
                 streakGoing = false
