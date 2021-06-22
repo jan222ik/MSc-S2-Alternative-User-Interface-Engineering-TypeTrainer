@@ -10,22 +10,18 @@ import kotlin.random.Random
 class StreakAPI {
 
     fun calcStreakFromDates(dates: List<LocalDate>, today: LocalDate): Int {
-        val sorted = dates.sortedByDescending { localDate: LocalDate -> localDate }
-
-        var prev = 1L
+        val sorted = dates.distinct().sortedByDescending { localDate: LocalDate -> localDate }
+        var minusDays = 0L
         var streak = 0
-        var exercisedToday = false
+        var streakGoing = true
 
-        for (date in sorted) {
-            if (today.equals(date) && !exercisedToday) {
-                exercisedToday = true
+        while (streakGoing) {
+            if (sorted.contains(today().minusDays(minusDays))) {
                 streak += 1
-            } else if (today.minusDays(prev).equals(date)) {
-                streak += 1
-                prev += 1
-            } else {
-                break
+            } else if (minusDays != 0L) {
+                streakGoing = false
             }
+            minusDays += 1L
         }
         return streak
     }
@@ -42,7 +38,7 @@ class StreakAPI {
 //        return LocalDate.of(2020, 11, 30)
     }
 
-    fun totalExercises(): Int{
+    fun totalExercises(): Int {
         return transaction {
             DbHistoryDAO.all().count().toInt()
         }
