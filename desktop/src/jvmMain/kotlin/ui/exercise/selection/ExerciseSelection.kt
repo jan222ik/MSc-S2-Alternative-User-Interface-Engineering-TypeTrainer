@@ -111,12 +111,11 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                     ExerciseModeSubCard(
                         selectionIntent = selectionIntent,
                         descriptionText = when (exerciseMode) {
-                            0 -> (+i18n.str.exercise.selection.exerciseMode.speedDescription).parseForSpans(boldHighlightSpan)
-                            1 -> (+i18n.str.exercise.selection.exerciseMode.accuracyDescription).parseForSpans(boldHighlightSpan)
-                            2 -> (+i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription).parseForSpans(boldHighlightSpan)
+                            0 -> (+i18n.str.exercise.selection.exerciseMode.timelimitDescription).parseForSpans(boldHighlightSpan)
+                            1 -> (+i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription).parseForSpans(boldHighlightSpan)
                             else -> throw IndexOutOfBoundsException()
                         },
-                        timeLimit = exerciseMode < 2
+                        timeLimit = exerciseMode == 0
                     )
                 }
                 Spacer(Modifier.height(50.dp))

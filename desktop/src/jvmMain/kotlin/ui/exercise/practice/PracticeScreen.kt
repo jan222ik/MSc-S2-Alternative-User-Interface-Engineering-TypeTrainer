@@ -234,7 +234,7 @@ fun main() {
                             minimalSegmentLength = 300
                         ),
                         durationMillis = 60 * 1000,
-                        exerciseMode = ExerciseMode.Speed,
+                        exerciseMode = ExerciseMode.Timelimit,
                         isCameraEnabled = false,
                         typingType = TypingType.MovingCursor
                     ),

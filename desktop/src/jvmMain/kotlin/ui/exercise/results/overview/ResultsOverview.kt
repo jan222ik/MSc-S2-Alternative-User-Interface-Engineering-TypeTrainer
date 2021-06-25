@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -125,9 +124,8 @@ fun SessionOptions(modifier: Modifier, options: AbstractTypingOptions) {
                 SessionOptionsItem(
                     name = strResExercise.exerciseMode,
                     value = when (options.exerciseMode) {
-                        ExerciseMode.Accuracy -> +strResExercise.accuracy
+                        ExerciseMode.Timelimit -> +strResExercise.timelimit
                         ExerciseMode.NoTimelimit -> +strResExercise.noTimeLimit
-                        ExerciseMode.Speed -> +strResExercise.speed
                     }
                 )
                 SessionOptionsItem(

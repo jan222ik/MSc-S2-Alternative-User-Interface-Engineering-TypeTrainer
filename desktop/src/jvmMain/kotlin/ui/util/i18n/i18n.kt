@@ -140,14 +140,14 @@ sealed class i18n {
                     val customDuration = "custom_duration".i18Key()
                     val enterDuration = "enter_duration".i18Key()
                     val customDurationError = "custom_duration_error".i18Key()
-                    val speed = "speed".i18Key()
-                    val speedDescription = "speed_description".i18Key()
+                    val timelimit = "timelimit".i18Key()
+                    val timelimitDescription = "timelimit_description".i18Key()
                     val accuracy = "accuracy".i18Key()
                     val accuracyDescription = "accuracy_description".i18Key()
                     val noTimeLimit = "no_time_limit".i18Key()
                     val noTimeLimitDescription = "no_time_limit_description".i18Key()
 
-                    fun getAll() = listOf(speed, accuracy, noTimeLimit)
+                    fun getAll() = listOf(timelimit, noTimeLimit)
                     fun getDurations() = listOf(oneMin, twoMin, customDuration)
                 }
 

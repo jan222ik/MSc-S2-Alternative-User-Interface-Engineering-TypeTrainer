@@ -25,7 +25,7 @@ object DEMO {
             minimalSegmentLength = 450
         ),
         durationMillis = 60_000,
-        exerciseMode = ExerciseMode.Accuracy,
+        exerciseMode = ExerciseMode.Timelimit,
         isCameraEnabled = false,
         typingType = TypingType.MovingCursor
     )

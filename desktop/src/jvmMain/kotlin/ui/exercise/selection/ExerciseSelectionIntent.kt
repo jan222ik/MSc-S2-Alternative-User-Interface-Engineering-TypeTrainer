@@ -32,9 +32,8 @@ class ExerciseSelectionIntent(initData: AbstractTypingOptions?) {
                 else -> throw RuntimeException("Invalid option in text-mode while selecting an exercise")
             }
             exerciseModeSelection.value = when (it.exerciseMode) {
-                ExerciseMode.Speed -> 0
-                ExerciseMode.Accuracy -> 1
-                ExerciseMode.NoTimelimit -> 2
+                ExerciseMode.Timelimit -> 0
+                ExerciseMode.NoTimelimit -> 1
             }
             typingTypeSelection.value = when (it.typingType) {
                 TypingType.MovingCursor -> 0
@@ -89,9 +88,8 @@ class ExerciseSelectionIntent(initData: AbstractTypingOptions?) {
             },
             durationMillis = duration.toLong(),
             exerciseMode = when (exerciseModeSelection.value) {
-                0 -> ExerciseMode.Speed
-                1 -> ExerciseMode.Accuracy
-                2 -> ExerciseMode.NoTimelimit
+                0 -> ExerciseMode.Timelimit
+                1 -> ExerciseMode.NoTimelimit
                 else -> throw RuntimeException("Invalid option in exercise-mode while selecting an exercise")
             },
             isCameraEnabled = withFingerTracking.value,

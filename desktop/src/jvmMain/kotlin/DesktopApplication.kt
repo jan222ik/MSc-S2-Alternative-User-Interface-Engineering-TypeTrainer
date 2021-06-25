@@ -161,7 +161,7 @@ object DesktopApplication {
             var engine: NettyApplicationEngine? = null
             startUpScope.launch(Dispatchers.IO) {
                 loadingStateFlow.emit(StartUpLoading.DATABASE)
-                //DatabaseFactory.init()
+                DatabaseFactory.init()
                 //DEMO.demoTrainingEntries()
                 DatabaseFactory.start()
                 loadingStateFlow.emit(StartUpLoading.NETWORK)
@@ -235,7 +235,7 @@ object DesktopApplication {
     @Composable
     fun FingerCanvas(server: Server, fingerMatcher: FingerMatcher?) {
         fingerMatcher ?: return
-        LaunchedEffect(server, fingerMatcher) {
+
             Window {
                 TypeTrainerTheme {
                     Surface(color = MaterialTheme.colors.surface) {
@@ -268,7 +268,7 @@ object DesktopApplication {
                     }
                 }
             }
-        }
+
     }
 }
 
