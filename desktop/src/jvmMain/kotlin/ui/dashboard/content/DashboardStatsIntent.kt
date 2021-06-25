@@ -11,6 +11,7 @@ import textgen.database.DbHistory
 import textgen.database.DbHistoryDAO
 import textgen.database.DbHistorys
 import textgen.database.getWeekly
+import ui.dashboard.StreakAPI
 import java.time.Duration
 import java.time.LocalDate
 import java.time.Period
@@ -50,6 +51,9 @@ class DashboardStatsIntent {
 
     fun streakDays(): Int {
         System.err.println("TODO get days of streak")
-        return -1
+        return transaction {
+            val localDates = DbHistoryDAO.all().map { it.timestamp.toLocalDate() }
+            StreakAPI().calcStreakFromDates(localDates, today())
+        }
     }
 }

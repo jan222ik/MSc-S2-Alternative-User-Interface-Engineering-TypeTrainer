@@ -89,18 +89,21 @@ abstract class PracticeIntendImpl(
 
     abstract fun onNextText()
 
-    var firstText = true
+    var firstText = 0
 
     override suspend fun nextText() {
-        if (firstText || typingOptions.exerciseMode == ExerciseMode.Timelimit) {
+        if (firstText == 0 || typingOptions.exerciseMode == ExerciseMode.Timelimit) {
             val generateSegment = generator.generateSegment()
             _textStateFlow.value = generateSegment
             onNextText()
-            firstText = false
+            firstText = 1
         } else {
-            _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.FINISHED)
-            typingClockJob?.cancelAndJoin()
-            onTimerFinished()
+            if (firstText == 1) {
+                _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.FINISHED)
+                typingClockJob?.cancelAndJoin()
+                //onTimerFinished()
+                firstText = 2
+            }
         }
     }
 
