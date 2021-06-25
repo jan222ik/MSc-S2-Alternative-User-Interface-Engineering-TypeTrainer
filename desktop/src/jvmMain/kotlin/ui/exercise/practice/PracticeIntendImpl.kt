@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -16,6 +17,7 @@ import textgen.generators.impl.RandomKnownTextOptions
 import textgen.generators.impl.RandomKnownWordGenerator
 import textgen.generators.impl.RandomKnownWordOptions
 import ui.exercise.AbstractTypingOptions
+import ui.exercise.ExerciseMode
 import util.FingerMatcher
 import util.FingerUsed
 
@@ -87,10 +89,19 @@ abstract class PracticeIntendImpl(
 
     abstract fun onNextText()
 
+    var firstText = true
+
     override suspend fun nextText() {
-        val generateSegment = generator.generateSegment()
-        _textStateFlow.value = generateSegment
-        onNextText()
+        if (firstText || typingOptions.exerciseMode == ExerciseMode.Timelimit) {
+            val generateSegment = generator.generateSegment()
+            _textStateFlow.value = generateSegment
+            onNextText()
+            firstText = false
+        } else {
+            _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.FINISHED)
+            typingClockJob?.cancelAndJoin()
+            onTimerFinished()
+        }
     }
 
     abstract fun update()

@@ -63,10 +63,22 @@ class ExerciseSelectionIntent(initData: AbstractTypingOptions?) {
             1 -> LanguageDefinition.German
             else -> throw RuntimeException("Invalid language option while selecting an exercise")
         }
+        val typingType = when (typingTypeSelection.value) {
+            0 -> TypingType.MovingCursor
+            1 -> TypingType.MovingText
+            else -> throw RuntimeException("Invalid option in typing-type while selecting an exercise")
+        }
+        val exerciseMode = when (exerciseModeSelection.value) {
+            0 -> ExerciseMode.Timelimit
+            1 -> ExerciseMode.NoTimelimit
+            else -> throw RuntimeException("Invalid option in exercise-mode while selecting an exercise")
+        }
         val duration = when (durationSelection.value) {
             0, 1 -> (durationSelection.value + 1L).times(60000L)
             else -> customDurationSelection.value.toDoubleOrNull()?.times(60000L) ?: 0L
-        } // Min to millis
+        }.takeUnless {
+            exerciseMode == ExerciseMode.NoTimelimit
+        } ?: Long.MAX_VALUE // Min to millis
 
         return TypingOptions(
             generatorOptions = when (textModeSelection.value) {
@@ -88,17 +100,9 @@ class ExerciseSelectionIntent(initData: AbstractTypingOptions?) {
                 else -> throw RuntimeException("Invalid option in text-mode while selecting an exercise")
             },
             durationMillis = duration.toLong(),
-            exerciseMode = when (exerciseModeSelection.value) {
-                0 -> ExerciseMode.Timelimit
-                1 -> ExerciseMode.NoTimelimit
-                else -> throw RuntimeException("Invalid option in exercise-mode while selecting an exercise")
-            },
+            exerciseMode = exerciseMode,
             isCameraEnabled = withFingerTracking.value,
-            typingType = when (typingTypeSelection.value) {
-                0 -> TypingType.MovingCursor
-                1 -> TypingType.MovingText
-                else -> throw RuntimeException("Invalid option in typing-type while selecting an exercise")
-            }
+            typingType = typingType
         )
     }
 

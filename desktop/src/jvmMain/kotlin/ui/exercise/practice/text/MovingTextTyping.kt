@@ -62,7 +62,7 @@ fun MovingTextTyping(intend: ITextDisplayPracticeIntend) {
                 val futureTrunc = textFuture.value.take(30)
                 append(typedTrunc)
                 addStyle(SpanStyle(color = Color.Green), 0, typedTrunc.length)
-                append(textCurrent.value.last())
+                append(textCurrent.value.lastOrNull() ?: ' ')
                 if (isError.value) {
                     this.addStyle(
                         SpanStyle(color = onError, background = error),

@@ -123,6 +123,8 @@ sealed class CharEvaluation {
         override val timeRemaining: Long,
         override val expected: Int
     ) : CharEvaluation() {
+        override fun copy(timeRemaining: Long): CharEvaluation = Correct(timeRemaining, expected)
+
         override fun toString(): String {
             return "CharEvaluation.Correct[time: $timeRemaining, expected: $expected]"
         }
@@ -143,6 +145,9 @@ sealed class CharEvaluation {
         override val expected: Int,
         val actual: Char
     ) : CharEvaluation() {
+        override fun copy(timeRemaining: Long) = TypingError(timeRemaining, expected, actual)
+
+
         override fun toString(): String {
             return "CharEvaluation.TypingError[time: $timeRemaining, expected: $expected, actual: $actual]"
         }
@@ -154,6 +159,9 @@ sealed class CharEvaluation {
         override val expected: Int,
         val fingerUsed: FingerUsed? = null
     ) : CharEvaluation() {
+        override fun copy(timeRemaining: Long) = FingerError(timeRemaining, expected, fingerUsed)
+
+
         override fun toString(): String {
             return "CharEvaluation.FingerError[time: $timeRemaining, expected: $expected, fingerUsed: $fingerUsed]"
         }
@@ -167,4 +175,6 @@ sealed class CharEvaluation {
         expectedChar = c
         return c
     }
+
+    abstract fun copy(timeRemaining: Long) : CharEvaluation
 }

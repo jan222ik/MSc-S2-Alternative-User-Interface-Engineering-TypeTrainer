@@ -42,6 +42,7 @@ import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import textgen.generators.impl.RandomKnownWordOptions
 import ui.components.progress.practice.CountDownProgressBar
+import ui.components.progress.practice.ProgressionProgressBar
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.AbstractTypingOptions
 import ui.exercise.ExerciseMode
@@ -135,15 +136,37 @@ private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
         modifier = Modifier.fillMaxWidth().padding(25.dp)
     ) {
         //progress bar
-        val timer = intend.timerStateFlow.collectAsState()
-        CountDownProgressBar(
-            modifier = Modifier.fillMaxWidth(),
-            value = max - timer.value.div(1000).toFloat(),
-            max = max,
-            trackColor = MaterialTheme.colors.background
-        )
-        // text in base dashboard card
-        // TODO adjust to fit generated text -> all test on screen or just one row etc.
+        if (intend.typingOptions.exerciseMode == ExerciseMode.Timelimit) {
+            val timer = intend.timerStateFlow.collectAsState()
+            CountDownProgressBar(
+                modifier = Modifier.fillMaxWidth(),
+                value = max - timer.value.div(1000).toFloat(),
+                max = max,
+                trackColor = MaterialTheme.colors.background
+            )
+        } else {
+            val otherMax = intend.textStateFlow.collectAsState("0")
+            when (intend.typingOptions.typingType) {
+                TypingType.MovingCursor -> {
+                    val textTyped = intend.textTypedIndex.collectAsState(0)
+                    ProgressionProgressBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = textTyped.value.toFloat(),
+                        max = otherMax.value.length.toFloat(),
+                    )
+                }
+                TypingType.MovingText -> {
+                    val textTyped = intend.textTyped.collectAsState("0")
+                    ProgressionProgressBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = textTyped.value.length.toFloat(),
+                        max = otherMax.value.length.toFloat(),
+                    )
+                }
+            }
+
+        }
+
         BaseDashboardCard(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)

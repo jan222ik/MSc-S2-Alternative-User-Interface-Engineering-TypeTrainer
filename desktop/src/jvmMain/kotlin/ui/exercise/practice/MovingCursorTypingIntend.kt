@@ -15,6 +15,7 @@ import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
 import ui.exercise.AbstractTypingOptions
+import ui.exercise.ExerciseMode
 import util.FingerMatcher
 import util.RandomUtil
 import java.time.LocalDateTime
@@ -29,7 +30,20 @@ class MovingCursorTypingIntend(
     lateinit var textEvaluation: TextEvaluation
 
     override val result: ExerciseEvaluation
-        get() = exerciseEvaluation
+        get() = when (typingOptions.exerciseMode) {
+            ExerciseMode.NoTimelimit -> exerciseEvaluation
+                .copy(
+                    texts = exerciseEvaluation.texts.map { text ->
+                        text.copy(chars =
+                            text.chars.map {
+                                it.copy(timeRemaining = Long.MAX_VALUE - it.timeRemaining)
+                            }.toMutableList()
+                        )
+                    }.toMutableList(),
+                    options = exerciseEvaluation.options.copyOptions(durationMillis = Long.MAX_VALUE - timerStateFlow.value)
+                )
+            ExerciseMode.Timelimit -> exerciseEvaluation
+        }
 
 
     override fun update() {
@@ -116,12 +130,19 @@ class MovingCursorTypingIntend(
     }
 
     override fun onTimerFinished() {
+        val eval = when (typingOptions.exerciseMode) {
+            ExerciseMode.NoTimelimit -> exerciseEvaluation
+                .copy(
+                    options = exerciseEvaluation.options.copyOptions(durationMillis = Long.MAX_VALUE - timerStateFlow.value)
+                )
+            ExerciseMode.Timelimit -> exerciseEvaluation
+        }
         transaction {
             DbHistoryDAO.new {
                 timestamp = LocalDateTime.now()
                 dataJson = ExposedBlob(
                     Json{serializersModule = DatabaseFactory.serializer}
-                        .encodeToString(exerciseEvaluation)
+                        .encodeToString(eval)
                         .toByteArray()
                 )
             }
