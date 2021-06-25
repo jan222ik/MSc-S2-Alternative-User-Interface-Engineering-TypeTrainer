@@ -74,7 +74,7 @@ fun MovingTextTyping(intend: ITextDisplayPracticeIntend) {
             }
         }
 
-        Text(text = annotatedString)
+        Text(text = annotatedString, style = MaterialTheme.typography.h5)
 
         DisposableEffect(Unit) {
             focusRequester.requestFocus()

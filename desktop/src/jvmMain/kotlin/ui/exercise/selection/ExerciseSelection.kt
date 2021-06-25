@@ -63,8 +63,8 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                     .padding(vertical = 16.dp)
                     .fillMaxSize()
             ) {
-                val (textMode, setTextMode) = remember { selectionIntent.textModeSelection }
-                val (exerciseMode, setExerciseMode) = remember { selectionIntent.exerciseModeSelection }
+                val (textMode, setTextMode) = selectionIntent.textModeSelection
+                val (exerciseMode, setExerciseMode) = selectionIntent.exerciseModeSelection
                 val roundedCornerDp = 15.dp
                 val headerShape = RoundedCornerShape(
                     topStart = roundedCornerDp,
@@ -107,12 +107,17 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                 ExerciseSelectionBodyWithSlot(
                     shape = bodyShape
                 ) {
-                    val boldHighlightSpan = SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
+                    val boldHighlightSpan =
+                        SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
                     ExerciseModeSubCard(
                         selectionIntent = selectionIntent,
                         descriptionText = when (exerciseMode) {
-                            0 -> (+i18n.str.exercise.selection.exerciseMode.timelimitDescription).parseForSpans(boldHighlightSpan)
-                            1 -> (+i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription).parseForSpans(boldHighlightSpan)
+                            0 -> (+i18n.str.exercise.selection.exerciseMode.timelimitDescription).parseForSpans(
+                                boldHighlightSpan
+                            )
+                            1 -> (+i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription).parseForSpans(
+                                boldHighlightSpan
+                            )
                             else -> throw IndexOutOfBoundsException()
                         },
                         timeLimit = exerciseMode == 0
@@ -169,7 +174,8 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
 
 @Composable
 fun TypingType(intent: ExerciseSelectionIntent, headerShape: RoundedCornerShape, bodyShape: RoundedCornerShape) {
-    val (typingType, setTypingType) = remember { intent.typingTypeSelection }
+    val (typingType, setTypingType) = intent.typingTypeSelection
+    println(intent.typingTypeSelection.value)
     LabeledOutlinedRadioButtonGroup(
         modifier = Modifier,
         label = +i18n.str.exercise.selection.typingType.typingType + ":",
@@ -177,7 +183,10 @@ fun TypingType(intent: ExerciseSelectionIntent, headerShape: RoundedCornerShape,
         options = ExerciseSelectionIntent.typingTypeSelectionOptions,
         optionTransform = @Composable { +it },
         selected = typingType,
-        onSelectionChange = setTypingType,
+        onSelectionChange = {
+            println("New" + it)
+            setTypingType.invoke(it)
+        },
         shape = headerShape
     )
     ExerciseSelectionBodyWithSlot(

@@ -67,6 +67,7 @@ class ExerciseSelectionIntent(initData: AbstractTypingOptions?) {
             0, 1 -> (durationSelection.value + 1L).times(60000L)
             else -> customDurationSelection.value.toDoubleOrNull()?.times(60000L) ?: 0L
         } // Min to millis
+
         return TypingOptions(
             generatorOptions = when (textModeSelection.value) {
                 0 -> RandomKnownTextOptions(

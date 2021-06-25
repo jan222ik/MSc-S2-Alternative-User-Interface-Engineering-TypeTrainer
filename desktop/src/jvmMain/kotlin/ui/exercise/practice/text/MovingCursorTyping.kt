@@ -70,7 +70,7 @@ fun MovingCursorTyping(intend: ITextDisplayPracticeIntend) {
                 }
             }
         }
-        Text(text = annotatedString)
+        Text(text = annotatedString, style = MaterialTheme.typography.h6)
         if (!isFocused.value) {
             TypingSetup(intend)
         }
