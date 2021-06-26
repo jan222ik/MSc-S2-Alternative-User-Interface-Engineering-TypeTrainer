@@ -317,7 +317,8 @@ private fun TextModeSubCard(
 @ExperimentalAnimationApi
 @Composable
 private fun CustomDurationInput(selectionIntent: ExerciseSelectionIntent, setSelectionIndex: () -> Unit) {
-    val (customDuration, setCustomDuration) = remember { selectionIntent.customDurationSelection }
+    val (customDuration, setCustomDuration) = selectionIntent.customDurationSelection
+    println("customDuration = ${customDuration}")
     val hasError = remember(customDuration) {
         val dur = customDuration.toDoubleOrNull()
         dur == null || dur <= 0.0
@@ -357,7 +358,7 @@ private fun ExerciseModeSubCard(
     ) {
         Text(text = descriptionText)
         Spacer(modifier = Modifier.height(25.dp))
-        val (duration, setDuration) = remember { selectionIntent.durationSelection }
+        val (duration, setDuration) = selectionIntent.durationSelection
         Row {
             val roundedCornerDp = 15.dp
             val shape = RoundedCornerShape(
