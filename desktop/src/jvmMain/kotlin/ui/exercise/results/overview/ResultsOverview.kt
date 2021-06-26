@@ -13,12 +13,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -28,10 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
+import textgen.error.ExerciseEvaluation
 import textgen.generators.impl.RandomCharOptions
 import textgen.generators.impl.RandomKnownTextOptions
 import textgen.generators.impl.RandomKnownWordOptions
@@ -46,7 +44,7 @@ import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 
 @Composable
-fun ColumnScope.ResultsOverview(intent: ResultIntent, isStandalone: Boolean) {
+fun ColumnScope.ResultsOverview(intent: ResultIntent, exerciseEvaluation: ExerciseEvaluation, isStandalone: Boolean) {
     Row(
         modifier = Modifier
             .fillMaxWidth(0.8f.takeIf { isStandalone } ?: 1f)
@@ -60,7 +58,8 @@ fun ColumnScope.ResultsOverview(intent: ResultIntent, isStandalone: Boolean) {
         ) {
             KeyPoints(
                 modifier = Modifier.fillMaxHeight(0.5f).fillMaxWidth(),
-                keyPoints = intent.getKeyPoints()
+                eval = exerciseEvaluation,
+                options = exerciseEvaluation.options
             )
             SessionOptions(
                 modifier = Modifier.fillMaxSize(),
@@ -105,7 +104,7 @@ fun SessionOptions(modifier: Modifier, options: AbstractTypingOptions) {
     ) {
 
 
-        Box(modifier = Modifier.fillMaxSize( )) {
+        Box(modifier = Modifier.fillMaxSize()) {
             val router = WindowRouterAmbient.current
             TextButton(
                 modifier = Modifier.align(Alignment.TopEnd),
@@ -171,47 +170,84 @@ fun <T> SessionOptionsItem(
 }
 
 @Composable
-fun KeyPoints(modifier: Modifier, keyPoints: List<KeyPoint>) {
+fun KeyPoints(modifier: Modifier, eval: ExerciseEvaluation, options: AbstractTypingOptions) {
     BaseDashboardCard(
         modifier = modifier
     ) {
+        val strResExercise = i18n.str.exercise.selection.exerciseMode
+        val strResKeypoints = i18n.str.exercise.results.overview_keypoints
+
         Column {
             Text(text = +i18n.str.exercise.results.overview.keyPoints)
-            Row {
-                LazyColumn(
-                    contentPadding = PaddingValues(end = 15.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    items(keyPoints) { keyPoint ->
-                        Text(
-                            text = keyPoint.name + ":",
-                            color = MaterialTheme.colors.primary,
-                            modifier = Modifier,
-                            textAlign = TextAlign.Justify
-                        )
-                    }
-                }
-                LazyColumn {
-                    items(keyPoints) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
-                        ) {
-                            Text(
-                                text = it.value,
-                                textAlign = TextAlign.Justify
-                            )
-                            Icon(
-                                imageVector = it.icon,
-                                contentDescription = null,
-                                tint = MaterialTheme.colors.primary,
-                                modifier = Modifier.size(15.dp)
-                            )
-                        }
-                    }
-                }
-            }
+            // Duration
+            KeyPointsItem(strResExercise.duration, options.durationMillis.div(1000f).let(convertToMinSecString))
+            // Date
+            // TODO
+            // Words Typed
+            KeyPointsItem(strResKeypoints.wordsTyped, eval.wordsTyped.toString())
+            // Chars Typed
+            KeyPointsItem(strResKeypoints.charsTyped, eval.totalCharsTyped.toString())
+            // WPM
+            KeyPointsItem(strResKeypoints.wpm, eval.wps.times(60).toInt().toString())
+            // CPM
+            KeyPointsItem(strResKeypoints.cpm, eval.cps.times(60).toInt().toString())
+            // Total Errors
+            KeyPointsItem(strResKeypoints.totalErrors, eval.totalErrors.toString())
+            // Accuracy
+            KeyPointsItem(
+                strResKeypoints.accuracy,
+                eval.totalAccuracy.toPercentage(2)
+            )
+
+            // Typing Errors
+            KeyPointsItem(strResKeypoints.typingErrors, eval.falseCharsTyped.toString())
+            // Typing Errors %
+            KeyPointsItem(
+                strResKeypoints.typingErrorsPercentage,
+                eval.falseCharsTyped.div(eval.totalErrors.toFloat()).toPercentage(2)
+            )
+
+            // Typing Errors Case
+            KeyPointsItem(strResKeypoints.typingErrorsCase, eval.falseCharsTypedCase.toString())
+            // Typing Errors Case %
+            KeyPointsItem(
+                strResKeypoints.typingErrorsCasePercentatge,
+                eval.falseCharsTypedCase.div(eval.falseCharsTyped.toFloat()).toPercentage(2)
+            )
+
+            // Typing Errors Whitespace
+            KeyPointsItem(strResKeypoints.typingErrorsWhitespace, eval.falseCharsTypedWhitespace.toString())
+            // Typing Errors Whitespace %
+            KeyPointsItem(
+                strResKeypoints.typingErrorsWhitespacePercentatge,
+                eval.falseCharsTypedWhitespace.div(eval.falseCharsTyped.toFloat()).toPercentage(2)
+            )
+
+
+            // Finger Errors
+            KeyPointsItem(strResKeypoints.fingerErrors, eval.falseKeyFingerStrokes.toString())
+            // Finger Errors %
+            KeyPointsItem(
+                strResKeypoints.fingerErrorsPercentage,
+                eval.falseKeyFingerStrokes.div(eval.totalErrors.toFloat()).toPercentage(2)
+            )
         }
+    }
+}
+
+fun Float.toPercentage(posAfter: Int): String {
+    val mul = (0..posAfter).fold(1) { acc, i -> acc.times(10.takeUnless { i == 0 } ?: 1) }
+    return this.times(100).times(mul).toInt().div(mul.toFloat()).toString()
+}
+
+@Composable
+fun KeyPointsItem(title: KeyI18N, value: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        Text(text = +title)
+        Text(text = value)
     }
 }
 

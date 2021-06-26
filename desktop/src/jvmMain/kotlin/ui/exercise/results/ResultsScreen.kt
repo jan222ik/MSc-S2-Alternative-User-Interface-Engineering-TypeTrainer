@@ -22,7 +22,7 @@ fun ResultsScreen(
         resultsRoutes = innerRouting
     ) { current ->
         when (current) {
-            ResultsRoutes.OVERVIEW -> ResultsOverview(intent, isStandalone)
+            ResultsRoutes.OVERVIEW -> ResultsOverview(intent, exerciseEvaluation, isStandalone)
             ResultsRoutes.ANALYSIS -> AnalysisScreen(exerciseEvaluation, isStandalone)
             ResultsRoutes.ERROR_HEATMAP -> Text(+current.title)
             ResultsRoutes.TIMELINE -> ResultsTimeline(intent, isStandalone)

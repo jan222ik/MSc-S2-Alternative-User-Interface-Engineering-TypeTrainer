@@ -1,7 +1,6 @@
 package textgen.error
 
 import com.github.jan222ik.compose_mpp_charts.core.data.DataPoint
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ui.exercise.AbstractTypingOptions
@@ -13,6 +12,34 @@ data class ExerciseEvaluation(
     val options: AbstractTypingOptions
 ) {
     // Use @Transient if sth has a backing field and should not be serialized
+
+    val falseCharsTypedCase: Int by lazy {
+        texts
+            .flatMap { txt ->
+                txt.chars
+                    .filterIsInstance<CharEvaluation.TypingError>()
+                    .onEach { it.getExpectedChar(txt.text) }
+            }
+            .let { errors ->
+                errors
+                    .groupBy { it.expectedChar }
+                    .entries
+                    .map { entry: Map.Entry<Char?, List<CharEvaluation.TypingError>> ->
+                        entry.value.count {
+                            entry.key?.equals(it.actual, ignoreCase = true) ?: false
+                        }
+                    }
+            }.sum()
+    }
+
+    val falseCharsTypedWhitespace: Int by lazy {
+        texts
+            .flatMap { txt ->
+                txt.chars
+                    .filterIsInstance<CharEvaluation.TypingError>()
+                    .onEach { it.getExpectedChar(txt.text) }
+            }.count { it.expectedChar?.isWhitespace() ?: false }
+    }
 
     val totalCharsTyped: Int by lazy {
         texts.sumBy { it.chars.size }
@@ -34,6 +61,10 @@ data class ExerciseEvaluation(
         wordsTyped / options.durationMillis.div(1000f)
     }
 
+    val cps: Float by lazy {
+        totalCharsTyped / options.durationMillis.div(1000f)
+    }
+
     val timesBetweenKeyStrokes: List<DataPoint> by lazy {
         val times = texts.map { it.chars.map { c -> c.timeRemaining } }.flatten()
         var prev: Long = options.durationMillis
@@ -49,7 +80,7 @@ data class ExerciseEvaluation(
     }
 
     val shortestTimeTweenStrokes: Float? by lazy {
-        timesBetweenKeyStrokes.minByOrNull { it.y.takeUnless { it == 0f } ?: Float.MAX_VALUE  }?.y
+        timesBetweenKeyStrokes.minByOrNull { it.y.takeUnless { it == 0f } ?: Float.MAX_VALUE }?.y
     }
 
     val averageTimeTweenStrokes: Float? by lazy {
@@ -72,7 +103,7 @@ data class ExerciseEvaluation(
                     .groupBy { it.expectedChar }
                     .entries
                     .sortedByDescending { it.value.size }
-                    .mapIndexed{index: Int, entry: Map.Entry<Char?, List<CharEvaluation.TypingError>> ->
+                    .mapIndexed { index: Int, entry: Map.Entry<Char?, List<CharEvaluation.TypingError>> ->
                         ChartErrorKey(
                             idx = index,
                             char = entry.key.toString(),
@@ -88,12 +119,14 @@ data class ExerciseEvaluation(
         get() = totalCharsTyped - correctCharsTyped
 
     val totalErrors
-        get() = falseCharsTyped + falseKeyStrokes
+        get() = falseCharsTyped + falseKeyFingerStrokes
 
     val totalAccuracy
         get() = 1f - (totalErrors / totalCharsTyped.toFloat())
 
-    val falseKeyStrokes: Int by lazy { 0 }
+    val falseKeyFingerStrokes: Int by lazy {
+        texts.sumBy { it.chars.filterIsInstance<CharEvaluation.FingerError>().size }
+    }
 }
 
 @Serializable
@@ -176,5 +209,5 @@ sealed class CharEvaluation {
         return c
     }
 
-    abstract fun copy(timeRemaining: Long) : CharEvaluation
+    abstract fun copy(timeRemaining: Long): CharEvaluation
 }

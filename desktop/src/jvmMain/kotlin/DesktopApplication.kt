@@ -161,7 +161,7 @@ object DesktopApplication {
             var engine: NettyApplicationEngine? = null
             startUpScope.launch(Dispatchers.IO) {
                 loadingStateFlow.emit(StartUpLoading.DATABASE)
-                DatabaseFactory.init()
+                //DatabaseFactory.init()
                 //DEMO.demoTrainingEntries()
                 DatabaseFactory.start()
                 loadingStateFlow.emit(StartUpLoading.NETWORK)

@@ -182,6 +182,25 @@ sealed class i18n {
                     val goals: KeyI18N = RequiresTranslationI18N("Goals:")
                     val achievements: KeyI18N = RequiresTranslationI18N("Achievements:")
                 }
+
+                object overview_keypoints : results() {
+                    override val path: String = super.path + ".overview_keypoints"
+                    val wordsTyped: KeyI18N = RequiresTranslationI18N("Words Typed:")
+                    val charsTyped: KeyI18N = RequiresTranslationI18N("Chars Typed:")
+                    val wpm: KeyI18N = RequiresTranslationI18N("Words Per Minute (WPM):")
+                    val cpm: KeyI18N = RequiresTranslationI18N("Chars Per Minute (CPM):")
+                    val totalErrors: KeyI18N = RequiresTranslationI18N("Total Errors:")
+                    val accuracy: KeyI18N = RequiresTranslationI18N("Accuracy:")
+                    val typingErrors: KeyI18N = RequiresTranslationI18N("Typing Errors:")
+
+                    val typingErrorsPercentage: KeyI18N = RequiresTranslationI18N("Typing Errors in %:")
+                    val typingErrorsCase: KeyI18N = RequiresTranslationI18N("Typing Errors - Char Case:")
+                    val typingErrorsCasePercentatge: KeyI18N = RequiresTranslationI18N("Typing Errors - Char Case in %:")
+                    val typingErrorsWhitespace: KeyI18N = RequiresTranslationI18N("Typing Errors - Whitespace:")
+                    val typingErrorsWhitespacePercentatge: KeyI18N = RequiresTranslationI18N("Typing Errors - Whitespace in %:")
+                    val fingerErrors: KeyI18N = RequiresTranslationI18N("Finger Errors:")
+                    val fingerErrorsPercentage: KeyI18N = RequiresTranslationI18N("Finger Errors in %:")
+                }
             }
 
             object connection : exercise() {
