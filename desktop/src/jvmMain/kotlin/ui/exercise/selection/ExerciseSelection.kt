@@ -175,7 +175,6 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
 @Composable
 fun TypingType(intent: ExerciseSelectionIntent, headerShape: RoundedCornerShape, bodyShape: RoundedCornerShape) {
     val (typingType, setTypingType) = intent.typingTypeSelection
-    println(intent.typingTypeSelection.value)
     LabeledOutlinedRadioButtonGroup(
         modifier = Modifier,
         label = +i18n.str.exercise.selection.typingType.typingType + ":",
@@ -184,7 +183,6 @@ fun TypingType(intent: ExerciseSelectionIntent, headerShape: RoundedCornerShape,
         optionTransform = @Composable { +it },
         selected = typingType,
         onSelectionChange = {
-            println("New" + it)
             setTypingType.invoke(it)
         },
         shape = headerShape
@@ -318,7 +316,6 @@ private fun TextModeSubCard(
 @Composable
 private fun CustomDurationInput(selectionIntent: ExerciseSelectionIntent, setSelectionIndex: () -> Unit) {
     val (customDuration, setCustomDuration) = selectionIntent.customDurationSelection
-    println("customDuration = ${customDuration}")
     val hasError = remember(customDuration) {
         val dur = customDuration.toDoubleOrNull()
         dur == null || dur <= 0.0

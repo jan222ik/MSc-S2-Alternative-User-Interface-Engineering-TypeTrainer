@@ -75,7 +75,7 @@ class ExerciseSelectionIntent(initData: AbstractTypingOptions?) {
         }
         val duration = when (durationSelection.value) {
             0, 1 -> (durationSelection.value + 1L).times(60000L)
-            else -> customDurationSelection.value.also { println("Cust" + it) }.toDoubleOrNull()?.times(60000L) ?: 0L
+            else -> customDurationSelection.value.toDoubleOrNull()?.times(60000L) ?: 0L
         }.takeUnless {
             exerciseMode == ExerciseMode.NoTimelimit
         } ?: Long.MAX_VALUE // Min to millis
