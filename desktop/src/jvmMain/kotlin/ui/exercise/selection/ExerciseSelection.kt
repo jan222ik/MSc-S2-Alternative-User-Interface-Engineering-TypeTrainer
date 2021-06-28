@@ -5,6 +5,7 @@ package ui.exercise.selection
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -149,7 +150,10 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                         )
                         Text(
                             text = +i18n.str.exercise.selection.controls.useHandTracking,
-                            style = MaterialTheme.typography.body1
+                            style = MaterialTheme.typography.body1,
+                            modifier = Modifier.clickable {
+                                setWithFingerTracking(!withFingerTracking)
+                            }
                         )
                     }
                     Spacer(Modifier.width(8.dp))
