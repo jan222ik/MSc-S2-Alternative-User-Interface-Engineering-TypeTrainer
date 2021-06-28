@@ -136,7 +136,7 @@ class FingerMatcher(
         get() = mulSyncStep
 
     private val escPoints = mutableListOf<Offset>()
-     var topLeft: Offset? = null
+    var topLeft: Offset? = null
 
     fun syncInput(evt: KeyEvent) {
         if (evt.type == KeyEventType.KeyDown) {
@@ -155,13 +155,15 @@ class FingerMatcher(
                 nativeKeyEvt.keyCode == java.awt.event.KeyEvent.VK_ESCAPE
                         && nativeKeyEvt.keyLocation == java.awt.event.KeyEvent.KEY_LOCATION_STANDARD -> {
                     if (mulSyncStep.value == 0) {
-                        escPoints.addAll(
-                            channel.poll()!!
-                                .mapNotNull {
+                        val poll = channel.poll()
+                        if (poll != null) {
+                            escPoints.addAll(
+                                poll.mapNotNull {
                                     it.fingerLandmarks[FingerEnum.PINKY]?.let { Offset(it.x, it.y) }
                                 }
-                        )
-                        mulSyncStep.value = 1
+                            )
+                            mulSyncStep.value = 1
+                        }
                     }
                 }
                 else -> {
@@ -173,7 +175,7 @@ class FingerMatcher(
     }
 
     fun matchFingerOverKey(char: String): FingerUsed? {
-        val hands = channel.poll()!!
+        val hands = channel.poll() ?: return null
         val expectedFinger = fingerMap[char.toUpperCase()]
         if (expectedFinger == null) {
             return null

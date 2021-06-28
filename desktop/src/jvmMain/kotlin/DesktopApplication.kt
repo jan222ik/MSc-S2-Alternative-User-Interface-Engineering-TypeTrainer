@@ -242,7 +242,7 @@ object DesktopApplication {
     @Composable
     fun FingerCanvas(server: Server, fingerMatcher: FingerMatcher?) {
         fingerMatcher ?: return
-
+        return
             Window {
                 TypeTrainerTheme {
                     Surface(color = MaterialTheme.colors.surface) {
@@ -250,20 +250,20 @@ object DesktopApplication {
                         Canvas(modifier = Modifier.fillMaxSize()) {
                             clipRect {
                                 val (w, h) = this.size
-                                println("w: $w h: $h")
+                                //println("w: $w h: $h")
                                 val colors = listOf(
                                     Color.Red,
                                     Color.Green,
                                     Color.Cyan
                                 )
                                 hands.value.forEachIndexed { idx, it ->
-                                    println("Hand $idx")
+                                    //println("Hand $idx")
                                     val c = colors[idx.rem(colors.size)]
                                     it.fingerLandmarks.values.map {
                                         val point = it.toKeyBoardRef( Offset.Zero)
                                         val x = point.x * w
                                         val y = point.y * h
-                                        println("Finger ${it.finger} x: $x y: $y")
+                                        //println("Finger ${it.finger} x: $x y: $y")
                                         Offset(x, y)
                                     }.let {
                                         drawPoints(points = it, brush = SolidColor(c), pointMode = PointMode.Points, strokeWidth = 4f, cap = StrokeCap.Round)

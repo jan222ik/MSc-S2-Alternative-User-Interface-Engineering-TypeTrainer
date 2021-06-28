@@ -165,7 +165,7 @@ class HandTrackingActivity : AppCompatActivity() {
         // based on the size of the SurfaceView that contains the display.
         val viewSize = computeViewSize(width, height)
         val displaySize = cameraHelper!!.computeDisplaySizeFromViewSize(viewSize)
-        val isCameraRotated = cameraHelper!!.isCameraRotated
+        val isCameraRotated = !cameraHelper!!.isCameraRotated
 
         // Connect the converter to the camera-preview frames as its input (via
         // previewFrameTexture), and configure the output width and height as the computed
