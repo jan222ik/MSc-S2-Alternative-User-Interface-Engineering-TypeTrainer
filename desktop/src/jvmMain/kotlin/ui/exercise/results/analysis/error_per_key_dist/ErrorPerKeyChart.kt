@@ -83,7 +83,7 @@ fun ErrorPerKeyChart(chartData: List<ChartErrorKey>, modifier: Modifier = Modifi
         series(
             data = data,
             renderer = compositeRenderer(
-                barRenderer(barDrawer(width = 50f, brush = SolidColor(pointColor)))
+                barRenderer(barDrawer(width = 40f, brush = SolidColor(pointColor)))
             )
         )
         label(slot = ChartLabelSlot.START, labelProvider = intLabelProvider(step = step.toUInt())) {

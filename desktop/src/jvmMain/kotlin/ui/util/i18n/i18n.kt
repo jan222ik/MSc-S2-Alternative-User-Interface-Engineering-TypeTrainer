@@ -194,10 +194,10 @@ sealed class i18n {
                     val typingErrors: KeyI18N = RequiresTranslationI18N("Typing Errors:")
 
                     val typingErrorsPercentage: KeyI18N = RequiresTranslationI18N("Typing Errors in %:")
-                    val typingErrorsCase: KeyI18N = RequiresTranslationI18N("Typing Errors - Char Case:")
-                    val typingErrorsCasePercentatge: KeyI18N = RequiresTranslationI18N("Typing Errors - Char Case in %:")
-                    val typingErrorsWhitespace: KeyI18N = RequiresTranslationI18N("Typing Errors - Whitespace:")
-                    val typingErrorsWhitespacePercentatge: KeyI18N = RequiresTranslationI18N("Typing Errors - Whitespace in %:")
+                    val typingErrorsCase: KeyI18N = RequiresTranslationI18N("Char Case:")
+                    val typingErrorsCasePercentatge: KeyI18N = RequiresTranslationI18N("Char Case in %:")
+                    val typingErrorsWhitespace: KeyI18N = RequiresTranslationI18N("Whitespace:")
+                    val typingErrorsWhitespacePercentatge: KeyI18N = RequiresTranslationI18N("Whitespace in %:")
                     val fingerErrors: KeyI18N = RequiresTranslationI18N("Finger Errors:")
                     val fingerErrorsPercentage: KeyI18N = RequiresTranslationI18N("Finger Errors in %:")
                 }

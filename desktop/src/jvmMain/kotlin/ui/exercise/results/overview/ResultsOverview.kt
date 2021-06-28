@@ -57,7 +57,7 @@ fun ColumnScope.ResultsOverview(intent: ResultIntent, exerciseEvaluation: Exerci
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             KeyPoints(
-                modifier = Modifier.fillMaxHeight(0.5f).fillMaxWidth(),
+                modifier = Modifier.fillMaxHeight(0.7f).fillMaxWidth(),
                 eval = exerciseEvaluation,
                 options = exerciseEvaluation.options
             )
@@ -114,42 +114,58 @@ fun SessionOptions(modifier: Modifier, options: AbstractTypingOptions) {
             ) {
                 Text(+RequiresTranslationI18N("Restart Exercise"))
             }
-            Column {
-                Text(+RequiresTranslationI18N("Session Options"))
-                SessionOptionsItem(
-                    name = strResExercise.duration,
-                    value = options.durationMillis.div(1000f).let(convertToMinSecString)
+            val verticalArrangement = Arrangement.spacedBy(5.dp)
+            Column(
+                verticalArrangement = verticalArrangement,
+            ) {
+                val indent = Modifier.padding(start = 16.dp)
+                Text(+RequiresTranslationI18N("Session Options:"))
+                Column(
+                    verticalArrangement = verticalArrangement,
+                    modifier = indent
+                ) {
+                    SessionOptionsItem(
+                        name = strResExercise.duration,
+                        value = options.durationMillis.div(1000f).let(convertToMinSecString)
+                    )
+                    SessionOptionsItem(
+                        name = strResExercise.exerciseMode,
+                        value = when (options.exerciseMode) {
+                            ExerciseMode.Timelimit -> +strResExercise.timelimit
+                            ExerciseMode.NoTimelimit -> +strResExercise.noTimeLimit
+                        }
+                    )
+                    SessionOptionsItem(
+                        name = strResTyping.typingType,
+                        value = when (options.typingType) {
+                            TypingType.MovingCursor -> +strResTyping.movingCursor
+                            TypingType.MovingText -> +strResTyping.movingText
+                        }
+                    )
+                }
+                Text(
+                    text = +RequiresTranslationI18N("Text Generation Options:")
                 )
-                SessionOptionsItem(
-                    name = strResExercise.exerciseMode,
-                    value = when (options.exerciseMode) {
-                        ExerciseMode.Timelimit -> +strResExercise.timelimit
-                        ExerciseMode.NoTimelimit -> +strResExercise.noTimeLimit
-                    }
-                )
-                SessionOptionsItem(
-                    name = strResTyping.typingType,
-                    value = when (options.typingType) {
-                        TypingType.MovingCursor -> +strResTyping.movingCursor
-                        TypingType.MovingText -> +strResTyping.movingText
-                    }
-                )
-                Text(+RequiresTranslationI18N("Text Generation Options"))
-                SessionOptionsItem(
-                    name = strResText.textMode,
-                    value = when (options.generatorOptions) {
-                        is RandomCharOptions -> +strResText.randomChars
-                        is RandomKnownWordOptions -> +strResText.randomWords
-                        is RandomKnownTextOptions -> +strResText.literature
-                        else -> throw IllegalArgumentException(
-                            "No string resource exists for this options type"
-                        )
-                    }
-                )
-                SessionOptionsItem(
-                    name = RequiresTranslationI18N("Seed"),
-                    value = options.generatorOptions.seed
-                )
+                Column(
+                    verticalArrangement = verticalArrangement,
+                    modifier = indent
+                ) {
+                    SessionOptionsItem(
+                        name = strResText.textMode,
+                        value = when (options.generatorOptions) {
+                            is RandomCharOptions -> +strResText.randomChars
+                            is RandomKnownWordOptions -> +strResText.randomWords
+                            is RandomKnownTextOptions -> +strResText.literature
+                            else -> throw IllegalArgumentException(
+                                "No string resource exists for this options type"
+                            )
+                        }
+                    )
+                    SessionOptionsItem(
+                        name = RequiresTranslationI18N("Seed"),
+                        value = options.generatorOptions.seed
+                    )
+                }
             }
 
         }
@@ -164,8 +180,14 @@ fun <T> SessionOptionsItem(
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(+name + ":")
-        Text(value.toString())
+        Text(
+            text = +name + ":",
+            modifier = Modifier.weight(0.3f)
+        )
+        Text(
+            text = value.toString(),
+            modifier = Modifier.weight(0.55f)
+        )
     }
 }
 
@@ -177,60 +199,123 @@ fun KeyPoints(modifier: Modifier, eval: ExerciseEvaluation, options: AbstractTyp
         val strResExercise = i18n.str.exercise.selection.exerciseMode
         val strResKeypoints = i18n.str.exercise.results.overview_keypoints
 
-        Column {
-            Text(text = +i18n.str.exercise.results.overview.keyPoints)
-            // Duration
-            KeyPointsItem(strResExercise.duration, options.durationMillis.div(1000f).let(convertToMinSecString))
-            // Date
-            // TODO
-            // Words Typed
-            KeyPointsItem(strResKeypoints.wordsTyped, eval.wordsTyped.toString())
-            // Chars Typed
-            KeyPointsItem(strResKeypoints.charsTyped, eval.totalCharsTyped.toString())
-            // WPM
-            KeyPointsItem(strResKeypoints.wpm, eval.wps.times(60).toInt().toString())
-            // CPM
-            KeyPointsItem(strResKeypoints.cpm, eval.cps.times(60).toInt().toString())
-            // Total Errors
-            KeyPointsItem(strResKeypoints.totalErrors, eval.totalErrors.toString())
-            // Accuracy
-            KeyPointsItem(
-                strResKeypoints.accuracy,
-                eval.totalAccuracy.toPercentage(2)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = +i18n.str.exercise.results.overview.keyPoints,
+                style = MaterialTheme.typography.h5
             )
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(start = 16.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                // Duration
+                KeyPointsItem(
+                    title = strResExercise.duration,
+                    value = options.durationMillis.div(1000f).let(convertToMinSecString)
+                )
+                // Date
+                // TODO
+                // Words Typed
+                KeyPointsItem(
+                    title = strResKeypoints.wordsTyped,
+                    value = eval.wordsTyped.toString()
+                )
+                // Chars Typed
+                KeyPointsItem(
+                    title = strResKeypoints.charsTyped,
+                    value = eval.totalCharsTyped.toString()
+                )
+                // WPM
+                KeyPointsItem(
+                    title = strResKeypoints.wpm,
+                    value = eval.wps.times(60).toInt().toString()
+                )
+                // CPM
+                KeyPointsItem(
+                    title = strResKeypoints.cpm,
+                    value = eval.cps.times(60).toInt().toString()
+                )
+                Text(
+                    text = +RequiresTranslationI18N("Errors:"),
+                    style = MaterialTheme.typography.h5
+                )
+                Column(
+                    modifier = Modifier.padding(start = 16.dp),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    // Total Errors
+                    KeyPointsItem(
+                        title = strResKeypoints.totalErrors,
+                        value = eval.totalErrors.toString()
+                    )
+                    // Accuracy
+                    KeyPointsItem(
+                        title = strResKeypoints.accuracy,
+                        value = eval.totalAccuracy.toPercentage(2) + "%"
+                    )
 
-            // Typing Errors
-            KeyPointsItem(strResKeypoints.typingErrors, eval.falseCharsTyped.toString())
-            // Typing Errors %
-            KeyPointsItem(
-                strResKeypoints.typingErrorsPercentage,
-                eval.falseCharsTyped.div(eval.totalErrors.toFloat()).toPercentage(2)
-            )
+                    // Typing Errors
+                    KeyPointsItem(
+                        title = strResKeypoints.typingErrors,
+                        value = eval.falseCharsTyped.toString()
+                    )
+                    // Typing Errors %
+                    KeyPointsItem(
+                        title = strResKeypoints.typingErrorsPercentage,
+                        value = eval.falseCharsTyped.div(eval.totalErrors.toFloat()).toPercentage(2) + "%"
+                    )
+                    Text(
+                        text = +RequiresTranslationI18N("Typing Errors per Category:"),
+                        style = MaterialTheme.typography.h6
+                    )
+                    Column(
+                        modifier = Modifier.padding(start = 16.dp),
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        // Typing Errors Case
+                        KeyPointsItem(
+                            title = strResKeypoints.typingErrorsCase,
+                            value = eval.falseCharsTypedCase.toString()
+                        )
+                        // Typing Errors Case %
+                        KeyPointsItem(
+                            title = strResKeypoints.typingErrorsCasePercentatge,
+                            value = eval.falseCharsTypedCase.div(eval.falseCharsTyped.toFloat()).toPercentage(2) + "%"
+                        )
 
-            // Typing Errors Case
-            KeyPointsItem(strResKeypoints.typingErrorsCase, eval.falseCharsTypedCase.toString())
-            // Typing Errors Case %
-            KeyPointsItem(
-                strResKeypoints.typingErrorsCasePercentatge,
-                eval.falseCharsTypedCase.div(eval.falseCharsTyped.toFloat()).toPercentage(2)
-            )
+                        // Typing Errors Whitespace
+                        KeyPointsItem(
+                            title = strResKeypoints.typingErrorsWhitespace,
+                            value = eval.falseCharsTypedWhitespace.toString()
+                        )
+                        // Typing Errors Whitespace %
+                        KeyPointsItem(
+                            title = strResKeypoints.typingErrorsWhitespacePercentatge,
+                            value = eval
+                                .falseCharsTypedWhitespace
+                                .div(eval.falseCharsTyped.toFloat())
+                                .toPercentage(2) + "%"
+                        )
+                    }
 
-            // Typing Errors Whitespace
-            KeyPointsItem(strResKeypoints.typingErrorsWhitespace, eval.falseCharsTypedWhitespace.toString())
-            // Typing Errors Whitespace %
-            KeyPointsItem(
-                strResKeypoints.typingErrorsWhitespacePercentatge,
-                eval.falseCharsTypedWhitespace.div(eval.falseCharsTyped.toFloat()).toPercentage(2)
-            )
 
-
-            // Finger Errors
-            KeyPointsItem(strResKeypoints.fingerErrors, eval.falseKeyFingerStrokes.toString())
-            // Finger Errors %
-            KeyPointsItem(
-                strResKeypoints.fingerErrorsPercentage,
-                eval.falseKeyFingerStrokes.div(eval.totalErrors.toFloat()).toPercentage(2)
-            )
+                    // Finger Errors
+                    KeyPointsItem(
+                        title = strResKeypoints.fingerErrors,
+                        value = eval.falseKeyFingerStrokes.toString()
+                    )
+                    // Finger Errors %
+                    KeyPointsItem(
+                        title = strResKeypoints.fingerErrorsPercentage,
+                        value = eval.falseKeyFingerStrokes.div(eval.totalErrors.toFloat()).toPercentage(2) + "%"
+                    )
+                }
+            }
         }
     }
 }
@@ -246,8 +331,14 @@ fun KeyPointsItem(title: KeyI18N, value: String) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        Text(text = +title)
-        Text(text = value)
+        Text(
+            text = +title,
+            modifier = Modifier.weight(0.45f)
+        )
+        Text(
+            text = value,
+            modifier = Modifier.weight(0.55f)
+        )
     }
 }
 
