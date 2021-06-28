@@ -78,7 +78,8 @@ fun DashboardGoalsPreviewCard(goalIntend: GoalIntend = GoalIntend()) {
             }
             Row(
                 modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 val (first, second) = goalIntend.getPreviewGoals()
                 DashboardGoal(first, {})
@@ -118,6 +119,7 @@ fun ComposeNewGoalBtn() {
             )
     ) {
         Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -135,7 +137,7 @@ fun ComposeNewGoalBtn() {
 }
 
 @Composable
-fun DashboardGoal(goal: IGoal, onOpenGoal: (IGoal) -> Unit) {
+fun DashboardGoal(goal: MockGoal, onOpenGoal: (MockGoal) -> Unit) {
     val activeTrackColor = MaterialTheme.colors.primary
     val inactiveTrackColor = activeTrackColor.copy(alpha = 0.24f)//MaterialTheme.colors.background
     val (isHover, setHover) = remember { mutableStateOf(false) }
@@ -183,12 +185,15 @@ fun DashboardGoal(goal: IGoal, onOpenGoal: (IGoal) -> Unit) {
         backgroundColor = MaterialTheme.colors.background,
         elevation = 0.dp
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Box(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 4.dp)
                     .padding(horizontal = 8.dp)
-                    .size(200.dp)
+                    .size(150.dp)
                     .drawBehind {
                         drawArc(
                             color = inactiveTrackColor,
@@ -204,9 +209,21 @@ fun DashboardGoal(goal: IGoal, onOpenGoal: (IGoal) -> Unit) {
                             useCenter = false,
                             style = if (isHover) hoverStrokeStyle else strokeStyle
                         )
-                    }
-            )
-            Text(text = goal.name)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(+goal.centerText)
+            }
+            Column(
+                modifier = Modifier.weight(1f).padding(top = 5.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                Text(text = +goal.name)
+                Text(
+                    text = +goal.timeframe,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
         }
     }
 }
