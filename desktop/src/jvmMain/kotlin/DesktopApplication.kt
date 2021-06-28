@@ -7,9 +7,11 @@ import androidx.compose.desktop.Window
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -25,13 +27,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.network.ServerConfig
@@ -66,6 +72,7 @@ import ui.util.debug.Debug
 import ui.util.debug.DebugWithAllRoutes
 import ui.util.i18n.LanguageConfiguration
 import util.FingerMatcher
+import util.KeyboardUtil
 import javax.imageio.ImageIO
 
 @ExperimentalAnimationApi
@@ -242,13 +249,23 @@ object DesktopApplication {
     @Composable
     fun FingerCanvas(server: Server, fingerMatcher: FingerMatcher?) {
         fingerMatcher ?: return
-        return
+        val keys = remember { KeyboardUtil.readKeyboard().keys }
+        LaunchedEffect(fingerMatcher, server) {
             Window {
                 TypeTrainerTheme {
                     Surface(color = MaterialTheme.colors.surface) {
                         val hands = server.handLandMarks.receiveAsFlow().collectAsState(listOf())
                         Canvas(modifier = Modifier.fillMaxSize()) {
                             clipRect {
+                                keys.forEach { row ->
+                                    row.forEach {
+                                        drawRect(
+                                            brush = SolidColor(Color.White),
+                                            topLeft = Offset(it.xCoord.toFloat(), it.yCoord.toFloat()),
+                                            size = Size(it.w.toFloat(), it.h.toFloat())
+                                        )
+                                    }
+                                }
                                 val (w, h) = this.size
                                 //println("w: $w h: $h")
                                 val colors = listOf(
@@ -260,13 +277,19 @@ object DesktopApplication {
                                     //println("Hand $idx")
                                     val c = colors[idx.rem(colors.size)]
                                     it.fingerLandmarks.values.map {
-                                        val point = it.toKeyBoardRef( Offset.Zero)
+                                        val point = it.toKeyBoardRef(Offset.Zero)
                                         val x = point.x * w
                                         val y = point.y * h
                                         //println("Finger ${it.finger} x: $x y: $y")
                                         Offset(x, y)
                                     }.let {
-                                        drawPoints(points = it, brush = SolidColor(c), pointMode = PointMode.Points, strokeWidth = 4f, cap = StrokeCap.Round)
+                                        drawPoints(
+                                            points = it,
+                                            brush = SolidColor(c),
+                                            pointMode = PointMode.Points,
+                                            strokeWidth = 4f,
+                                            cap = StrokeCap.Round
+                                        )
                                     }
 
                                 }
@@ -275,7 +298,80 @@ object DesktopApplication {
                     }
                 }
             }
+        }
+    }
 
+    @JvmStatic
+    fun main(args: Array<String>) {
+        Window {
+
+            val keyboard = remember {
+                KeyboardUtil.readKeyboard()
+            }
+            val keys = remember(keyboard) {
+                keyboard.keys
+            }
+            val bounds = remember(keyboard) {
+                keyboard.getBounds()
+            }
+            BoxWithConstraints(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                val density = LocalDensity.current
+                val vScale = with(density) { maxHeight.toPx().div(bounds.second) }
+                val hScale = with(density) { maxWidth.toPx().div(bounds.first) }
+                println("vScale = ${vScale}")
+                println("hScale = ${hScale}")
+                Canvas(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    println("maxHeight = ${maxHeight}, canvasHeight = ${size.height}")
+                    println("maxW = ${maxWidth}, canvasW = ${size.width}")
+                    clipRect {
+                        keys.forEach { row ->
+                            row.fold(0f) { acc, it ->
+                                println("it.strChars = ${it.strChars}")
+                                val col = if (!it.isSpacer()) Color.Black else Color.Red
+                                val (w, h) = it.getBounds()
+                                val x = it.xCoord.times(hScale).toFloat()
+                                drawRect(
+                                    brush = SolidColor(col),
+                                    topLeft = Offset(
+                                        x = x.plus(acc),
+                                        y = it.yCoord.times(vScale).toFloat()
+                                    ),
+                                    size = Size(
+                                        width = w.times(hScale).toFloat(),
+                                        height = h.times(vScale).toFloat()
+                                    ),
+                                    style = Stroke(width = 1f)
+                                )
+                                acc.plus(x)
+                            }
+                        }
+                    }
+                }
+                keys.forEach { row ->
+                    row.fold(0f) { acc, it ->
+                        val (w, h) = it.getBounds()
+                        val x = it.xCoord.times(hScale).toFloat()
+                        if (!it.isSpacer()) {
+                            Text(
+                                text = it.strChars,
+                                modifier = Modifier.offset {
+                                    IntOffset.Zero.copy(
+                                        x = (x.plus(acc) + w.times(hScale).toFloat().div(2)).toInt(),
+                                        y = (it.yCoord.times(vScale).toFloat() + h.times(vScale).toFloat().div(2)).toInt()
+                                    )
+                                }
+                            )
+                        }
+                        acc.plus(x)
+                    }
+                }
+            }
+
+        }
     }
 }
 

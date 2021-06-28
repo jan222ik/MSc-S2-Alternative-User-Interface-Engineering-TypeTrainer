@@ -61,7 +61,7 @@ class Keyboard {
         var actY = 0.0
         keys.forEach { row ->
             var actX = 0.0
-            actY += row[0].h
+            actY += row.maxOf { it.h }
             row.forEach { key ->
                 key.xCoord = actX
                 key.yCoord = actY

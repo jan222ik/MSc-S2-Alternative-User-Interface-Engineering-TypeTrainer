@@ -1,8 +1,16 @@
 package util
 
+import androidx.compose.desktop.Window
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.type
@@ -31,6 +39,7 @@ object KeyboardUtil {
     private fun String.getResourceAsFile(): InputStream? {
         return KeyboardUtil::class.java.classLoader.getResourceAsStream(this)
     }
+
 
     /* http://www.keyboard-layout-editor.com/#/ */
     /* !ATTENTION! Space will be "" -> therefore change file to contain "Space" instead! */
@@ -121,6 +130,67 @@ object KeyboardUtil {
                 map[it] = FingerEnum.PINKY
             }
 
+    }
+
+    fun getRelativeKeyboard(): List<List<RelativeKey>> {
+        val yl0 = 0f
+        val l0 = listOf(
+            K(x = 0f, y = yl0, ch = "Esc"),
+            // Space w = 1 -> x + 1
+            K(x = 2f, y = yl0, ch = "F1"),
+            K(x = 3f, y = yl0, ch = "F2"),
+            K(x = 4f, y = yl0, ch = "F3"),
+            K(x = 5f, y = yl0, ch = "F4"),
+            // Space w = 0.5 -> x + 0.5
+            K(x = 6.5f, y = yl0, ch = "F5"),
+            K(x = 7.5f, y = yl0, ch = "F6"),
+            K(x = 8.5f, y = yl0, ch = "F7"),
+            K(x = 9.5f, y = yl0, ch = "F8"),
+            // Space w = 0.5 -> x + 0.5
+            K(x = 11f, y = yl0, ch = "F9"),
+            K(x = 12f, y = yl0, ch = "F10"),
+            K(x = 13f, y = yl0, ch = "F11"),
+            K(x = 14f, y = yl0, ch = "F12"),
+        )
+        val yl1 = 1f + 0.5f
+        val l1 = listOf(
+            K(x = 0f, y = yl1, ch = "°\n^"),
+            K(x = 1f, y = yl1, ch = "!\n1"),
+            K(x = 2f, y = yl1, ch = "\"\n2\n\n²"),
+            K(x = 3f, y = yl1, ch = "§\n3\n\n³"),
+            K(x = 4f, y = yl1, ch = "$\n4"),
+            K(x = 5f, y = yl1, ch = "%\n5"),
+            K(x = 6f, y = yl1, ch = "&\n6"),
+            K(x = 7f, y = yl1, ch = "/\n7\n\n{"),
+            K(x = 8f, y = yl1, ch = "(\n8\n\n["),
+            K(x = 9f, y = yl1, ch = ")\n9\n\n]"),
+            K(x = 10f, y = yl1, ch = "=\n0\n\n}"),
+            K(x = 11f, y = yl1, ch = "?\nß\n\n\\"),
+            K(x = 12f, y = yl1, ch = "`\n´"),
+            K(x = 13f, y = yl1, w = 2f, ch = "Backspace"),
+        )
+        val yl2 = yl1 + 1f
+        val l2 = listOf(
+            K(x = 0f, y = yl2, w = 1.5f, ch = "Tab"),
+            K(x = 1.5f, y = yl2, ch = "Q"),
+            K(x = 2.5f, y = yl2, ch = "W"),
+            K(x = 3.5f, y = yl2, ch = "E"),
+            K(x = 4.5f, y = yl2, ch = "R"),
+            K(x = 5.5f, y = yl2, ch = "T"),
+            K(x = 6.5f, y = yl2, ch = "Y"),
+            K(x = 7.5f, y = yl2, ch = "U"),
+            K(x = 8.5f, y = yl2, ch = "I"),
+            K(x = 9.5f, y = yl2, ch = "O"),
+            K(x = 10.5f, y = yl2, ch = "P"),
+            K(x = 11.5f, y = yl2, ch = "Ü"),
+            K(x = 12.5f, y = yl2, ch = "*\n+\n\n~"),
+            K(x = 13.5f, y = yl2, w = 2f, ch = "Enter"),
+        )
+        return listOf(l0, l1, l2).map {
+            it.map {
+                it.rel(1/15.5f, heightScale = 1/6.5f)
+            }
+        }
     }
 
 
@@ -219,6 +289,34 @@ class FingerMatcher(
     }
 }
 
+data class K(
+    val x: Float,
+    val y: Float,
+    val w: Float = 1f,
+    val h: Float = 1f,
+    val ch: String
+) {
+    fun rel(widthScale: Float, heightScale: Float): RelativeKey {
+        return RelativeKey(
+            x = x * widthScale,
+            y = y * heightScale,
+            w = w * widthScale,
+            h = h * heightScale,
+            ch = ch
+        )
+    }
+}
+
+data class RelativeKey(
+    val x: Float,
+    val y: Float,
+    val w: Float,
+    val h: Float,
+    val ch: String
+) {
+
+}
+
 @Serializable
 data class FingerUsed(
     val expected: @Contextual FingerEnum,
@@ -228,4 +326,29 @@ data class FingerUsed(
 fun main() {
     val keyboard = KeyboardUtil.readKeyboard()
     println(keyboard.getBounds())
+
+    Window {
+        Canvas(Modifier.fillMaxSize()) {
+            val (w, h) = size
+            KeyboardUtil.getRelativeKeyboard().fold(0f) { hAcc, row ->
+                row.fold(0f) { wAcc, key ->
+                    drawRect(
+                        brush = SolidColor(Color.Black),
+                        topLeft = Offset(
+                            x = w * key.x,
+                            y = h * key.y
+                        ),
+                        size = Size(
+                            width = w * key.w,
+                            height = h * key.h
+                        ),
+                        style = Stroke(width = 1f)
+                    )
+                    wAcc + key.x
+                }
+                hAcc + row.first().h
+            }
+
+        }
+    }
 }
