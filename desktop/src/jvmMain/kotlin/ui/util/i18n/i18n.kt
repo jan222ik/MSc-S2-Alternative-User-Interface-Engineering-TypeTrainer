@@ -179,28 +179,28 @@ sealed class i18n {
 
                 object overview : results() {
                     override val path: String = super.path + ".overview"
-                    val keyPoints: KeyI18N = RequiresTranslationI18N("KeyPoints:")
-                    val goals: KeyI18N = RequiresTranslationI18N("Goals:")
-                    val achievements: KeyI18N = RequiresTranslationI18N("Achievements:")
+                    val keyPoints: KeyI18N = LocalTranslationI18N("KeyPoints:", "Eckpunkte:")
+                    val goals: KeyI18N = LocalTranslationI18N("Goals:", "Ziele:")
+                    val achievements: KeyI18N = LocalTranslationI18N("Achievements:", "Errungenschaften:")
                 }
 
                 object overview_keypoints : results() {
                     override val path: String = super.path + ".overview_keypoints"
-                    val wordsTyped: KeyI18N = RequiresTranslationI18N("Words Typed:")
-                    val charsTyped: KeyI18N = RequiresTranslationI18N("Chars Typed:")
-                    val wpm: KeyI18N = RequiresTranslationI18N("Words Per Minute (WPM):")
-                    val cpm: KeyI18N = RequiresTranslationI18N("Chars Per Minute (CPM):")
-                    val totalErrors: KeyI18N = RequiresTranslationI18N("Total Errors:")
-                    val accuracy: KeyI18N = RequiresTranslationI18N("Accuracy:")
-                    val typingErrors: KeyI18N = RequiresTranslationI18N("Typing Errors:")
+                    val wordsTyped: KeyI18N = LocalTranslationI18N("Words Typed:", "Getippte Wörter:")
+                    val charsTyped: KeyI18N = LocalTranslationI18N("Chars Typed:", "Getippte Buchstaben:")
+                    val wpm: KeyI18N = LocalTranslationI18N("Words Per Minute (WPM):", "Wörter pro Minute (WPM):")
+                    val cpm: KeyI18N = LocalTranslationI18N("Chars Per Minute (CPM):", "Buchstaben pro Minute (BPM):")
+                    val totalErrors: KeyI18N = LocalTranslationI18N("Total Errors:", "Gesamtfehler:")
+                    val accuracy: KeyI18N = LocalTranslationI18N("Accuracy:", "Genauigkeit")
+                    val typingErrors: KeyI18N = LocalTranslationI18N("Typing Errors:", "Tippfehler:")
 
-                    val typingErrorsPercentage: KeyI18N = RequiresTranslationI18N("Typing Errors in %:")
-                    val typingErrorsCase: KeyI18N = RequiresTranslationI18N("Char Case:")
-                    val typingErrorsCasePercentatge: KeyI18N = RequiresTranslationI18N("Char Case in %:")
-                    val typingErrorsWhitespace: KeyI18N = RequiresTranslationI18N("Whitespace:")
-                    val typingErrorsWhitespacePercentatge: KeyI18N = RequiresTranslationI18N("Whitespace in %:")
-                    val fingerErrors: KeyI18N = RequiresTranslationI18N("Finger Errors:")
-                    val fingerErrorsPercentage: KeyI18N = RequiresTranslationI18N("Finger Errors in %:")
+                    val typingErrorsPercentage: KeyI18N = LocalTranslationI18N("Typing Errors in %:", "Tippfehler in %:")
+                    val typingErrorsCase: KeyI18N = LocalTranslationI18N("Char Case:", "Groß-/Kleinschreibung:")
+                    val typingErrorsCasePercentatge: KeyI18N = LocalTranslationI18N("Char Case in %:", "Groß-/Kleinschreibung in %:")
+                    val typingErrorsWhitespace: KeyI18N = LocalTranslationI18N("Whitespace:", "Leerraum:")
+                    val typingErrorsWhitespacePercentatge: KeyI18N = LocalTranslationI18N("Whitespace in %:", "Leerraum in %:")
+                    val fingerErrors: KeyI18N = LocalTranslationI18N("Finger Errors:", "Fingerfehler:")
+                    val fingerErrorsPercentage: KeyI18N = LocalTranslationI18N("Finger Errors in %:", "Fingerfehler in %:")
                 }
             }
 
@@ -216,11 +216,14 @@ sealed class i18n {
             object keyboard_sync : exercise() {
                 override val path: String = super.path + ".keyboard_synchronisation"
 
-                val step1: KeyI18N = RequiresTranslationI18N("1. Place your camera above the keyboard")
+                val step1: KeyI18N = LocalTranslationI18N(
+                    "1. Place your camera above the keyboard", "1. Plaziere die Kamera überhalb der Tastatur")
                 val step2: KeyI18N =
-                    RequiresTranslationI18N("2. Press the <span>'ESC'<\\span> key with your <span>left pinky finger<\\span>")
+                    LocalTranslationI18N("2. Press the <span>'ESC'<\\span> key with your <span>left pinky finger<\\span>",
+                        "2. Drücke die <span>'ESC'<\\span> Taste mit deinem <span>linken kleinen Finger<\\span>")
                 val step3: KeyI18N =
-                    RequiresTranslationI18N("3. Press the <span>right 'CTRL'<\\span> key with your <span>right pinky finger<\\span>")
+                    LocalTranslationI18N("3. Press the <span>right 'CTRL'<\\span> key with your <span>right pinky finger<\\span>",
+                        "3. Drücke die <span>rechte 'STRG'<\\span> Taste mit deinem <span>rechten kleinen Finger<\\span>")
             }
         }
 

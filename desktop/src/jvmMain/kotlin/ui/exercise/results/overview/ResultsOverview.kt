@@ -40,6 +40,7 @@ import ui.exercise.TypingType
 import ui.exercise.results.ResultIntent
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.KeyI18N
+import ui.util.i18n.LocalTranslationI18N
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 
@@ -112,14 +113,14 @@ fun SessionOptions(modifier: Modifier, options: AbstractTypingOptions) {
                     router.navTo(ApplicationRoutes.Exercise.ExerciseSelection(options))
                 }
             ) {
-                Text(+RequiresTranslationI18N("Restart Exercise"))
+                Text(+LocalTranslationI18N("Restart Exercise", "Übung Neustarten"))
             }
             val verticalArrangement = Arrangement.spacedBy(5.dp)
             Column(
                 verticalArrangement = verticalArrangement,
             ) {
                 val indent = Modifier.padding(start = 16.dp)
-                Text(+RequiresTranslationI18N("Session Options:"))
+                Text(+LocalTranslationI18N("Session Options:", "Session-Optionen:"))
                 Column(
                     verticalArrangement = verticalArrangement,
                     modifier = indent
@@ -144,7 +145,7 @@ fun SessionOptions(modifier: Modifier, options: AbstractTypingOptions) {
                     )
                 }
                 Text(
-                    text = +RequiresTranslationI18N("Text Generation Options:")
+                    text = +LocalTranslationI18N("Text Generation Options:", "Optionen für Textgenerierung:")
                 )
                 Column(
                     verticalArrangement = verticalArrangement,
@@ -162,7 +163,7 @@ fun SessionOptions(modifier: Modifier, options: AbstractTypingOptions) {
                         }
                     )
                     SessionOptionsItem(
-                        name = RequiresTranslationI18N("Seed"),
+                        name = LocalTranslationI18N("Seed", "Seed"),
                         value = options.generatorOptions.seed
                     )
                 }
@@ -239,7 +240,7 @@ fun KeyPoints(modifier: Modifier, eval: ExerciseEvaluation, options: AbstractTyp
                     value = eval.cps.times(60).toInt().toString()
                 )
                 Text(
-                    text = +RequiresTranslationI18N("Errors:"),
+                    text = +LocalTranslationI18N("Errors:", "Fehler:"),
                     style = MaterialTheme.typography.h5
                 )
                 Column(
@@ -269,7 +270,7 @@ fun KeyPoints(modifier: Modifier, eval: ExerciseEvaluation, options: AbstractTyp
                         value = eval.falseCharsTyped.div(eval.totalErrors.toFloat()).toPercentage(2) + "%"
                     )
                     Text(
-                        text = +RequiresTranslationI18N("Typing Errors per Category:"),
+                        text = +LocalTranslationI18N("Typing Errors per Category:", "Tippfehler pro Kategorie:"),
                         style = MaterialTheme.typography.h6
                     )
                     Column(

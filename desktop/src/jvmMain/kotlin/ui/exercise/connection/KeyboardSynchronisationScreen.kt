@@ -33,6 +33,7 @@ import network.Server
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.AbstractTypingOptions
 import ui.general.WindowRouterAmbient
+import ui.util.i18n.LocalTranslationI18N
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 import ui.util.span_parse.parseForSpans
@@ -102,7 +103,8 @@ private fun KeyboardSynchronisationScreenContent(
                     .fillMaxSize()
             ) {
                 Text(
-                    text = +RequiresTranslationI18N("Synchronising Keyboard with Finger positions from the camera.")
+                    text = +LocalTranslationI18N("Synchronising Keyboard with Finger positions from the camera.",
+                    "Synchronisieren der Tastatur mit den Fingerpositionen der Kamera")
                 )
                 Text(text = "DEBUG: Current STEP ${synchronisationIntent.step.value}")
 
