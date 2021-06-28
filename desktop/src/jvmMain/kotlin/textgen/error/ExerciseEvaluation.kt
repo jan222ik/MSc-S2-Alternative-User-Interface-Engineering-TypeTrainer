@@ -1,6 +1,8 @@
 package textgen.error
 
+import com.github.jan222ik.common.FingerEnum
 import com.github.jan222ik.compose_mpp_charts.core.data.DataPoint
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ui.exercise.AbstractTypingOptions
@@ -115,6 +117,30 @@ data class ExerciseEvaluation(
 
     }
 
+    val errorRateOfFingers: List<FingerErrorKey> by lazy {
+        texts
+            .flatMap { txt ->
+                txt.chars
+                    .filterIsInstance<CharEvaluation.FingerError>()
+                    .onEach { it.getExpectedChar(txt.text) }
+            }
+            .let { errors ->
+                errors
+                    .groupBy { it.fingerUsed?.expected }
+                    .entries
+                    .sortedByDescending { it.value.size }
+                    .mapIndexed { index: Int, entry: Map.Entry<FingerEnum?, List<CharEvaluation.FingerError>> ->
+                        FingerErrorKey(
+                            idx = index,
+                            amount = entry.value.size,
+                            sum = errors.size,
+                            finger = entry.key
+                        )
+                    }
+            }
+        listOf()
+    }
+
     val falseCharsTyped
         get() = totalCharsTyped - correctCharsTyped
 
@@ -135,6 +161,18 @@ data class ChartErrorKey(
     val char: String,
     val amount: Int,
     val sum: Int
+) {
+    @Transient
+    val dataPoint = DataPoint(idx.toFloat(), amount.toFloat().div(sum.toFloat()).times(100f))
+}
+
+@Serializable
+data class FingerErrorKey(
+    val idx: Int,
+    val amount: Int,
+    val sum: Int,
+    @Contextual
+    val finger: FingerEnum?,
 ) {
     @Transient
     val dataPoint = DataPoint(idx.toFloat(), amount.toFloat().div(sum.toFloat()).times(100f))

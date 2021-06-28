@@ -33,8 +33,8 @@ data class RequiresTranslationI18N(val value: String) : KeyI18N("") {
 data class LocalTranslationI18N(val eng: String, val ger: String) : KeyI18N("") {
     override fun resolve(): String {
         ifDebug {
-            System.err.
-            println("i18n > Local Translation - \"$eng\", \"$ger\"")
+            //System.err.
+            //println("i18n > Local Translation - \"$eng\", \"$ger\"")
         }
         return when (ResolverI18n.currentLang) {
             LanguageDefinition.English -> eng
