@@ -116,6 +116,7 @@ sealed class i18n {
                     override val path: String = super.path + ".controls"
                     val useHandTracking = "use_hand_tracking".i18Key()
                     val startBtn = "start_exercise".i18Key()
+                    val startingHint = "starting_hint".i18Key()
                 }
 
                 object textMode : selection() {

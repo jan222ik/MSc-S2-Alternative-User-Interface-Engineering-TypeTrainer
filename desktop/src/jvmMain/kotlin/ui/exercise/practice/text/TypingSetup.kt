@@ -14,29 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ui.exercise.practice.IPracticeIntend
 import ui.util.i18n.RequiresTranslationI18N
+import ui.util.i18n.i18n
 
 @Composable
-fun BoxScope.TypingSetup(intend: IPracticeIntend) {
+fun BoxScope.TypingSetup(intent: IPracticeIntend) {
     Box(
         modifier = Modifier
             .matchParentSize()
             .background(color = MaterialTheme.colors.background.copy(alpha = 0.8f))
             .padding(all = 5.dp),
     ) {
-        if (intend.isCameraEnabled.value) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = +RequiresTranslationI18N(
-                    "Please get into calibrating position by placing your left hand pinky finger on the key " +
-                            "beneath ESC and your right hand pinky finger on BACKSPACE.\n" +
-                            "Press SPACE to start your exercise in this position!"
-                )
-            )
-        } else {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = +RequiresTranslationI18N("Start typing whenever you are ready!")
-            )
-        }
+        Text(
+            style = MaterialTheme.typography.h5,
+            modifier = Modifier.align(Alignment.Center),
+            text = +i18n.str.exercise.selection.controls.startingHint
+        )
     }
 }
