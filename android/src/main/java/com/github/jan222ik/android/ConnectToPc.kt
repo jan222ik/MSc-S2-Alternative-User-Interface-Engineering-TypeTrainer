@@ -26,21 +26,22 @@ fun ConnectToPc(sharedPref: SharedPreferences) {
     val router = MobileRouterAmbient.current
     val coroutineScope = rememberCoroutineScope()
 
-    NDSDiscovery.start(callback = {
+    val started = NDSDiscovery.start(callback = {
         coroutineScope.launch(Dispatchers.IO) {
             if (WSClient.canConnect(it)) {
+                WSClient.router = router
                 WSClient.url = ServerConfig.getWebsocketUrl(it)
                 WSClient.loadWeekly(it, sharedPref)
-                router.navTo(MobileRoutes.Exercise(Connection(true)))
+                router.navTo(MobileRoutes.Exercise(Connection(canConnect = true)))
             }
         }
     })
 
-    Column {
-        val text = remember { mutableStateOf("") }
-        TextField(text.value, onValueChange = text.component2())
-        Button(
-            onClick = {
+    if (started)
+        Column {
+            val text = remember { mutableStateOf("") }
+            TextField(text.value, onValueChange = text.component2())
+            Button(onClick = {
                 GlobalScope.launch(Dispatchers.IO) {
                     val ip = text.value
                     if (WSClient.canConnect(ip)) {
@@ -49,67 +50,11 @@ fun ConnectToPc(sharedPref: SharedPreferences) {
                         router.navTo(MobileRoutes.Exercise(Connection(true)))
                     }
                 }
+            }) {
+                Text(text = "Try from Textbox")
             }
-        ) {
-            Text(text = "Try from Textbox")
         }
-    }
+    else
+        router.back()
 }
-
-
-//    val router = MobileRouterAmbient.current
-//
-//    val lifecycleOwner = LocalLifecycleOwner.current
-//    val context = LocalContext.current
-//    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
-//
-//    AndroidView(
-//        modifier = Modifier.fillMaxSize(),
-//        factory = { ctx ->
-//            val previewView = PreviewView(ctx).apply {
-//                this.scaleType = PreviewView.ScaleType.FILL_CENTER
-//                layoutParams = ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.MATCH_PARENT,
-//                    ViewGroup.LayoutParams.MATCH_PARENT
-//                )
-//                // Preview is incorrectly scaled in Compose on some devices without this
-//                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-//            }
-//            val executor = ContextCompat.getMainExecutor(ctx)
-//            cameraProviderFuture.addListener({
-//                val cameraProvider = cameraProviderFuture.get()
-//                val preview = Preview.Builder().build().also {
-//                    it.setSurfaceProvider(previewView.surfaceProvider)
-//                }
-//
-//                val cameraSelector = CameraSelector.Builder()
-//                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-//                    .build()
-//
-//                val imageAnalysis =
-//                    ImageAnalysis.Builder()
-//                        .setTargetResolution(Size(previewView.width, previewView.height))
-//                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-//                        .build()
-//                        .also {
-//                            it.setAnalyzer(
-//                                Executors.newSingleThreadExecutor(),
-//                                QrCodeAnalyzer { qrResult ->
-//                                    println(qrResult.text)
-//                                    router.navTo(MobileRoutes.Exercise(Connection(qrResult.text)))
-//                                }
-//                            )
-//                        }
-//
-//                cameraProvider.unbindAll()
-//                cameraProvider.bindToLifecycle(
-//                    lifecycleOwner,
-//                    cameraSelector,
-//                    preview,
-//                    imageAnalysis
-//                )
-//            }, executor)
-//            previewView
-//        },
-//    )
 

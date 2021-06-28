@@ -1,6 +1,5 @@
 package util
 
-import androidx.compose.ui.geometry.Offset
 import com.github.jan222ik.common.FingerTipLandmark
 import java.awt.event.KeyEvent.VK_BACK_SPACE
 import java.awt.event.KeyEvent.VK_ENTER
@@ -8,7 +7,6 @@ import java.awt.event.KeyEvent.VK_ESCAPE
 import java.awt.event.KeyEvent.VK_SHIFT
 import java.awt.event.KeyEvent.VK_SPACE
 import java.awt.event.KeyEvent.VK_TAB
-import java.security.Key
 
 class Keyboard {
     companion object {

@@ -5,6 +5,8 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import com.github.jan222ik.common.HandLandmark
 import com.github.jan222ik.common.dto.SHARED_STATS_PREF_KEY
 import com.github.jan222ik.common.network.ServerConfig
+import com.github.jan222ik.common.ui.router.MobileRoutes
+import com.github.jan222ik.common.ui.util.router.Router
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.features.websocket.WebSockets
@@ -26,12 +28,17 @@ import kotlinx.serialization.encodeToByteArray
 object WSClient {
     val landmarks = MutableStateFlow(listOf<HandLandmark>())
     lateinit var url: String
+    lateinit var router: Router<MobileRoutes>
 
     @OptIn(ExperimentalSerializationApi::class)
     private suspend fun connect(ktor: HttpClient, u: Url) {
         ktor.ws(Get, u.host, u.port, u.encodedPath) {
             landmarks.collect {
-                send(Frame.Binary(true, Cbor.encodeToByteArray(it)))
+                try {
+                    send(Frame.Binary(true, Cbor.encodeToByteArray(it)))
+                } catch (ex: Exception) {
+                    router.previous
+                }
             }
         }
     }

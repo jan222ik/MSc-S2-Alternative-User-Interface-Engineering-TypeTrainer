@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
@@ -54,7 +56,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Composable
-fun MobileMenu(activity: Activity) {
+fun MobileMenu(activity: Activity, lostConnection: Boolean = false) {
     val data: MobileStatsData? = activity
         .getPreferences(Context.MODE_PRIVATE)
         .getString(SHARED_STATS_PREF_KEY, null)
@@ -62,6 +64,7 @@ fun MobileMenu(activity: Activity) {
             Json.decodeFromString<MobileStatsData>(it)
         }
     val router = MobileRouterAmbient.current
+    var lostConnection = lostConnection
     Column {
         Box(modifier = Modifier.fillMaxWidth()) {
             Wave(cornerSize = 32.dp)
@@ -234,6 +237,23 @@ fun MobileMenu(activity: Activity) {
                 }
             )
         }
+    }
+
+    if (lostConnection) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text(text = "Error") },
+            text = { Text("Connection to desktop application lost") },
+            confirmButton = {},
+            dismissButton = {
+                Button(
+                    onClick = {
+                        lostConnection = false
+                    }) {
+                    Text("This is the dismiss Button")
+                }
+            }
+        )
     }
 }
 

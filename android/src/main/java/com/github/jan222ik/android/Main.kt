@@ -13,9 +13,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.github.jan222ik.common.ui.MobileMenu
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
@@ -37,11 +34,13 @@ fun mobileMain(activity: Activity, supplyRouter: @Composable (Router<MobileRoute
                 ) { current, router ->
                     supplyRouter(router)
                     when (current) {
-                        MobileRoutes.Menu -> MobileMenu(activity)
+                        MobileRoutes.Menu -> MobileMenu(activity = activity)
                         MobileRoutes.Scanner -> ConnectToPc(sharedPref)
                         is MobileRoutes.Exercise -> {
-                            if(current.connection.canConnect)
+                            if (current.connection.canConnect)
                                 HandTracking(activity)
+                            else if (current.connection.lostConnection)
+                                MobileMenu(activity = activity, lostConnection = true)
                             else
                                 ConnectToPc(sharedPref)
                         }
