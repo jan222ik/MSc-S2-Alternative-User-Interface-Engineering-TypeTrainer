@@ -20,8 +20,10 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Adb
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -127,10 +129,27 @@ private fun BoxScope.EndGroup(
                 tint = Color.Gray
             )
         }
+        CurrentUser(onAction = { println("User button clicked!") })
         SettingsBtn(onAction = { setShowSettings(showSettings.not()) })
         MinimizeBtn(onAction = appWindow::minimize)
         MaximizeBtn(onAction = { if (appWindow.isMaximized) appWindow.restore() else appWindow.maximize() })
         CloseBtn(onAction = appWindow::close)
+    }
+}
+
+@Composable
+private fun CurrentUser(onAction: () -> Unit) {
+    TextButton(
+        onClick = onAction
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Icon(imageVector = Icons.Filled.Person, contentDescription = null)
+            val user = System.getProperty("user") ?: "Unknown User"
+            Text(text = user)
+        }
     }
 }
 
