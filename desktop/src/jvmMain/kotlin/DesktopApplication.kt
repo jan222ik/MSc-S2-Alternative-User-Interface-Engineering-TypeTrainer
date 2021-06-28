@@ -66,6 +66,7 @@ import ui.util.debug.Debug
 import ui.util.debug.DebugWithAllRoutes
 import ui.util.i18n.LanguageConfiguration
 import util.FingerMatcher
+import javax.imageio.ImageIO
 
 @ExperimentalAnimationApi
 object DesktopApplication {
@@ -76,7 +77,13 @@ object DesktopApplication {
     @KtorExperimentalAPI
     fun start() {
         val initSize = IntSize(width = 1920, height = 1080)
-        Window(size = initSize, undecorated = !Debug.isDebug) {
+        val icon = ImageIO.read(this::class.java.getResourceAsStream("/LogoWithBackground.png"))
+        println("icon = ${icon}")
+        Window(
+            size = initSize,
+            undecorated = !Debug.isDebug,
+            icon = icon
+        ) {
             TypeTrainerTheme {
                 StartupApplication { server ->
                     LanguageConfiguration {
