@@ -61,7 +61,11 @@ fun MobileMenu(activity: Activity, lostConnection: Boolean = false) {
         .getPreferences(Context.MODE_PRIVATE)
         .getString(SHARED_STATS_PREF_KEY, null)
         ?.let {
-            Json.decodeFromString<MobileStatsData>(it)
+            try {
+                Json.decodeFromString<MobileStatsData>(it)
+            } catch (ex: Exception) {
+                null
+            }
         }
     val router = MobileRouterAmbient.current
     var lostConnection = lostConnection
