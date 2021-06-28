@@ -110,12 +110,21 @@ private fun BoxScope.EndGroup(
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         val (showSettings, setShowSettings) = remember { mutableStateOf(false) }
-        val onDismissRequest = { setShowSettings(false) }
+        val (showUser, setShowUser) = remember { mutableStateOf(false) }
+        val onDismissRequestSettings = { setShowSettings(false) }
+        val onDismissRequestUser = { setShowUser(false) }
         if (showSettings) {
             QuickSettingsPopup(
                 height = height,
                 windowControlsGroupPadding = windowControlsGroupPadding,
-                onDismissRequest = onDismissRequest
+                onDismissRequest = onDismissRequestSettings
+            )
+        }
+        if (showUser) {
+            UserPopup(
+                height = height,
+                windowControlsGroupPadding = windowControlsGroupPadding,
+                onDismissRequest = onDismissRequestUser
             )
         }
         ifDebugCompose {
@@ -129,7 +138,7 @@ private fun BoxScope.EndGroup(
                 tint = Color.Gray
             )
         }
-        CurrentUser(onAction = { println("User button clicked!") })
+        CurrentUser(onAction = { setShowUser(true) })
         SettingsBtn(onAction = { setShowSettings(showSettings.not()) })
         MinimizeBtn(onAction = appWindow::minimize)
         MaximizeBtn(onAction = { if (appWindow.isMaximized) appWindow.restore() else appWindow.maximize() })
