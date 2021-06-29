@@ -2,31 +2,44 @@
 
 package ui.history
 
-import androidx.compose.desktop.Window
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.LockClock
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import org.jetbrains.exposed.sql.transactions.transaction
-import textgen.database.DbHistory
+import textgen.database.DbHistoryDAO
 import ui.exercise.results.ResultsRoutes
 import ui.exercise.results.ResultsScreen
-import ui.util.debug.ifDebugCompose
+import ui.util.i18n.i18n
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -35,17 +48,25 @@ import kotlin.math.absoluteValue
 @ExperimentalFoundationApi
 @Composable
 fun HistoryScreen() {
-    val items = remember { transaction { DbHistory.all().toList().sortedByDescending { it.timestampDate.value } } }
+    val items = remember {
+        transaction {
+            DbHistoryDAO
+                .all()
+                .map(DbHistoryDAO::toModel)
+                .sortedByDescending { it.timestamp }
+        }
+    }
     val currItem = remember(items) { mutableStateOf(0) }
     Row(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
             modifier = Modifier
-                // .fillMaxWidth(0.3f)
-                .padding(horizontal = 8.dp)
+                .fillMaxWidth(0.1f)
+                .padding(start = 16.dp)
                 .padding(vertical = 16.dp)
-                .fillMaxHeight()
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             if (items.isNotEmpty()) {
                 val local = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
@@ -56,44 +77,50 @@ fun HistoryScreen() {
                 var lastMonth = true
                 var older = true
                 items.forEachIndexed { index, item ->
-                    val date = item.timestampDate.value
+                    val date = item.timestamp
                     val untilToday =
                         date.truncatedTo(ChronoUnit.DAYS).until(local, ChronoUnit.DAYS).toInt().absoluteValue
                     println("date: $date   - $untilToday")
                     when {
                         untilToday == 0 && today -> {
                             today = false
-                            "Today:"
+                            i18n.str.history.today
                         }
                         untilToday == 1 && yesterday -> {
                             yesterday = false
-                            "Yesterday:"
+                            i18n.str.history.yesterday
                         }
                         (2 until 7).contains(untilToday) && thisWeek -> {
                             thisWeek = false
-                            "This Week:"
+                            i18n.str.history.thisWeek
                         }
                         (7 until 14).contains(untilToday) && lastWeek -> {
                             lastWeek = false
-                            "Last Week:"
+                            i18n.str.history.lastWeek
                         }
                         (14 until 31).contains(untilToday) && lastMonth -> {
                             lastMonth = false
-                            "During Last Month:"
+                            i18n.str.history.lastMonth
                         }
                         untilToday > 31 && older -> {
                             older = false
-                            "Older:"
+                            i18n.str.history.older
                         }
                         else -> null
                     }?.let {
                         stickyHeader {
-                            Text(text = it)
+                            Surface(
+                                modifier = Modifier.fillParentMaxWidth(),
+                                color = MaterialTheme.colors.surface,
+                                elevation = 0.dp
+                            ) {
+                                Text(text = +it)
+                            }
                         }
                     }
                     item {
                         HistoryEntry(
-                            index = index,
+                            index = items.size - index,
                             dateTime = date,
                             isCurrent = index == currItem.value,
                             onClick = {
@@ -109,6 +136,7 @@ fun HistoryScreen() {
         ) {
             if (items.isNotEmpty()) {
                 val item = remember(currItem.value, items) { items[currItem.value] }
+                /*
                 ifDebugCompose {
                     Window {
                         BaseDashboardCard {
@@ -117,18 +145,21 @@ fun HistoryScreen() {
                                     .verticalScroll(rememberScrollState())
                             ) {
                                 Text("histId:" + item.histId.value)
-                                Text("timestamp:" + item.timestampDate.value)
+                                Text("timestamp:" + item.timestamp)
                                 Text("dataJson:" + item.dataJson)
                                 Text("data:" + item.data.value)
                             }
                         }
                     }
                 }
-                ResultsScreen(
-                    exerciseEvaluation = item.data.value,
-                    innerRouting = ResultsRoutes.OVERVIEW,
-                    isStandalone = false
-                )
+                 */
+                Box(Modifier.padding(horizontal = 16.dp)) {
+                    ResultsScreen(
+                        exerciseEvaluation = item.data.value,
+                        innerRouting = ResultsRoutes.OVERVIEW,
+                        isStandalone = false
+                    )
+                }
             } else {
                 Text("Complete a practice to see your results here!")
             }
@@ -137,23 +168,54 @@ fun HistoryScreen() {
 }
 
 @Composable
-fun HistoryEntry(index: Int, dateTime: LocalDateTime, isCurrent: Boolean, onClick: () -> Unit) {
+fun LazyItemScope.HistoryEntry(index: Int, dateTime: LocalDateTime, isCurrent: Boolean, onClick: () -> Unit) {
     Card(
         modifier = Modifier
+            .fillParentMaxWidth()
             .clickable(onClick = onClick),
         backgroundColor = when (isCurrent) {
             true -> MaterialTheme.colors.primary
             false -> MaterialTheme.colors.surface
         }
     ) {
-        Row {
-            Text(text = index.inc().toString()) // Shift visual index by +1
-            Column {
-                val date = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yy"))
-                val time = dateTime.format(DateTimeFormatter.ofPattern("hh:mm"))
-                Text(text = "$date at $time")
+        Row(
+            modifier = Modifier.padding(all = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .height(IntrinsicSize.Max)
+                    .fillParentMaxWidth(0.3f)
+                    .padding(horizontal = 5.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(modifier = Modifier.fillMaxHeight(), text = index.toString())
+            }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(5.dp))
+            {
+                val date = dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yy"))
+                val time = dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Today,
+                        contentDescription = null
+                    )
+                    Text(text = date)
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.AccessTime,
+                        contentDescription = null
+                    )
+                    Text(text = time)
+                }
             }
         }
     }
 }
-

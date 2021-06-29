@@ -15,26 +15,34 @@ import com.github.jan222ik.compose_mpp_charts.core.line.ILineDrawer
  * A null value disables the drawing of the lines.
  * @param drawOrdinateFirst if true, the ordinate lines will be drawn before the abscissa axis.
  * Thus, the abscissa will be drawn above the ordinate.
+ * @param stepAbscissa Step between the abscissa lines
+ * @param stepOrdinate Step between the ordinate lines
  */
 fun intGridRenderer(
     abscissaDrawer: ILineDrawer? = simpleAxisLineDrawer(brush = SolidColor(Color.Gray)),
     ordinateDrawer: ILineDrawer? = simpleAxisLineDrawer(brush = SolidColor(Color.Gray)),
-    drawOrdinateFirst: Boolean = true
+    drawOrdinateFirst: Boolean = true,
+    stepAbscissa: Int = 1,
+    stepOrdinate: Int = 1,
 ) = IGridRenderer {
     /**
      * Returns a list of the line positions for the int-based grid.
      * @param min Minimum value in the viewport to account for
      * @param max Maximum value in the viewport to account for
+     * @param step Step between the lines
+     *
      * @return List of the line positions
      */
-    fun calcLinesBetween(min: Float, max: Float): List<Float> {
-        return (min.toInt()..max.toInt()).map(Int::toFloat)
+    fun calcLinesBetween(min: Float, max: Float, step: Int): List<Float> {
+        return IntProgression
+            .fromClosedRange(rangeStart = min.toInt(), rangeEnd = max.toInt(), step = step)
+            .map(Int::toFloat)
     }
 
     val (minX, minY, maxX, maxY) = context.viewport
 
     val ordinate: (ILineDrawer) -> Unit = { r ->
-        calcLinesBetween(minX, maxX)
+        calcLinesBetween(minX, maxX, stepOrdinate)
             .map {
                 val x = with(context) { it.toRendererX() }
                 val start = Offset(x = x, y = 0f)
@@ -45,7 +53,7 @@ fun intGridRenderer(
     }
 
     val abscissa: (ILineDrawer) -> Unit = { r ->
-        calcLinesBetween(minY, maxY)
+        calcLinesBetween(minY, maxY, stepAbscissa)
             .map {
                 val y = with(context) { it.toRendererY() }
                 val start = Offset(x = 0f, y = y)

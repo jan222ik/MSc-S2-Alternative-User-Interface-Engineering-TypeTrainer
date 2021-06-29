@@ -22,18 +22,18 @@ import network.NDSServer
 import network.NDSState
 import network.Server
 import ui.dashboard.ApplicationRoutes
-import ui.exercise.ITypingOptions
+import ui.exercise.AbstractTypingOptions
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.i18n
 
 @Composable
-fun ConnectionScreen(server: Server, trainingOptions: ITypingOptions) {
+fun ConnectionScreen(server: Server, trainingOptions: AbstractTypingOptions) {
     val hasConnection = server.connectionStatus.collectAsState()
     val router = WindowRouterAmbient.current
 
     when (hasConnection.value) {
         true -> {
-            router.navTo(ApplicationRoutes.Exercise.Training(trainingOptions = trainingOptions))
+            router.navTo(dest = ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation(trainingOptions))
         }
         false -> {
             val ndsStateFlow = remember { MutableStateFlow(NDSState.STARTING) }

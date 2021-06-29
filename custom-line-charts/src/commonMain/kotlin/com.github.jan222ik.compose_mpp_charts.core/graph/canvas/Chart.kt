@@ -46,34 +46,38 @@ fun Chart(
     val activePopupsAt = remember { mutableStateOf<Pair<Offset, IBoundingShape2D?>?>(null) }
 
     SubcomposeLayout(modifier) { constraints ->
+        val constraintsWithoutLowerBound = constraints.copy(minWidth = 0, minHeight = 0)
 
         val (spaceForStartLabel, startSlotResults) = labelSubcompose(
             slot = ChartLabelSlot.START,
             viewport = viewport.value,
             graphScopeImpl = graphScopeImpl,
-            constraints = constraints
+            constraints = constraintsWithoutLowerBound
         )
 
         val (spaceForEndLabel, endSlotResults) = labelSubcompose(
             slot = ChartLabelSlot.END,
             viewport = viewport.value,
             graphScopeImpl = graphScopeImpl,
-            constraints = constraints
+            constraints = constraintsWithoutLowerBound
         )
 
         val (spaceForBottomLabel, bottomSlotResults) = labelSubcompose(
             slot = ChartLabelSlot.BOTTOM,
             viewport = viewport.value,
             graphScopeImpl = graphScopeImpl,
-            constraints = constraints
+            constraints = constraintsWithoutLowerBound
         )
 
         val (spaceForTopLabel, topSlotResults) = labelSubcompose(
             slot = ChartLabelSlot.TOP,
             viewport = viewport.value,
             graphScopeImpl = graphScopeImpl,
-            constraints = constraints
+            constraints = constraintsWithoutLowerBound
         )
+
+        //println("spaceForStartLabel: $spaceForStartLabel, spaceForEndLabel: $spaceForEndLabel," +
+        //        " spaceForBottomLabel: $spaceForBottomLabel, spaceForTopLabel: $spaceForTopLabel")
 
         val pPopupsWithOffset = subcompose("popups") {
             activePopupsAt.value?.let { (offset: Offset, shape2D: IBoundingShape2D?) ->
@@ -85,7 +89,7 @@ fun Chart(
                 }
             }
         }.firstOrNull()?.let {
-            it.measure(constraints) to activePopupsAt.value?.first
+            it.measure(constraintsWithoutLowerBound) to activePopupsAt.value?.first
         }
 
         val canvasSize = Size(
@@ -100,7 +104,7 @@ fun Chart(
                     .fillMaxSize()
                     .pointerInput(viewport) {
                         detectTransformGestures { _, pan, zoom, direction ->
-                            println("Gesture detected: Zoom: $zoom")
+                            //println("Gesture detected: Zoom: $zoom")
                             val current = if (enableZoom) {
                                 viewport.value.applyZoom(
                                     zoom = zoom,
@@ -165,7 +169,7 @@ fun Chart(
                 .forEach { (placeable, labelInChartSpace) ->
                     val halfComposableHeight = placeable.height.div(2)
                     val y =
-                        with(rendererContext) { labelInChartSpace.toRendererY() + halfComposableHeight }.roundToInt()
+                        with(rendererContext) { labelInChartSpace.toRendererY() - halfComposableHeight }.roundToInt()
                     if (y >= 0 && y <= constraints.maxHeight - spaceForBottomLabel - halfComposableHeight) {
                         placeable.placeRelative(
                             x = 0,

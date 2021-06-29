@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package ui.util.debug
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -7,13 +9,9 @@ import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import textgen.error.ExerciseEvaluation
-import textgen.generators.impl.RandomKnownWordGenerator
+import textgen.database.DEMO
 import ui.dashboard.ApplicationRoutes
-import ui.exercise.ExerciseMode
-import ui.exercise.TypingOptions
 import ui.general.WindowRouterAmbient
-import ui.util.i18n.LanguageDefinition
 import kotlin.reflect.KClass
 
 
@@ -32,9 +30,8 @@ fun DebugWithAllRoutes() {
                 ApplicationRoutes.Dashboard,
                 ApplicationRoutes.Settings,
                 ApplicationRoutes.User.Login,
-                ApplicationRoutes.Exercise.ExerciseSelection,
-                //ApplicationRoutes.Exercise.Connection.QRCode,
-                //ApplicationRoutes.Exercise.Connection.SetupInstructions,
+                    //ApplicationRoutes.Exercise.Connection.QRCode,
+                    //ApplicationRoutes.Exercise.Connection.SetupInstructions,
                 ApplicationRoutes.Goals.Overview,
                 ApplicationRoutes.Goals.Compose,
                 ApplicationRoutes.Achievements,
@@ -47,6 +44,12 @@ fun DebugWithAllRoutes() {
                     }
                 }
                 null -> when (it) {
+                    ApplicationRoutes.Exercise.ExerciseSelection::class -> {
+                        val dest = ApplicationRoutes.Exercise.ExerciseSelection(DEMO.demoOptions)
+                        Button(onClick = { router.navTo(dest) }) {
+                            Text(text = +dest.title)
+                        }
+                    }
                     ApplicationRoutes.User.AccountManagement::class -> {
                         val dest = ApplicationRoutes.User.AccountManagement(Any())
                         Button(onClick = { router.navTo(dest) }) {
@@ -55,23 +58,20 @@ fun DebugWithAllRoutes() {
                     }
                     ApplicationRoutes.Exercise.Training::class -> {
                         val dest = ApplicationRoutes.Exercise.Training(
-                            TypingOptions(
-                                generatorOptions = RandomKnownWordGenerator.RandomKnownWordOptions(
-                                    seed = 1L,
-                                    minimalSegmentLength = 300,
-                                    language = LanguageDefinition.German
-                                ),
-                                durationMillis = 1 * 60_000,
-                                type = ExerciseMode.Speed,
-                                isCameraEnabled = true
-                            )
+                            DEMO.demoOptions
                         )
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)
                         }
                     }
                     ApplicationRoutes.Exercise.ExerciseResults::class -> {
-                        val dest = ApplicationRoutes.Exercise.ExerciseResults(ExerciseEvaluation())
+                        val dest = ApplicationRoutes.Exercise.ExerciseResults(DEMO.demoData)
+                        Button(onClick = { router.navTo(dest) }) {
+                            Text(text = +dest.title)
+                        }
+                    }
+                    ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation::class -> {
+                        val dest = ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation(DEMO.demoOptions)
                         Button(onClick = { router.navTo(dest) }) {
                             Text(text = +dest.title)
                         }

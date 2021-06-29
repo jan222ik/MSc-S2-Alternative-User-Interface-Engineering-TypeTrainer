@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import textgen.error.ExerciseEvaluation
+import ui.exercise.results.analysis.AnalysisScreen
 import ui.exercise.results.overview.ResultsOverview
 import ui.exercise.results.timeline.ResultsTimeline
 
@@ -22,9 +23,11 @@ fun ResultsScreen(
     ) { current ->
         when (current) {
             ResultsRoutes.OVERVIEW -> ResultsOverview(intent, isStandalone)
-            ResultsRoutes.ANALYSIS -> Text(+current.title)
+            ResultsRoutes.ANALYSIS -> AnalysisScreen(exerciseEvaluation, isStandalone)
             ResultsRoutes.ERROR_HEATMAP -> Text(+current.title)
             ResultsRoutes.TIMELINE -> ResultsTimeline(intent, isStandalone)
         }
     }
 }
+
+

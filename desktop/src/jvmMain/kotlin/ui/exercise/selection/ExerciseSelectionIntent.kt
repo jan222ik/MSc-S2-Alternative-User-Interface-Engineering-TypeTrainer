@@ -1,24 +1,61 @@
 package ui.exercise.selection
 
 import androidx.compose.runtime.mutableStateOf
-import network.Server
-import textgen.generators.impl.RandomCharGenerator
-import textgen.generators.impl.RandomKnownTextGenerator
-import textgen.generators.impl.RandomKnownWordGenerator
+import textgen.generators.impl.RandomCharOptions
+import textgen.generators.impl.RandomKnownTextOptions
+import textgen.generators.impl.RandomKnownWordOptions
+import ui.exercise.AbstractTypingOptions
 import ui.exercise.ExerciseMode
 import ui.exercise.TypingOptions
+import ui.exercise.TypingType
 import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
 import util.weightedAt
 import kotlin.random.Random
 
-class ExerciseSelectionIntent {
-    val withFingerTracking = mutableStateOf(false)
+class ExerciseSelectionIntent(initData: AbstractTypingOptions?) {
+    val withFingerTracking = mutableStateOf( false)
     val textModeSelection = mutableStateOf(0)
     val exerciseModeSelection = mutableStateOf(0)
+    val typingTypeSelection = mutableStateOf(0)
     val languageSelection = mutableStateOf(0)
     val durationSelection = mutableStateOf(0)
     val customDurationSelection = mutableStateOf("")
+
+    init {
+        initData?.let {
+            withFingerTracking.value = it.isCameraEnabled
+            textModeSelection.value = when (it.generatorOptions) {
+                is RandomCharOptions -> 2
+                is RandomKnownWordOptions -> 1
+                is RandomKnownTextOptions -> 0
+                else -> throw RuntimeException("Invalid option in text-mode while selecting an exercise")
+            }
+            exerciseModeSelection.value = when (it.exerciseMode) {
+                ExerciseMode.Speed -> 0
+                ExerciseMode.Accuracy -> 1
+                ExerciseMode.NoTimelimit -> 2
+            }
+            typingTypeSelection.value = when (it.typingType) {
+                TypingType.MovingCursor -> 0
+                TypingType.MovingText -> 1
+                else -> throw RuntimeException("Invalid option in typing-type while selecting an exercise")
+            }
+            when (val op = it.generatorOptions) {
+                is RandomKnownWordOptions -> op.language
+                is RandomKnownTextOptions -> op.language
+                else -> null
+            }?.let { lang ->
+                languageSelection.value = when (lang) {
+                LanguageDefinition.English -> 0
+                LanguageDefinition.German -> 1
+            } }
+            it.durationMillis.let { millis ->
+                customDurationSelection.value = millis.div(60000f).toString()
+                durationSelection.value = 2
+            }
+        }
+    }
 
     fun generateTypingOptions(): TypingOptions {
         val seed = Random.nextLong()
@@ -27,22 +64,22 @@ class ExerciseSelectionIntent {
             1 -> LanguageDefinition.German
             else -> throw RuntimeException("Invalid language option while selecting an exercise")
         }
-        val duration = when(durationSelection.value) {
-            0, 1 -> durationSelection.value + 1L
-            else -> customDurationSelection.value.toLongOrNull() ?: 0L
-        }.times(60000) // Min to millis
+        val duration = when (durationSelection.value) {
+            0, 1 -> (durationSelection.value + 1L).times(60000L)
+            else -> customDurationSelection.value.toDoubleOrNull()?.times(60000L) ?: 0L
+        } // Min to millis
         return TypingOptions(
             generatorOptions = when (textModeSelection.value) {
-                0 -> RandomKnownTextGenerator.RandomKnownTextOptions(
+                0 -> RandomKnownTextOptions(
                     seed = seed,
                     language = language
                 )
-                1 -> RandomKnownWordGenerator.RandomKnownWordOptions(
+                1 -> RandomKnownWordOptions(
                     seed = seed,
                     language = language,
                     minimalSegmentLength = 300
                 )
-                2 -> RandomCharGenerator.RandomCharOptions(
+                2 -> RandomCharOptions(
                     seed = seed,
                     segmentMinimumLength = 300,
                     wordLengthWeightMap = englishContentWordLengthDistribution,
@@ -50,20 +87,26 @@ class ExerciseSelectionIntent {
                 )
                 else -> throw RuntimeException("Invalid option in text-mode while selecting an exercise")
             },
-            durationMillis = duration,
-            type = when (exerciseModeSelection.value){
+            durationMillis = duration.toLong(),
+            exerciseMode = when (exerciseModeSelection.value) {
                 0 -> ExerciseMode.Speed
                 1 -> ExerciseMode.Accuracy
                 2 -> ExerciseMode.NoTimelimit
                 else -> throw RuntimeException("Invalid option in exercise-mode while selecting an exercise")
             },
-            isCameraEnabled = withFingerTracking.value
+            isCameraEnabled = withFingerTracking.value,
+            typingType = when (typingTypeSelection.value) {
+                0 -> TypingType.MovingCursor
+                1 -> TypingType.MovingText
+                else -> throw RuntimeException("Invalid option in typing-type while selecting an exercise")
+            }
         )
     }
 
     companion object {
         val textModeSelectionOptions = i18n.str.exercise.selection.textMode.getAll()
         val exerciseModeSelectionOptions = i18n.str.exercise.selection.exerciseMode.getAll()
+        val typingTypeSelectionOptions = i18n.str.exercise.selection.typingType.getAll()
         val languageSelectionOptions = i18n.str.settings.languages.getAll()
         val durationSelectionOptions = i18n.str.exercise.selection.exerciseMode.getDurations()
 

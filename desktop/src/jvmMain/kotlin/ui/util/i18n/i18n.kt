@@ -20,6 +20,17 @@ sealed class i18n {
             val notImplementedYet: KeyI18N = "not_implemented_yet".i18Key()
         }
 
+        object history : str() {
+            override val path: String = "history"
+
+            val today: KeyI18N = "today".i18Key()
+            val yesterday: KeyI18N = "yesterday".i18Key()
+            val thisWeek: KeyI18N = "thisWeek".i18Key()
+            val lastWeek: KeyI18N = "lastWeek".i18Key()
+            val lastMonth: KeyI18N = "lastMonth".i18Key()
+            val older: KeyI18N = "older".i18Key()
+        }
+
         sealed class dashboard : str() {
             override val path: String = "dashboard"
 
@@ -30,6 +41,19 @@ sealed class i18n {
                 val chartsTitle: KeyI18N = "title".i18Key()
                 val showMore: KeyI18N = "show_more".i18Key()
                 val description: KeyI18N = "description".i18Key()
+            }
+
+            object goals : dashboard() {
+                override val path: String = super.path + ".goals"
+                val goalsTitle: KeyI18N = "title".i18Key()
+                val openAll: KeyI18N = "open_all".i18Key()
+                val composeNew: KeyI18N = "compose_new".i18Key()
+            }
+
+            object streak : dashboard() {
+                override val path: String = super.path + ".streak"
+                val streakTitle: KeyI18N = "title".i18Key()
+                val days: KeyI18N = "days".i18Key()
             }
         }
 
@@ -45,6 +69,7 @@ sealed class i18n {
                 val achievements: KeyI18N = "achievements".i18Key()
                 val app_benefits: KeyI18N = "app_benefits".i18Key()
                 val camera_setup: KeyI18N = "camera_setup".i18Key()
+                val exerciseSelection: KeyI18N = "exercise_selection".i18Key()
             }
         }
 
@@ -75,6 +100,12 @@ sealed class i18n {
             sealed class selection : exercise() {
                 override val path: String = super.path + ".selection"
 
+                object controls : selection() {
+                    override val path: String = super.path + ".controls"
+                    val useHandTracking = "use_hand_tracking".i18Key()
+                    val startBtn = "start_exercise".i18Key()
+                }
+
                 object textMode : selection() {
                     override val path: String = super.path + ".textMode"
                     val textMode = "text_mode".i18Key()
@@ -89,19 +120,35 @@ sealed class i18n {
 
                 object exerciseMode : selection() {
                     override val path: String = super.path + ".exerciseMode"
+
                     val exerciseMode = "exercise_mode".i18Key()
                     val duration = "duration".i18Key()
                     val oneMin = "one_min".i18Key()
                     val twoMin = "two_min".i18Key()
                     val customDuration = "custom_duration".i18Key()
+                    val enterDuration = "enter_duration".i18Key()
+                    val customDurationError = "custom_duration_error".i18Key()
                     val speed = "speed".i18Key()
                     val speedDescription = "speed_description".i18Key()
                     val accuracy = "accuracy".i18Key()
                     val accuracyDescription = "accuracy_description".i18Key()
                     val noTimeLimit = "no_time_limit".i18Key()
                     val noTimeLimitDescription = "no_time_limit_description".i18Key()
+
                     fun getAll() = listOf(speed, accuracy, noTimeLimit)
                     fun getDurations() = listOf(oneMin, twoMin, customDuration)
+                }
+
+                object typingType : selection() {
+                    override val path: String = super.path + ".typingType"
+
+                    val typingType: KeyI18N = "typing_type".i18Key()
+                    val movingCursor: KeyI18N = "moving_cursor".i18Key()
+                    val movingCursorDescription: KeyI18N = "moving_cursor_description".i18Key()
+                    val movingText: KeyI18N = "moving_text".i18Key()
+                    val movingTextDescription: KeyI18N = "moving_text_description".i18Key()
+
+                    fun getAll() = listOf(movingCursor, movingText)
                 }
             }
 
@@ -111,15 +158,37 @@ sealed class i18n {
                 object base : results() {
                     override val path: String = super.path + ".base"
                     val returnToDashboard = "returnToDashboard".i18Key()
+                    val overview = "overview".i18Key()
+                    val analysis = "analysis".i18Key()
+                    val errorHeatmap = "error_heatmap".i18Key()
+                    val timeline = "timeline".i18Key()
+                }
+
+                object overview : results() {
+                    override val path: String = super.path + ".overview"
+                    val keyPoints: KeyI18N = RequiresTranslationI18N("KeyPoints:")
+                    val goals: KeyI18N = RequiresTranslationI18N("Goals:")
+                    val achievements: KeyI18N = RequiresTranslationI18N("Achievements:")
                 }
             }
 
-            object connection : exercise(){
+            object connection : exercise() {
                 override val path: String = super.path + ".connection"
 
-                val ndsStarting = "nds_starting".i18Key()
-                val ndsStarted = "nds_started".i18Key()
-                val continueWithoutHandtracking : KeyI18N= "continue_without_handtracking".i18Key()
+                val ndsStarting: KeyI18N = "nds_starting".i18Key()
+                val ndsStarted: KeyI18N = "nds_started".i18Key()
+                val continueWithoutHandtracking: KeyI18N = "continue_without_handtracking".i18Key()
+
+            }
+
+            object keyboard_sync : exercise() {
+                override val path: String = super.path + ".keyboard_synchronisation"
+
+                val step1: KeyI18N = RequiresTranslationI18N("1. Place your camera above the keyboard")
+                val step2: KeyI18N =
+                    RequiresTranslationI18N("2. Press the <span>'ESC'<\\span> key with your <span>left pinky finger<\\span>")
+                val step3: KeyI18N =
+                    RequiresTranslationI18N("3. Press the <span>right 'CTRL'<\\span> key with your <span>right pinky finger<\\span>")
             }
         }
 

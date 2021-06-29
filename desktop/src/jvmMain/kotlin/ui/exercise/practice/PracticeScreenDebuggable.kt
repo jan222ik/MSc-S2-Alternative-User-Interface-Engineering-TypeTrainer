@@ -89,7 +89,7 @@ fun PracticeScreenDebuggable(
                                 }
                                 Row {
                                     Text("Type: ")
-                                    Text(text = intend.typingOptions.type.toString())
+                                    Text(text = intend.typingOptions.exerciseMode.toString())
                                 }
                             }
                         }
@@ -270,9 +270,8 @@ fun PracticeScreenDebuggable(
                                         ) {
                                             LineChart(
                                                 modifier = Modifier
-                                                    .width(20.dp.times(data.points.size))
-                                                    //.background(Color.Red)
-                                                ,
+                                                    .width(20.dp.times(data.points.size)),
+                                                //.background(Color.Red)
                                                 lineChartData = data,
                                             )
                                         }
@@ -299,7 +298,7 @@ fun PracticeScreenDebuggable(
                                             onValueChange = setPeriodMs
                                         )
                                     } else {
-                                        Text("Period ${1f.div(periodMs.toLong().div(1000f))}kHz")
+                                        Text("Period ${1f.div(periodMs.toLong().div(1000f))}Hz")
                                     }
                                 }
                                 if (!isStarted) {
@@ -308,9 +307,12 @@ fun PracticeScreenDebuggable(
                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
                                         OutlinedButton(
-                                            enabled = clockState.value == IPracticeIntend.TypingClockState.ACTIVE,
+                                            enabled = clockState.value != IPracticeIntend.TypingClockState.FINISHED,
                                             onClick = {
-                                                scope.launch { intend.startConstantSpeedTypeDemo(periodMs.toLong()) }
+                                                scope.launch {
+                                                    intend.start()
+                                                    intend.startConstantSpeedTypeDemo(periodMs.toLong())
+                                                }
                                                 setStarted(true)
                                             }
                                         ) {

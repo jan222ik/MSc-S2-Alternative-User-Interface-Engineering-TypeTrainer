@@ -4,28 +4,83 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import textgen.error.CharEvaluation
+import textgen.database.schema.DbTexts
+import textgen.database.schema.DbTextsEnglish
+import textgen.database.schema.DbTextsGerman
 import textgen.error.ExerciseEvaluation
-import textgen.error.TextEvaluation
+import textgen.generators.AbstractGeneratorOptions
+import textgen.generators.impl.RandomCharOptions
+import textgen.generators.impl.RandomKnownTextOptions
+import textgen.generators.impl.RandomKnownWordOptions
+import ui.exercise.AbstractTypingOptions
+import ui.exercise.ExerciseMode
+import ui.exercise.TypingOptions
+import ui.util.i18n.LanguageDefinition
 import java.io.File
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 object DatabaseFactory {
+    val serializer: SerializersModule = SerializersModule {
+        polymorphic(baseClass = AbstractTypingOptions::class) {
+            subclass(
+                subclass = TypingOptions::class,
+                serializer = TypingOptions.serializer()
+            )
+        }
+        polymorphic(baseClass = AbstractGeneratorOptions::class) {
+            subclass(
+                subclass = RandomKnownWordOptions::class,
+                serializer = RandomKnownWordOptions.serializer()
+            )
+            subclass(
+                subclass = RandomCharOptions::class,
+                serializer = RandomCharOptions.serializer()
+            )
+            subclass(
+                subclass = RandomKnownTextOptions::class,
+                serializer = RandomKnownTextOptions.serializer()
+            )
+        }
+        polymorphic(baseClass = LanguageDefinition::class) {
+            subclass(
+                subclass = LanguageDefinition.English::class,
+                serializer = LanguageDefinition.English.serializer()
+            )
+            subclass(
+                subclass = LanguageDefinition.German::class,
+                serializer = LanguageDefinition.German.serializer()
+            )
+        }
+        polymorphic(baseClass = ExerciseMode::class) {
+            subclass(
+                subclass = ExerciseMode.Accuracy::class,
+                serializer = ExerciseMode.Accuracy.serializer()
+            )
+            subclass(
+                subclass = ExerciseMode.Speed::class,
+                serializer = ExerciseMode.Speed.serializer()
+            )
+            subclass(
+                subclass = ExerciseMode.NoTimelimit::class,
+                serializer = ExerciseMode.NoTimelimit.serializer()
+            )
+        }
+    }
+
     var dataSource: HikariDataSource? = null
 
-    fun initWithDemoData() {
+    fun init() {
         dataSource = hikari()
         Database.connect(dataSource!!)
         transaction {
@@ -34,73 +89,20 @@ object DatabaseFactory {
             SchemaUtils.create(DbTextsEnglish)
             SchemaUtils.create(DbTextsGerman)
 
-            var file = File("desktop/src/jvmMain/resources/literature_eng.csv")
-            try {
-                val csvReader = csvReader {
-                    delimiter = ';'
-                    escapeChar = '\\'
-                }
-                csvReader.open(file) {
-                    readAllWithHeaderAsSequence().forEach { csv ->
-                        println("csv = ${csv}")
-                        var toString = csv["Content"].toString()
-
-//                        toString = toString.replace(regex = Regex("^$\r\n"), replacement = "")
-//                        toString = toString.replace(regex = Regex("\r\n"), replacement = " ")
-
-                        if (toString.length <= 400 || true) {
-                            DbTextsEnglish.insert {
-                                it[content] = toString
-                            }
-                        }
-                    }
-                }
-            } catch (e: CSVFieldNumDifferentException) {
-                e.printStackTrace()
-            }
-
-            file = File("desktop/src/jvmMain/resources/literature_ger.csv")
-            try {
-                val csvReader = csvReader {
-                    delimiter = ';'
-                    escapeChar = '\\'
-                }
-                csvReader.open(file) {
-                    readAllWithHeaderAsSequence().forEach { csv ->
-                        println("csv = ${csv}")
-                        var toString = csv["Content"].toString()
-
-//                        toString = toString.replace(regex = Regex("^$\r\n"), replacement = "")
-//                        toString = toString.replace(regex = Regex("\r\n"), replacement = " ")
-
-                        if (toString.length <= 400 || true) {
-                            DbTextsGerman.insert {
-                                it[content] = toString
-                            }
-                        }
-                    }
-                }
-            } catch (e: CSVFieldNumDifferentException) {
-                e.printStackTrace()
-            }
-
-
-            for(i in 0..45){
-                if(Random.nextInt(100) < 25){
-                    DbHistory.new {
-                        val today = LocalDate.now()
-                        timestamp = LocalDateTime.of(today.minusDays(i.toLong()), LocalTime.MIDNIGHT)
-                            .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                        dataJson = ExposedBlob("{}".toByteArray())
-                    }
-                }
-            }
+            val fileEng = File("desktop/src/jvmMain/resources/literature_eng.csv")
+            readTextsFromFile(file = fileEng, table = DbTextsEnglish)
+            val fileGer = File("desktop/src/jvmMain/resources/literature_ger.csv")
+            readTextsFromFile(file = fileGer, table = DbTextsGerman)
         }
     }
 
     fun start() {
         dataSource = hikari()
         Database.connect(dataSource!!)
+        val missingTables = transaction {
+            listOf(DbHistorys, DbTextsEnglish, DbTextsGerman).any { !it.exists() }
+        }
+        //require(missingTables) { "The current setup is missing tables in the database" }
     }
 
     fun stop() {
@@ -121,33 +123,58 @@ object DatabaseFactory {
     }
 
     suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction { block.invoke() }
+
+
+    private fun <T> readTextsFromFile(
+        file: File,
+        table: T,
+        delimiter: Char = ';',
+        escapeChar: Char = '\\'
+    ) where T : Table, T : DbTexts {
+        require(file.exists()) { "The provided file does not exit." }
+        require(file.isFile) { "The provided file is not a file." }
+        try {
+            csvReader {
+                this.delimiter = delimiter
+                this.escapeChar = escapeChar
+            }.open(file) {
+                readAllWithHeaderAsSequence().forEach { csv ->
+                    //println("csv = ${csv}")
+                    val toString = csv["Content"].toString().let {
+                        it
+                        //    .replace(regex = Regex("^$\r\n"), replacement = "")
+                        //    .replace(regex = Regex("\r\n"), replacement = " ")
+                    }
+
+                    //if (toString.length <= 400) {
+                    table.insert {
+                        it[content] = toString
+                    }
+                    //}
+                }
+            }
+        } catch (e: CSVFieldNumDifferentException) {
+            e.printStackTrace()
+        }
+    }
+
 }
 
-
 fun main() {
-    DatabaseFactory.initWithDemoData()
-    val exercise = ExerciseEvaluation().apply {
-        texts.add(
-            TextEvaluation(text = "a".repeat(200)).apply {
-                chars.add(CharEvaluation.TypingError(2000, 0, 'b'))
-                chars.add(CharEvaluation.TypingError(1900, 0, 'b'))
-                chars.add(CharEvaluation.TypingError(1700, 0, 'b'))
-                chars.add(CharEvaluation.TypingError(900, 0, 'b'))
-            }
-        )
-        texts.add(
-            TextEvaluation(text = "b".repeat(200)).apply {
-                chars.add(CharEvaluation.TypingError(3000, 0, 'c'))
-                chars.add(CharEvaluation.TypingError(2900, 0, 'c'))
-                chars.add(CharEvaluation.TypingError(1700, 0, 'c'))
-                chars.add(CharEvaluation.TypingError(900, 0, 'c'))
-            }
-        )
-    }
+    //DatabaseFactory.initWithDemoData()
+    val json = Json() {
+        this.serializersModule = DatabaseFactory.serializer
+    }.encodeToString(value = DEMO.demoData)
+    println("json = ${json}")
+    Json() {
+        this.serializersModule = DatabaseFactory.serializer
+    }.decodeFromString<ExerciseEvaluation>(json).also { println("it = ${it}") }
+
+    /*
     transaction {
         DbHistory.new {
             timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-            dataJson = ExposedBlob(Json.encodeToString(exercise).toByteArray())
+            dataJson = ExposedBlob(Json.encodeToString(DatabaseFactory.demoData).toByteArray())
         }
         DbHistory.all().forEach {
             println(it)
@@ -155,4 +182,5 @@ fun main() {
             println(it.data.value)
         }
     }
+     */
 }

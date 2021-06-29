@@ -9,21 +9,21 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.transaction
-import textgen.database.DbHistory
+import textgen.database.DatabaseFactory
+import textgen.database.DbHistoryDAO
 import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
-import ui.exercise.ITypingOptions
+import ui.exercise.AbstractTypingOptions
 import util.RandomUtil
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import kotlin.concurrent.fixedRateTimer
 
 class MovingTextTypingIntend(
-    typingOptions: ITypingOptions
+    typingOptions: AbstractTypingOptions
 ) : PracticeIntendImpl(typingOptions = typingOptions), ITextDisplayPracticeIntend {
 
-    override val exerciseEvaluation = ExerciseEvaluation()
+    override val exerciseEvaluation = ExerciseEvaluation(options = typingOptions)
     lateinit var textEvaluation: TextEvaluation
 
     override val result: ExerciseEvaluation
@@ -109,9 +109,12 @@ class MovingTextTypingIntend(
 
     override fun onTimerFinished() {
         transaction {
-            DbHistory.new {
-                timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                dataJson = ExposedBlob(Json.encodeToString(exerciseEvaluation).toByteArray())
+            DbHistoryDAO.new {
+                timestamp = LocalDateTime.now()
+                dataJson = ExposedBlob(
+                    Json{serializersModule = DatabaseFactory.serializer}
+                        .encodeToString(exerciseEvaluation).toByteArray()
+                )
             }
         }
     }

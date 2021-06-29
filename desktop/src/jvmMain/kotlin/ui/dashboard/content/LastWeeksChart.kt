@@ -2,10 +2,13 @@
 
 package ui.dashboard.content
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -15,46 +18,67 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
-import com.github.tehras.charts.line.LineChart
-import com.github.tehras.charts.line.LineChartData
-import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
-import com.github.tehras.charts.line.renderer.point.FilledCircularPointDrawer
-import com.github.tehras.charts.line.renderer.xaxis.SimpleXAxisDrawer
-import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
+import com.github.jan222ik.compose_mpp_charts.core.graph.canvas.Chart
+import com.github.jan222ik.compose_mpp_charts.core.graph.dsl.ChartLabelSlot
+import com.github.jan222ik.compose_mpp_charts.core.grid.intGridRenderer
+import com.github.jan222ik.compose_mpp_charts.core.labels.provoder.intLabelProvider
+import com.github.jan222ik.compose_mpp_charts.core.line.lineRenderer
+import com.github.jan222ik.compose_mpp_charts.core.line.simplePathDrawer
+import com.github.jan222ik.compose_mpp_charts.core.point.drawer.circularPointDrawer
+import com.github.jan222ik.compose_mpp_charts.core.point.renderer.pointRenderer
+import com.github.jan222ik.compose_mpp_charts.core.series.compositeRenderer
+import com.github.jan222ik.compose_mpp_charts.core.viewport.Viewport
 import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.i18n
+import java.time.DayOfWeek
+import java.time.LocalDate
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
 
+@OptIn(ExperimentalUnsignedTypes::class)
 @Composable
-fun LastWeeksChart() {
+fun LastWeeksChart(statsIntent: DashboardStatsIntent) {
     BaseDashboardCard {
         val langConfig = LanguageAmbient.current
-        val lineChartData = remember(langConfig) {
-            // TODO get data from database
-            // TODO if there is a value below 20 set startAtZero to true otherwise keep false
-            val translation3LetterDay = i18n.str.dashboard.weeklyChart.daysOfWeek.resolve().split(" ")
-            LineChartData(
-                points = listOf(
-                    LineChartData.Point(84f, translation3LetterDay[5]),
-                    LineChartData.Point(80f, translation3LetterDay[6]),
-                    LineChartData.Point(90f, translation3LetterDay[0]),
-                    LineChartData.Point(100f, translation3LetterDay[1]),
-                    LineChartData.Point(0f, translation3LetterDay[2]),
-                    LineChartData.Point(80f, translation3LetterDay[3]),
-                    LineChartData.Point(123f, translation3LetterDay[4]),
-                ),
-                startAtZero = true
+        val dateLabels = remember(langConfig) { i18n.str.dashboard.weeklyChart.daysOfWeek.resolve().split(" ") }
+        /*
+        val lineChartData = remember {
+            listOf(
+                DataPoint(x = -1f, y = 110f),
+                DataPoint(x = 0f, y = 100f),
+                DataPoint(x = 1f, y = 84f),
+                DataPoint(x = 2f, y = 80f),
+                DataPoint(x = 3f, y = 90f),
+                DataPoint(x = 4f, y = 100f),
+                //DataPoint(x = 5f, y = 0f),
+                DataPoint(x = 6f, y = 80f),
             )
         }
+         */
+        val lineChartData = statsIntent.weekData.collectAsState()
+        val maxViewport = remember(lineChartData.value) {
+            val data = lineChartData.value
+            val pair = if (data.isEmpty()) {
+                0f to 20f
+            } else {
+                data.minOf { it.y } to data.maxOf { it.y }
+            }
+            mutableStateOf(pair)
+        }
+        val (minVP, maxVP) = remember(maxViewport.value) { maxViewport.value }
         Layout(
             content = {
                 Box(
@@ -74,31 +98,105 @@ fun LastWeeksChart() {
                         Text(text = +i18n.str.dashboard.weeklyChart.showMore)
                     }
                 }
-
-                LineChart(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    lineChartData = lineChartData,
-                    lineDrawer = SolidLineDrawer(
-                        thickness = 5.dp,
-                        color = MaterialTheme.colors.primary.copy(alpha = 0.6f)
-                    ),
-                    xAxisDrawer = SimpleXAxisDrawer(
-                        labelTextSize = 16.sp,
-                        labelTextColor = Color.White,
-                        axisLineColor = Color.White,
-                        axisLineThickness = 3.dp
-                    ),
-                    yAxisDrawer = SimpleYAxisDrawer(
-                        labelTextSize = 16.sp,
-                        labelTextColor = Color.White,
-                        axisLineColor = Color.White,
-                        axisLineThickness = 3.dp
-                    ),
-                    pointDrawer = FilledCircularPointDrawer(
-                        color = MaterialTheme.colors.primary
+                val viewport = remember(minVP, maxVP) {
+                    mutableStateOf(
+                        Viewport(
+                            minX = -0.5f,
+                            maxX = 6.5f,
+                            minY = max(minVP - 20f, -0.5f),
+                            maxY = maxVP + 20f
+                        )
                     )
-
-                )
+                }
+                val pointColor = MaterialTheme.colors.primary
+                val bgColor = MaterialTheme.colors.background
+                val lineColor = pointColor.copy(alpha = 0.6f)
+                Chart(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    viewport = viewport
+                ) {
+                    abscissaAxis { }
+                    ordinateAxis { }
+                    val step = 10
+                    grid(renderer = intGridRenderer(stepAbscissa = step))
+                    series(
+                        data = lineChartData.value,
+                        renderer = compositeRenderer(
+                            lineRenderer(
+                                simplePathDrawer(brush = SolidColor(lineColor))
+                            ),
+                            pointRenderer(
+                                drawer = circularPointDrawer(
+                                    radius = 5f,
+                                    brush = SolidColor(pointColor)
+                                )
+                            )
+                        )
+                    )
+                    label(slot = ChartLabelSlot.START, labelProvider = intLabelProvider(step = step.toUInt())) {
+                        Text(text = it.first)
+                    }
+                    label(
+                        slot = ChartLabelSlot.BOTTOM,
+                        labelProvider = { min: Float, max: Float ->
+                            if (max < 0 || min.roundToInt() > 7) listOf()
+                            else {
+                                val dateLabelsSorted = when(
+                                    val weekdayIdxOffset = LocalDate.now().dayOfWeek.value - 1
+                                ) {
+                                    DayOfWeek.SUNDAY.value.dec() -> dateLabels
+                                    else -> listOf(
+                                        *dateLabels.subList(weekdayIdxOffset.inc(), dateLabels.size).toTypedArray(),
+                                        *dateLabels.subList(0, weekdayIdxOffset.inc()).toTypedArray(),
+                                    )
+                                }
+                                val sIdx = max(0.0, min.toDouble()).toInt()
+                                val eIdx = min(7.0, max.roundToInt().toDouble()).toInt()
+                                dateLabelsSorted.subList(sIdx, eIdx).mapIndexed { idx, it -> it to sIdx + idx.toFloat() }
+                            }
+                        }
+                    ) {
+                        Text(text = it.first)
+                    }
+                    onClickPopupLabel { _, shape ->
+                        shape?.let {
+                            Column {
+                                Canvas(
+                                    modifier = Modifier
+                                        .size(15.dp)
+                                        .align(Alignment.CenterHorizontally)
+                                        .offset(x = (-7.5).dp)
+                                ) {
+                                    drawPath(
+                                        path = Path().apply {
+                                            moveTo(x = 0f, y = size.height)
+                                            lineTo(x = size.width, y = size.height)
+                                            lineTo(x = center.x, y = 0f)
+                                        },
+                                        brush = SolidColor(pointColor),
+                                    )
+                                }
+                                Surface(color = pointColor) {
+                                    Text(text = "${shape.dataPoint.y} WPM")
+                                }
+                            }
+                            true
+                        } ?: false
+                    }
+                    /*
+                    linearFunction(
+                        renderer = linearFunctionRenderer(
+                            lineDrawer = simpleAxisLineDrawer(
+                                strokeWidth = 3f,
+                                brush = SolidColor(Color.Black)
+                            ),
+                            linearFunctionPointProvider = linearFunctionPointProvider { x ->
+                                1.2f * x + 80f
+                            }
+                        )
+                    )
+                     */
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,

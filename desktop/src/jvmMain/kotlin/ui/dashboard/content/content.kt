@@ -3,7 +3,6 @@
 package ui.dashboard.content
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,13 +15,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.History
@@ -35,28 +30,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.common.ui.util.router.Router
-import com.github.tehras.charts.line.LineChart
-import com.github.tehras.charts.line.LineChartData
-import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
-import com.github.tehras.charts.line.renderer.point.FilledCircularPointDrawer
-import com.github.tehras.charts.line.renderer.xaxis.SimpleXAxisDrawer
-import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
+import kotlinx.coroutines.GlobalScope
 import ui.dashboard.ApplicationRoutes
 import ui.dashboard.HoverIconDashboardCard
 import ui.dashboard.StreakAPI
 import ui.dashboard.goal_preview.DashboardGoalsPreviewCard
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageAmbient
-import ui.util.i18n.RequiresTranslationI18N
+import ui.util.i18n.LanguageDefinition
 import ui.util.i18n.i18n
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -79,7 +67,7 @@ fun DashStartBtnGroup(router: Router<ApplicationRoutes>) {
         ) {
             HoverIconDashboardCard(
                 modifier = Modifier.width(btnWidth).heightIn(max = this@BoxWithConstraints.maxHeight),
-                onClick = { router.navTo(ApplicationRoutes.Exercise.ExerciseSelection) },
+                onClick = { router.navTo(ApplicationRoutes.Exercise.ExerciseSelection(null)) },
                 icon = {
                     Icon(
                         modifier = Modifier.fillMaxSize(fraction = iconFraction),
@@ -148,7 +136,11 @@ fun DashStartBtnGroup(router: Router<ApplicationRoutes>) {
 }
 
 @Composable
-fun DashboardContent() {
+fun DashboardContent(
+    initStatsIntent: DashboardStatsIntent? = null
+) {
+    val statsIntent =
+        remember(initStatsIntent) { initStatsIntent ?: DashboardStatsIntent().apply { init(GlobalScope) } }
     val router = WindowRouterAmbient.current
     val density = LocalDensity.current
     Layout(
@@ -157,7 +149,7 @@ fun DashboardContent() {
             .padding(vertical = 48.dp),
         content = {
             DashStartBtnGroup(router)
-            LastWeeksChart()
+            LastWeeksChart(statsIntent)
             DashboardGoalsPreviewCard()
             StreakAndBtns(router)
         }
@@ -189,8 +181,6 @@ fun DashboardContent() {
 }
 
 
-
-
 @Composable
 fun StreakAndBtns(router: Router<ApplicationRoutes>) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -211,8 +201,19 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                             contentDescription = null,
                             tint = MaterialTheme.colors.primary
                         )
+                        val calcStreaks = streakapi.calcStreaks()
+                        val lang = LanguageAmbient.current
                         Text(
-                            text = streakapi.calcStreaks().toString() + " " + +RequiresTranslationI18N("Days"),
+                            text = "$calcStreaks " + i18n.str.dashboard.streak.days.observedString()
+                                .let {
+                                    val singleDayLastLetterTrunc =
+                                        lang.language == LanguageDefinition.English ||
+                                                lang.language == LanguageDefinition.German
+                                    if (calcStreaks == 1 && singleDayLastLetterTrunc) {
+                                        // Truncate last letter if value is 1 "Tage" -> "Tag"; "Days" -> "Day"
+                                        it.substring(0, it.length.dec())
+                                    } else it
+                                },
                             style = MaterialTheme.typography.h5
                         )
                     }
@@ -222,7 +223,7 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                     ) {
                         Text(
                             modifier = Modifier.padding(paddingValues = PaddingValues(start = 10.dp)),
-                            text = +RequiresTranslationI18N("Streak"),
+                            text = +i18n.str.dashboard.streak.streakTitle,
                             style = MaterialTheme.typography.h6
                         )
                         Text(
@@ -251,7 +252,7 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                             Icon(
                                 modifier = Modifier.fillMaxSize(fraction = iconFraction),
                                 imageVector = Icons.Filled.PhotoCamera,
-                                contentDescription = "Open Camera Setup",
+                                contentDescription = null,
                                 tint = MaterialTheme.colors.onBackground
                             )
                         },
@@ -266,7 +267,7 @@ fun StreakAndBtns(router: Router<ApplicationRoutes>) {
                             Icon(
                                 modifier = Modifier.fillMaxSize(fraction = iconFraction),
                                 imageVector = Icons.Filled.SentimentVerySatisfied,
-                                contentDescription = "Open AppBenefits",
+                                contentDescription = null,
                                 tint = MaterialTheme.colors.onBackground
                             )
                         },

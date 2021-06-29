@@ -1,7 +1,7 @@
 package ui.dashboard
 
 import org.jetbrains.exposed.sql.transactions.transaction
-import textgen.database.DbHistory
+import textgen.database.DbHistoryDAO
 import java.time.LocalDate
 import java.time.temporal.IsoFields
 import kotlin.random.Random
@@ -32,7 +32,7 @@ class StreakAPI {
 
     fun calcStreaks(): Int {
         return transaction {
-            val localDates = DbHistory.all().map { it.timestampDate.value.toLocalDate() }
+            val localDates = DbHistoryDAO.all().map { it.timestamp.toLocalDate() }
             calcStreakFromDates(localDates, today())
         }
     }
@@ -44,15 +44,15 @@ class StreakAPI {
 
     fun totalExercises(): Int{
         return transaction {
-            DbHistory.all().count().toInt()
+            DbHistoryDAO.all().count().toInt()
         }
     }
 
     fun getPractisesThisMonth(): List<LocalDate> {
         return transaction {
-            DbHistory.all()
-                .filter { it.timestampDate.value.toLocalDate().monthValue == today().monthValue }
-                .map { history -> history.timestampDate.value.toLocalDate() }
+            DbHistoryDAO.all()
+                .filter { it.timestamp.toLocalDate().monthValue == today().monthValue }
+                .map { history -> history.timestamp.toLocalDate() }
                 .distinct()
                 .sortedBy { it }
         }

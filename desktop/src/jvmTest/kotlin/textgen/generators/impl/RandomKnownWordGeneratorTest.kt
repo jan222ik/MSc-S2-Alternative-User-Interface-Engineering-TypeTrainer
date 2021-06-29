@@ -9,14 +9,14 @@ internal class RandomKnownWordGeneratorTest {
     @Test
     fun stableRngEnglish() {
         val gen0 = RandomKnownWordGenerator.create(
-            options = RandomKnownWordGenerator.RandomKnownWordOptions(
+            options = RandomKnownWordOptions(
                 seed = 1L,
                 language = LanguageDefinition.English,
                 minimalSegmentLength = 100
             )
         )
         val gen1 = RandomKnownWordGenerator.create(
-            options = RandomKnownWordGenerator.RandomKnownWordOptions(
+            options = RandomKnownWordOptions(
                 seed = 1L,
                 language = LanguageDefinition.English,
                 minimalSegmentLength = 100
@@ -30,14 +30,14 @@ internal class RandomKnownWordGeneratorTest {
     @Test
     fun stableRngGerman() {
         val gen0 = RandomKnownWordGenerator.create(
-            options = RandomKnownWordGenerator.RandomKnownWordOptions(
+            options = RandomKnownWordOptions(
                 seed = 2L,
                 language = LanguageDefinition.German,
                 minimalSegmentLength = 100
             )
         )
         val gen1 = RandomKnownWordGenerator.create(
-            options = RandomKnownWordGenerator.RandomKnownWordOptions(
+            options = RandomKnownWordOptions(
                 seed = 2L,
                 language = LanguageDefinition.German,
                 minimalSegmentLength = 100

@@ -10,13 +10,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import textgen.generators.ContinuousGenerator
 import textgen.generators.impl.RandomCharGenerator
+import textgen.generators.impl.RandomCharOptions
 import textgen.generators.impl.RandomKnownTextGenerator
+import textgen.generators.impl.RandomKnownTextOptions
 import textgen.generators.impl.RandomKnownWordGenerator
-import ui.exercise.ITypingOptions
+import textgen.generators.impl.RandomKnownWordOptions
+import ui.exercise.AbstractTypingOptions
 
 
 abstract class PracticeIntendImpl(
-    final override val typingOptions: ITypingOptions
+    final override val typingOptions: AbstractTypingOptions
 ) : IPracticeIntend, IDebugPracticeIntend {
     private val generator: ContinuousGenerator
     private var typingClockJob: Job? = null
@@ -24,9 +27,9 @@ abstract class PracticeIntendImpl(
     init {
         val generatorOptions = typingOptions.generatorOptions
         generator = when (generatorOptions) {
-            is RandomKnownWordGenerator.RandomKnownWordOptions -> RandomKnownWordGenerator.create(generatorOptions)
-            is RandomKnownTextGenerator.RandomKnownTextOptions -> RandomKnownTextGenerator.create(generatorOptions)
-            is RandomCharGenerator.RandomCharOptions -> RandomCharGenerator.create(generatorOptions)
+            is RandomKnownWordOptions -> RandomKnownWordGenerator.create(generatorOptions)
+            is RandomKnownTextOptions -> RandomKnownTextGenerator.create(generatorOptions)
+            is RandomCharOptions -> RandomCharGenerator.create(generatorOptions)
             else -> throw IllegalStateException("The given Generator Options are not recognized. A Implementation might be missing.")
         }
     }

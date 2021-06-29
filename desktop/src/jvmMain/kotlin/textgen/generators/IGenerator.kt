@@ -1,5 +1,5 @@
 package textgen.generators
 
-interface IGenerator<T : IGeneratorOptions> {
+interface IGenerator<T : AbstractGeneratorOptions> {
     fun create(options: T): ContinuousGenerator
 }

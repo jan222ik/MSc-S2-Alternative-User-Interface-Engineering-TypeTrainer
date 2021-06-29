@@ -12,11 +12,15 @@ fun main() {
     ResolverI18n.changeLang(LanguageDefinition.English)
     var count = 0
     exploreClasses(kClass = i18n::class) {
-        try {
-            it.resolve()
-        } catch (e: IllegalStateException) {
-            println(it.key + "=")
-            count++
+        if (it is RequiresTranslationI18N) {
+            println(it)
+        } else {
+            try {
+                it.resolve()
+            } catch (e: IllegalStateException) {
+                println(it.key + "=")
+                count++
+            }
         }
     }
     println("\nDone - Missing Keys: $count")

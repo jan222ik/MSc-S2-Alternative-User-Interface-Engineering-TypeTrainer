@@ -30,7 +30,6 @@ import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
 import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.KeyI18N
-import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 
 val ResultsSubRouterAmbient = compositionLocalOf<Router<ResultsRoutes>> { error("No active router found!") }
@@ -120,8 +119,8 @@ fun BaseResultScreen(
 }
 
 enum class ResultsRoutes(val title: KeyI18N) {
-    OVERVIEW(RequiresTranslationI18N("Overview")),
-    ANALYSIS(RequiresTranslationI18N("Analysis")),
-    ERROR_HEATMAP(RequiresTranslationI18N("Error Heatmap")),
-    TIMELINE(RequiresTranslationI18N("Timeline"))
+    OVERVIEW(i18n.str.exercise.results.base.overview),
+    ANALYSIS(i18n.str.exercise.results.base.analysis),
+    ERROR_HEATMAP(i18n.str.exercise.results.base.errorHeatmap),
+    TIMELINE(i18n.str.exercise.results.base.timeline)
 }

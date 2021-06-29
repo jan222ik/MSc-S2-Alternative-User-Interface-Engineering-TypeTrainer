@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LanguageConfiguration
-import ui.util.i18n.RequiresTranslationI18N
+import ui.util.i18n.i18n
 
 @Composable
 fun DashboardGoalsPreviewCard(goalIntend: GoalIntend = GoalIntend()) {
@@ -64,7 +64,7 @@ fun DashboardGoalsPreviewCard(goalIntend: GoalIntend = GoalIntend()) {
                         contentDescription = null
                     )
                     Text(
-                        text = +RequiresTranslationI18N("Goals: [Placeholder]"),
+                        text = +i18n.str.dashboard.goals.goalsTitle,
                         style = MaterialTheme.typography.h5
                     )
                 }
@@ -72,7 +72,7 @@ fun DashboardGoalsPreviewCard(goalIntend: GoalIntend = GoalIntend()) {
                     modifier = Modifier.align(Alignment.CenterEnd),
                     onClick = {},
                     content = {
-                        Text(text = +RequiresTranslationI18N("Open all Goals"))
+                        Text(text = +i18n.str.dashboard.goals.openAll)
                     }
                 )
             }
@@ -93,10 +93,12 @@ fun DashboardGoalsPreviewCard(goalIntend: GoalIntend = GoalIntend()) {
 fun ComposeNewGoalBtn() {
     val router = WindowRouterAmbient.current
     val onHover = remember { mutableStateOf(false) }
-    val color = animateColorAsState(when(onHover.value) {
-        true -> MaterialTheme.colors.primary
-        false -> MaterialTheme.colors.onBackground
-    })
+    val color = animateColorAsState(
+        when (onHover.value) {
+            true -> MaterialTheme.colors.primary
+            false -> MaterialTheme.colors.onBackground
+        }
+    )
     Box(
         modifier = Modifier
             .pointerMoveFilter(
@@ -125,7 +127,7 @@ fun ComposeNewGoalBtn() {
                 tint = color.value
             )
             Text(
-                text = +RequiresTranslationI18N("Compose a new goal"),
+                text = +i18n.str.dashboard.goals.composeNew,
                 color = color.value
             )
         }
