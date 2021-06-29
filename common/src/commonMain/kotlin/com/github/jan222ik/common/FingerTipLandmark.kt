@@ -14,15 +14,6 @@ class FingerTipLandmark(
         return "FingerTipLandmark(finger=$finger, x=$x, y=$y, z=$z)"
     }
 
-
-    fun toKeyBoardRef(topLeft: Offset): FingerTipLandmark {
-       return FingerTipLandmark(
-           finger = finger,
-           x = x.plus(topLeft.x),
-           y = y.plus(topLeft.y),
-           z = z
-       )
-    }
 }
 
 @Serializable

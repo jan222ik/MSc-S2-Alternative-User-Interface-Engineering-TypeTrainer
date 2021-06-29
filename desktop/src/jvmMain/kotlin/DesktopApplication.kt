@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.key.Key
@@ -73,6 +74,7 @@ import ui.util.debug.DebugWithAllRoutes
 import ui.util.i18n.LanguageConfiguration
 import util.FingerMatcher
 import util.KeyboardUtil
+import util.RelativeKey
 import javax.imageio.ImageIO
 
 @ExperimentalAnimationApi
@@ -249,7 +251,7 @@ object DesktopApplication {
     @Composable
     fun FingerCanvas(server: Server, fingerMatcher: FingerMatcher?) {
         fingerMatcher ?: return
-        val keys = remember { KeyboardUtil.readKeyboard().keys }
+        val keys = remember { KeyboardUtil.getRelativeKeyboard() }
         LaunchedEffect(fingerMatcher, server) {
             Window {
                 TypeTrainerTheme {
@@ -259,15 +261,10 @@ object DesktopApplication {
                             clipRect {
                                 keys.forEach { row ->
                                     row.forEach {
-                                        drawRect(
-                                            brush = SolidColor(Color.White),
-                                            topLeft = Offset(it.xCoord.toFloat(), it.yCoord.toFloat()),
-                                            size = Size(it.w.toFloat(), it.h.toFloat())
-                                        )
+                                        drawKey(it)
                                     }
                                 }
                                 val (w, h) = this.size
-                                //println("w: $w h: $h")
                                 val colors = listOf(
                                     Color.Red,
                                     Color.Green,
@@ -276,12 +273,15 @@ object DesktopApplication {
                                 hands.value.forEachIndexed { idx, it ->
                                     //println("Hand $idx")
                                     val c = colors[idx.rem(colors.size)]
-                                    it.fingerLandmarks.values.map {
-                                        val point = it.toKeyBoardRef(Offset.Zero)
-                                        val x = point.x * w
-                                        val y = point.y * h
+                                    //println("Finger ${it.finger} x: $x y: $y")
+                                    it.fingerLandmarks.values.mapNotNull {
+                                        val point = with(fingerMatcher) { it.toKeyBoardRef() }
+                                        point?.let {
+                                            val x = it.x * w
+                                            val y = it.y * h
+                                            Offset(x, y)
+                                        }
                                         //println("Finger ${it.finger} x: $x y: $y")
-                                        Offset(x, y)
                                     }.let {
                                         drawPoints(
                                             points = it,
@@ -304,53 +304,27 @@ object DesktopApplication {
     @JvmStatic
     fun main(args: Array<String>) {
         Window {
-
             val keyboard = remember {
-                KeyboardUtil.readKeyboard()
-            }
-            val keys = remember(keyboard) {
-                keyboard.keys
-            }
-            val bounds = remember(keyboard) {
-                keyboard.getBounds()
+                KeyboardUtil.getRelativeKeyboard()
             }
             BoxWithConstraints(
                 modifier = Modifier.fillMaxSize()
             ) {
                 val density = LocalDensity.current
-                val vScale = with(density) { maxHeight.toPx().div(bounds.second) }
-                val hScale = with(density) { maxWidth.toPx().div(bounds.first) }
-                println("vScale = ${vScale}")
-                println("hScale = ${hScale}")
+
                 Canvas(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    println("maxHeight = ${maxHeight}, canvasHeight = ${size.height}")
-                    println("maxW = ${maxWidth}, canvasW = ${size.width}")
                     clipRect {
-                        keys.forEach { row ->
-                            row.fold(0f) { acc, it ->
-                                println("it.strChars = ${it.strChars}")
-                                val col = if (!it.isSpacer()) Color.Black else Color.Red
-                                val (w, h) = it.getBounds()
-                                val x = it.xCoord.times(hScale).toFloat()
-                                drawRect(
-                                    brush = SolidColor(col),
-                                    topLeft = Offset(
-                                        x = x.plus(acc),
-                                        y = it.yCoord.times(vScale).toFloat()
-                                    ),
-                                    size = Size(
-                                        width = w.times(hScale).toFloat(),
-                                        height = h.times(vScale).toFloat()
-                                    ),
-                                    style = Stroke(width = 1f)
-                                )
-                                acc.plus(x)
+                        keyboard.forEach { row ->
+                            row.forEach { key ->
+                                println("it.strChars = ${key.ch}")
+                                drawKey(key)
                             }
                         }
                     }
                 }
+                /*
                 keys.forEach { row ->
                     row.fold(0f) { acc, it ->
                         val (w, h) = it.getBounds()
@@ -369,9 +343,37 @@ object DesktopApplication {
                         acc.plus(x)
                     }
                 }
+                 */
             }
 
         }
+    }
+
+    fun DrawScope.drawKey(key: RelativeKey) {
+        val (w, h) = size
+        drawRect(
+            brush = SolidColor(Color.White),
+            topLeft = Offset(
+                x = w * key.x,
+                y = h * key.y
+            ),
+            size = Size(
+                width = w * key.w,
+                height = h * key.h
+            )
+        )
+        drawRect(
+            brush = SolidColor(Color.Black),
+            topLeft = Offset(
+                x = w * key.x,
+                y = h * key.y
+            ),
+            size = Size(
+                width = w * key.w,
+                height = h * key.h
+            ),
+            style = Stroke(width = 1f)
+        )
     }
 }
 

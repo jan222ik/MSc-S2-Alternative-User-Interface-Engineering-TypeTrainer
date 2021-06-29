@@ -232,8 +232,8 @@ object KeyboardUtil {
             K(x = 13.75f, y = yl5, w = 1.25f, ch = "Ctrl"),
         )
         return listOf(l0, l1, l2, l3, l4, l5).let { lists ->
-            val maxWidth = lists.maxOf { it.last().let { it.x + it.w }  }
-            val maxHeight = lists.maxOf { it.last().let { it.y + it.h }  }
+            val maxWidth = lists.maxOf { it.last().let { it.x + it.w } }
+            val maxHeight = lists.maxOf { it.last().let { it.y + it.h } }
             println("maxWidth = $maxWidth, maxHeight = $maxHeight")
             lists.map {
                 it.map {
@@ -257,6 +257,16 @@ class FingerMatcher(
 
     private val escPoints = mutableListOf<Offset>()
     var topLeft: Offset? = null
+    var bottomRight: Offset? = null
+
+    var roiSize: Size? = null
+
+    fun isInROI(offset: Offset): Boolean {
+        topLeft ?: return false
+        roiSize ?: return false
+        return ((topLeft!!.x)..(topLeft!!.x.plus(roiSize!!.width))).contains(offset.x)
+                && ((topLeft!!.y)..(topLeft!!.y.plus(roiSize!!.height))).contains(offset.y)
+    }
 
     fun syncInput(evt: KeyEvent) {
         if (evt.type == KeyEventType.KeyDown) {
@@ -268,7 +278,26 @@ class FingerMatcher(
                         // TODO Save Location or something
                         // TODO IF OTHER STEPS MOVE TO LAST STEP
                         topLeft = escPoints.minByOrNull { it.x }
-                        mulSyncStep.value = 2 // Useless unless above necessary
+                        if (topLeft == null) {
+                            mulSyncStep.value = 1
+                        }
+                        val poll = channel.poll()
+                        if (poll != null) {
+
+                            poll
+                                .mapNotNull {
+                                    it.fingerLandmarks[FingerEnum.PINKY]?.let { Offset(it.x, it.y) }
+                                }
+                                .maxByOrNull { it.x }
+                                ?.let {
+                                    bottomRight = it
+                                    roiSize = Size(
+                                        width = it.x - topLeft!!.x,
+                                        height = it.y - topLeft!!.y
+                                    )
+                                    mulSyncStep.value = 2
+                                }
+                        }
                     }
                 }
                 // Escape
@@ -294,6 +323,20 @@ class FingerMatcher(
 
     }
 
+    fun FingerTipLandmark.toKeyBoardRef(): FingerTipLandmark? {
+        roiSize ?: return null
+        return if (isInROI(Offset(x = this.x, y = this.y))) { // Over Keyboard
+            FingerTipLandmark(
+                finger = finger,
+                x = x.minus(topLeft!!.x).times(1 / roiSize!!.width),
+                y = y.minus(topLeft!!.y).times(1 / roiSize!!.height),
+                z = z
+            )
+        } else null
+    }
+
+    val relKeys = KeyboardUtil.getRelativeKeyboard()
+
     fun matchFingerOverKey(char: String): FingerUsed? {
         val hands = channel.poll() ?: return null
         val expectedFinger = fingerMap[char.toUpperCase()]
@@ -301,13 +344,12 @@ class FingerMatcher(
             return null
         }
         val fingerPosToCheck: List<FingerTipLandmark> = hands.mapNotNull {
-            it.fingerLandmarks[expectedFinger]
-                ?.toKeyBoardRef(topLeft = topLeft ?: Offset.Zero)
+            it.fingerLandmarks[expectedFinger]?.toKeyBoardRef()
         }
         val correctFingerUsed = fingerPosToCheck.any { fingerTip ->
-            keyboard.keys.any { l ->
-                l.any {
-                    !it.isSpacer() && it.contains(fingerTip)
+            relKeys.any { row ->
+                row.any {
+                    it.contains(fingerTip)
                 }
             }
         }
@@ -319,11 +361,11 @@ class FingerMatcher(
                 it.remove(expectedFinger)
             }.forEach { finger ->
                 hands.mapNotNull {
-                    it.fingerLandmarks[finger]?.toKeyBoardRef(topLeft = topLeft ?: Offset.Zero)
+                    it.fingerLandmarks[finger]?.toKeyBoardRef()
                 }.forEach { fingerTip ->
-                    if (keyboard.keys.any { l ->
-                            l.any {
-                                !it.isSpacer() && it.contains(fingerTip)
+                    if (relKeys.any { row ->
+                            row.any {
+                                it.contains(fingerTip)
                             }
                         }) {
                         println("char = [${char}], expected = [${expectedFinger}], actual = [${finger}]")
@@ -364,7 +406,13 @@ data class RelativeKey(
     val h: Float,
     val ch: String
 ) {
-
+    fun contains(fingerTip: FingerTipLandmark): Boolean {
+        val endX = x.plus(w)
+        val endY = y.plus(h)
+        val inX = (x..endX).contains(fingerTip.x)
+        val inY = (x..endY).contains(fingerTip.y)
+        return inX && inY
+    }
 }
 
 @Serializable
@@ -380,8 +428,8 @@ fun main() {
     Window {
         Canvas(Modifier.fillMaxSize().background(Color.DarkGray)) {
             val (w, h) = size
-            KeyboardUtil.getRelativeKeyboard().forEach {  row ->
-                row.forEach {  key ->
+            KeyboardUtil.getRelativeKeyboard().forEach { row ->
+                row.forEach { key ->
                     drawRect(
                         brush = SolidColor(Color.White),
                         topLeft = Offset(
