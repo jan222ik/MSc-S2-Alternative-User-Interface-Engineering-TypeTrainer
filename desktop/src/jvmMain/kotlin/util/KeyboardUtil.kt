@@ -2,6 +2,7 @@ package util
 
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -184,11 +185,60 @@ object KeyboardUtil {
             K(x = 10.5f, y = yl2, ch = "P"),
             K(x = 11.5f, y = yl2, ch = "Ü"),
             K(x = 12.5f, y = yl2, ch = "*\n+\n\n~"),
-            K(x = 13.5f, y = yl2, w = 2f, ch = "Enter"),
+            K(x = 13.5f, y = yl2, w = 1.5f, ch = "Enter"),
         )
-        return listOf(l0, l1, l2).map {
-            it.map {
-                it.rel(1/15.5f, heightScale = 1/6.5f)
+        val yl3 = yl2 + 1f
+        val l3 = listOf(
+            K(x = 0f, y = yl3, w = 1.75f, ch = "Caps Lock"),
+            K(x = 1.75f, y = yl3, ch = "A"),
+            K(x = 2.75f, y = yl3, ch = "S"),
+            K(x = 3.75f, y = yl3, ch = "D"),
+            K(x = 4.75f, y = yl3, ch = "F"),
+            K(x = 5.75f, y = yl3, ch = "G"),
+            K(x = 6.75f, y = yl3, ch = "H"),
+            K(x = 7.75f, y = yl3, ch = "J"),
+            K(x = 8.75f, y = yl3, ch = "K"),
+            K(x = 9.75f, y = yl3, ch = "L"),
+            K(x = 10.75f, y = yl3, ch = "Ö"),
+            K(x = 11.75f, y = yl3, ch = "Ä"),
+            K(x = 12.75f, y = yl3, ch = "'\n#"),
+            K(x = 13.75f, y = yl3, w = 1.25f, ch = "Enter"),
+        )
+        val yl4 = yl3 + 1f
+        val l4 = listOf(
+            K(x = 0f, y = yl4, w = 1.25f, ch = "Shift"),
+            K(x = 1.25f, y = yl4, ch = ">\n<\n\n|"),
+            K(x = 2.25f, y = yl4, ch = "Z"),
+            K(x = 3.25f, y = yl4, ch = "X"),
+            K(x = 4.25f, y = yl4, ch = "C"),
+            K(x = 5.25f, y = yl4, ch = "V"),
+            K(x = 6.25f, y = yl4, ch = "B"),
+            K(x = 7.25f, y = yl4, ch = "N"),
+            K(x = 8.25f, y = yl4, ch = "M"),
+            K(x = 9.25f, y = yl4, ch = ";\n,"),
+            K(x = 10.25f, y = yl4, ch = ":\n."),
+            K(x = 11.25f, y = yl4, ch = "_\n-"),
+            K(x = 12.25f, y = yl4, w = 2.75f, ch = "Shift"),
+        )
+        val yl5 = yl4 + 1f
+        val l5 = listOf(
+            K(x = 0f, y = yl5, w = 1.25f, ch = "Ctrl"),
+            K(x = 1.25f, y = yl5, w = 1.25f, ch = "Win"),
+            K(x = 2.50f, y = yl5, w = 1.25f, ch = "Alt"),
+            K(x = 3.75f, y = yl5, w = 6.25f, ch = "Space"),
+            K(x = 10.0f, y = yl5, w = 1.25f, ch = "AltGr"),
+            K(x = 11.25f, y = yl5, w = 1.25f, ch = "Win"),
+            K(x = 12.50f, y = yl5, w = 1.25f, ch = "Menu"),
+            K(x = 13.75f, y = yl5, w = 1.25f, ch = "Ctrl"),
+        )
+        return listOf(l0, l1, l2, l3, l4, l5).let { lists ->
+            val maxWidth = lists.maxOf { it.last().let { it.x + it.w }  }
+            val maxHeight = lists.maxOf { it.last().let { it.y + it.h }  }
+            println("maxWidth = $maxWidth, maxHeight = $maxHeight")
+            lists.map {
+                it.map {
+                    it.rel(1 / maxWidth, heightScale = 1 / maxHeight)
+                }
             }
         }
     }
@@ -328,10 +378,21 @@ fun main() {
     println(keyboard.getBounds())
 
     Window {
-        Canvas(Modifier.fillMaxSize()) {
+        Canvas(Modifier.fillMaxSize().background(Color.DarkGray)) {
             val (w, h) = size
-            KeyboardUtil.getRelativeKeyboard().fold(0f) { hAcc, row ->
-                row.fold(0f) { wAcc, key ->
+            KeyboardUtil.getRelativeKeyboard().forEach {  row ->
+                row.forEach {  key ->
+                    drawRect(
+                        brush = SolidColor(Color.White),
+                        topLeft = Offset(
+                            x = w * key.x,
+                            y = h * key.y
+                        ),
+                        size = Size(
+                            width = w * key.w,
+                            height = h * key.h
+                        )
+                    )
                     drawRect(
                         brush = SolidColor(Color.Black),
                         topLeft = Offset(
@@ -344,9 +405,7 @@ fun main() {
                         ),
                         style = Stroke(width = 1f)
                     )
-                    wAcc + key.x
                 }
-                hAcc + row.first().h
             }
 
         }
