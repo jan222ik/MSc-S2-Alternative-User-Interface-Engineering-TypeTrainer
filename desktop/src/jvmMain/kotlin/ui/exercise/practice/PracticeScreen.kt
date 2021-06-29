@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +25,6 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,10 +38,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import textgen.generators.impl.RandomKnownWordOptions
 import ui.components.progress.practice.CountDownProgressBar
+import ui.components.progress.practice.ProgressionProgressBar
 import ui.dashboard.ApplicationRoutes
 import ui.exercise.AbstractTypingOptions
 import ui.exercise.ExerciseMode
@@ -54,13 +54,21 @@ import ui.exercise.practice.text.MovingTextTyping
 import ui.general.WindowRouterAmbient
 import ui.util.debug.ifDebugCompose
 import ui.util.i18n.LanguageDefinition
+import util.FingerMatcher
 
+@HasDoc
 @Composable
-fun PracticeScreen(typingOptions: AbstractTypingOptions) {
+fun PracticeScreen(typingOptions: AbstractTypingOptions, fingerMatcher: FingerMatcher?) {
     val intend = remember(typingOptions) {
         when (typingOptions.typingType) {
-            TypingType.MovingCursor -> MovingCursorTypingIntend(typingOptions = typingOptions)
-            TypingType.MovingText -> MovingTextTypingIntend(typingOptions = typingOptions)
+            TypingType.MovingCursor -> MovingCursorTypingIntend(
+                typingOptions = typingOptions,
+                fingerMatcher = fingerMatcher
+            )
+            TypingType.MovingText -> MovingTextTypingIntend(
+                typingOptions = typingOptions,
+                fingerMatcher = fingerMatcher
+            )
         }
     }
     DisposableEffect(intend) {
@@ -130,15 +138,37 @@ private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
         modifier = Modifier.fillMaxWidth().padding(25.dp)
     ) {
         //progress bar
-        val timer = intend.timerStateFlow.collectAsState()
-        CountDownProgressBar(
-            modifier = Modifier.fillMaxWidth(),
-            value = max - timer.value.div(1000).toFloat(),
-            max = max,
-            trackColor = MaterialTheme.colors.background
-        )
-        // text in base dashboard card
-        // TODO adjust to fit generated text -> all test on screen or just one row etc.
+        if (intend.typingOptions.exerciseMode == ExerciseMode.Timelimit) {
+            val timer = intend.timerStateFlow.collectAsState()
+            CountDownProgressBar(
+                modifier = Modifier.fillMaxWidth(),
+                value = max - timer.value.div(1000).toFloat(),
+                max = max,
+                trackColor = MaterialTheme.colors.background
+            )
+        } else {
+            val otherMax = intend.textStateFlow.collectAsState("0")
+            when (intend.typingOptions.typingType) {
+                TypingType.MovingCursor -> {
+                    val textTyped = intend.textTypedIndex.collectAsState(0)
+                    ProgressionProgressBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = textTyped.value.toFloat(),
+                        max = otherMax.value.length.toFloat(),
+                    )
+                }
+                TypingType.MovingText -> {
+                    val textTyped = intend.textTyped.collectAsState("0")
+                    ProgressionProgressBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = textTyped.value.length.toFloat(),
+                        max = otherMax.value.length.toFloat(),
+                    )
+                }
+            }
+
+        }
+
         BaseDashboardCard(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -229,10 +259,11 @@ fun main() {
                             minimalSegmentLength = 300
                         ),
                         durationMillis = 60 * 1000,
-                        exerciseMode = ExerciseMode.Speed,
+                        exerciseMode = ExerciseMode.Timelimit,
                         isCameraEnabled = false,
                         typingType = TypingType.MovingCursor
-                    )
+                    ),
+                    null
                 )
             }
         }

@@ -3,6 +3,7 @@
 package com.github.jan222ik.android
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import com.github.jan222ik.common.ui.util.router.Router
 
 @Composable
 fun mobileMain(activity: Activity, supplyRouter: @Composable (Router<MobileRoutes>) -> Unit) {
+    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     TypeTrainerTheme {
         Surface(color = MaterialTheme.colors.background) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -32,13 +34,15 @@ fun mobileMain(activity: Activity, supplyRouter: @Composable (Router<MobileRoute
                 ) { current, router ->
                     supplyRouter(router)
                     when (current) {
-                        MobileRoutes.Menu -> MobileMenu()
-                        MobileRoutes.Scanner -> ConnectToPc()
+                        MobileRoutes.Menu -> MobileMenu(activity = activity)
+                        MobileRoutes.Scanner -> ConnectToPc(sharedPref)
                         is MobileRoutes.Exercise -> {
-                            if(current.connection.canConnect)
+                            if (current.connection.canConnect)
                                 HandTracking(activity)
+                            else if (current.connection.lostConnection)
+                                MobileMenu(activity = activity, lostConnection = true)
                             else
-                                ConnectToPc()
+                                ConnectToPc(sharedPref)
                         }
                         MobileRoutes.CameraSetup -> Column {
                             CurrentlyMissing("Camera Setup")

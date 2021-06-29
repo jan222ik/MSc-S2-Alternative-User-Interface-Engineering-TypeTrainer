@@ -73,6 +73,18 @@ sealed class i18n {
             }
         }
 
+        sealed class camera : str() {
+            override val path = "camera"
+
+            object setup : camera() {
+                override val path = super.path + ".setup"
+                val instruction_header = "instruction_header".i18Key()
+                val first_point = "first_point".i18Key()
+                val second_point = "second_point".i18Key()
+                val third_point = "third_point".i18Key()
+            }
+        }
+
         sealed class settings : str() {
             override val path = "settings"
 
@@ -104,6 +116,7 @@ sealed class i18n {
                     override val path: String = super.path + ".controls"
                     val useHandTracking = "use_hand_tracking".i18Key()
                     val startBtn = "start_exercise".i18Key()
+                    val startingHint = "starting_hint".i18Key()
                 }
 
                 object textMode : selection() {
@@ -128,14 +141,14 @@ sealed class i18n {
                     val customDuration = "custom_duration".i18Key()
                     val enterDuration = "enter_duration".i18Key()
                     val customDurationError = "custom_duration_error".i18Key()
-                    val speed = "speed".i18Key()
-                    val speedDescription = "speed_description".i18Key()
+                    val timelimit = "timelimit".i18Key()
+                    val timelimitDescription = "timelimit_description".i18Key()
                     val accuracy = "accuracy".i18Key()
                     val accuracyDescription = "accuracy_description".i18Key()
                     val noTimeLimit = "no_time_limit".i18Key()
                     val noTimeLimitDescription = "no_time_limit_description".i18Key()
 
-                    fun getAll() = listOf(speed, accuracy, noTimeLimit)
+                    fun getAll() = listOf(timelimit, noTimeLimit)
                     fun getDurations() = listOf(oneMin, twoMin, customDuration)
                 }
 
@@ -166,9 +179,28 @@ sealed class i18n {
 
                 object overview : results() {
                     override val path: String = super.path + ".overview"
-                    val keyPoints: KeyI18N = RequiresTranslationI18N("KeyPoints:")
-                    val goals: KeyI18N = RequiresTranslationI18N("Goals:")
-                    val achievements: KeyI18N = RequiresTranslationI18N("Achievements:")
+                    val keyPoints: KeyI18N = LocalTranslationI18N("KeyPoints:", "Eckpunkte:")
+                    val goals: KeyI18N = LocalTranslationI18N("Goals:", "Ziele:")
+                    val achievements: KeyI18N = LocalTranslationI18N("Achievements:", "Errungenschaften:")
+                }
+
+                object overview_keypoints : results() {
+                    override val path: String = super.path + ".overview_keypoints"
+                    val wordsTyped: KeyI18N = LocalTranslationI18N("Words Typed:", "Getippte Wörter:")
+                    val charsTyped: KeyI18N = LocalTranslationI18N("Chars Typed:", "Getippte Buchstaben:")
+                    val wpm: KeyI18N = LocalTranslationI18N("Words Per Minute (WPM):", "Wörter pro Minute (WPM):")
+                    val cpm: KeyI18N = LocalTranslationI18N("Chars Per Minute (CPM):", "Buchstaben pro Minute (BPM):")
+                    val totalErrors: KeyI18N = LocalTranslationI18N("Total Errors:", "Gesamtfehler:")
+                    val accuracy: KeyI18N = LocalTranslationI18N("Accuracy:", "Genauigkeit")
+                    val typingErrors: KeyI18N = LocalTranslationI18N("Typing Errors:", "Tippfehler:")
+
+                    val typingErrorsPercentage: KeyI18N = LocalTranslationI18N("Typing Errors in %:", "Tippfehler in %:")
+                    val typingErrorsCase: KeyI18N = LocalTranslationI18N("Char Case:", "Groß-/Kleinschreibung:")
+                    val typingErrorsCasePercentatge: KeyI18N = LocalTranslationI18N("Char Case in %:", "Groß-/Kleinschreibung in %:")
+                    val typingErrorsWhitespace: KeyI18N = LocalTranslationI18N("Whitespace:", "Leerraum:")
+                    val typingErrorsWhitespacePercentatge: KeyI18N = LocalTranslationI18N("Whitespace in %:", "Leerraum in %:")
+                    val fingerErrors: KeyI18N = LocalTranslationI18N("Finger Errors:", "Fingerfehler:")
+                    val fingerErrorsPercentage: KeyI18N = LocalTranslationI18N("Finger Errors in %:", "Fingerfehler in %:")
                 }
             }
 
@@ -184,11 +216,14 @@ sealed class i18n {
             object keyboard_sync : exercise() {
                 override val path: String = super.path + ".keyboard_synchronisation"
 
-                val step1: KeyI18N = RequiresTranslationI18N("1. Place your camera above the keyboard")
+                val step1: KeyI18N = LocalTranslationI18N(
+                    "1. Place your camera above the keyboard", "1. Plaziere die Kamera überhalb der Tastatur")
                 val step2: KeyI18N =
-                    RequiresTranslationI18N("2. Press the <span>'ESC'<\\span> key with your <span>left pinky finger<\\span>")
+                    LocalTranslationI18N("2. Press the <span>'ESC'<\\span> key with your <span>left pinky finger<\\span>",
+                        "2. Drücke die <span>'ESC'<\\span> Taste mit deinem <span>linken kleinen Finger<\\span>")
                 val step3: KeyI18N =
-                    RequiresTranslationI18N("3. Press the <span>right 'CTRL'<\\span> key with your <span>right pinky finger<\\span>")
+                    LocalTranslationI18N("3. Press the <span>right 'CTRL'<\\span> key with your <span>right pinky finger<\\span>",
+                        "3. Drücke die <span>rechte 'STRG'<\\span> Taste mit deinem <span>rechten kleinen Finger<\\span>")
             }
         }
 

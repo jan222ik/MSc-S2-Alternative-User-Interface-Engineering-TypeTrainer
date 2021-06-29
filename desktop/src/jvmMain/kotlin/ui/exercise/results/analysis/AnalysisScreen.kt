@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import textgen.error.ExerciseEvaluation
 import ui.exercise.results.analysis.error_per_key_dist.ErrorPerKey
+import ui.exercise.results.analysis.finger_error_dist.FingerError
 import ui.exercise.results.analysis.keyinterval.KeyInterval
 
 @Composable
@@ -26,10 +27,7 @@ fun ColumnScope.AnalysisScreen(exerciseEvaluation: ExerciseEvaluation, isStandal
             ErrorPerKey(exerciseEvaluation, isStandalone)
         }
         item {
-            KeyInterval(exerciseEvaluation, isStandalone)
-        }
-        item {
-            ErrorPerKey(exerciseEvaluation, isStandalone)
+            FingerError(exerciseEvaluation, isStandalone)
         }
     }
 }

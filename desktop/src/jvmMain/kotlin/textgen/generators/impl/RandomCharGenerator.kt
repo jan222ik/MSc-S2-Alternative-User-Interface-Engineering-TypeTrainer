@@ -1,5 +1,6 @@
 package textgen.generators.impl
 
+import com.github.jan222ik.common.HasDoc
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import textgen.generators.ContinuousGenerator
@@ -7,6 +8,7 @@ import textgen.generators.IGenerator
 import textgen.generators.AbstractGeneratorOptions
 import util.RandomUtil
 
+@HasDoc
 object RandomCharGenerator : IGenerator<RandomCharOptions> {
 
     override fun create(options: RandomCharOptions): ContinuousGenerator {
@@ -54,6 +56,7 @@ object RandomCharGenerator : IGenerator<RandomCharOptions> {
 
 @Serializable
 @SerialName("RandomCharOptions")
+@HasDoc
 data class RandomCharOptions(
     override val seed: Long,
     val delimiter: String = " ",

@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 
 /**
  * The back button shows an icon based on the state of enableBackBtn.
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
  * @param surface Color of button surface
  */
 @Composable
+@HasDoc
 internal fun BackBtn(
     height: Dp,
     enableBackBtn: Boolean,

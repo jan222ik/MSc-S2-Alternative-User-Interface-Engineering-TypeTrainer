@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 
 /**
  * Basic material card with content slot.
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
  * @param content Scoped lambda (BoxScope) for composable content
  */
 @Composable
+@HasDoc
 fun BaseDashboardCard(
     modifier: Modifier = Modifier,
     bgColor: Color = MaterialTheme.colors.background,

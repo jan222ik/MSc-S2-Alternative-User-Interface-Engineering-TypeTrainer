@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import ui.components.outlined_radio_button.internal.OptionText
 import ui.components.outlined_radio_button.internal.VDivider
 
@@ -36,6 +37,7 @@ import ui.components.outlined_radio_button.internal.VDivider
  * @param onCardBackgroundColor defines the color used on top of a background-colored surface
  * @param optionTextPadding defines the padding of the option's text
  */
+@HasDoc
 @Composable
 fun <T> LabeledOutlinedRadioButtonGroup(
     modifier: Modifier = Modifier,

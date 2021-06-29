@@ -5,6 +5,7 @@ package ui.exercise.selection
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
@@ -43,6 +45,7 @@ import ui.general.WindowRouterAmbient
 import ui.util.i18n.i18n
 import ui.util.span_parse.parseForSpans
 
+@HasDoc
 @ExperimentalAnimationApi
 @Composable
 fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelectionIntent(null)) {
@@ -63,8 +66,8 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                     .padding(vertical = 16.dp)
                     .fillMaxSize()
             ) {
-                val (textMode, setTextMode) = remember { selectionIntent.textModeSelection }
-                val (exerciseMode, setExerciseMode) = remember { selectionIntent.exerciseModeSelection }
+                val (textMode, setTextMode) = selectionIntent.textModeSelection
+                val (exerciseMode, setExerciseMode) = selectionIntent.exerciseModeSelection
                 val roundedCornerDp = 15.dp
                 val headerShape = RoundedCornerShape(
                     topStart = roundedCornerDp,
@@ -107,16 +110,20 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                 ExerciseSelectionBodyWithSlot(
                     shape = bodyShape
                 ) {
-                    val boldHighlightSpan = SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
+                    val boldHighlightSpan =
+                        SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
                     ExerciseModeSubCard(
                         selectionIntent = selectionIntent,
                         descriptionText = when (exerciseMode) {
-                            0 -> (+i18n.str.exercise.selection.exerciseMode.speedDescription).parseForSpans(boldHighlightSpan)
-                            1 -> (+i18n.str.exercise.selection.exerciseMode.accuracyDescription).parseForSpans(boldHighlightSpan)
-                            2 -> (+i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription).parseForSpans(boldHighlightSpan)
+                            0 -> (+i18n.str.exercise.selection.exerciseMode.timelimitDescription).parseForSpans(
+                                boldHighlightSpan
+                            )
+                            1 -> (+i18n.str.exercise.selection.exerciseMode.noTimeLimitDescription).parseForSpans(
+                                boldHighlightSpan
+                            )
                             else -> throw IndexOutOfBoundsException()
                         },
-                        timeLimit = exerciseMode < 2
+                        timeLimit = exerciseMode == 0
                     )
                 }
                 Spacer(Modifier.height(50.dp))
@@ -145,7 +152,10 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                         )
                         Text(
                             text = +i18n.str.exercise.selection.controls.useHandTracking,
-                            style = MaterialTheme.typography.body1
+                            style = MaterialTheme.typography.body1,
+                            modifier = Modifier.clickable {
+                                setWithFingerTracking(!withFingerTracking)
+                            }
                         )
                     }
                     Spacer(Modifier.width(8.dp))
@@ -154,7 +164,7 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
                             val options = selectionIntent.generateTypingOptions()
                             router.navTo(
                                 dest = when (options.isCameraEnabled) {
-                                    true -> ApplicationRoutes.Exercise.Connection.QRCode(options)
+                                    true -> ApplicationRoutes.Exercise.Connection.SetupConnection(options)
                                     false -> ApplicationRoutes.Exercise.Training(options)
                                 }
                             )
@@ -170,7 +180,7 @@ fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelect
 
 @Composable
 fun TypingType(intent: ExerciseSelectionIntent, headerShape: RoundedCornerShape, bodyShape: RoundedCornerShape) {
-    val (typingType, setTypingType) = remember { intent.typingTypeSelection }
+    val (typingType, setTypingType) = intent.typingTypeSelection
     LabeledOutlinedRadioButtonGroup(
         modifier = Modifier,
         label = +i18n.str.exercise.selection.typingType.typingType + ":",
@@ -178,7 +188,9 @@ fun TypingType(intent: ExerciseSelectionIntent, headerShape: RoundedCornerShape,
         options = ExerciseSelectionIntent.typingTypeSelectionOptions,
         optionTransform = @Composable { +it },
         selected = typingType,
-        onSelectionChange = setTypingType,
+        onSelectionChange = {
+            setTypingType.invoke(it)
+        },
         shape = headerShape
     )
     ExerciseSelectionBodyWithSlot(
@@ -286,16 +298,20 @@ private fun TextModeSubCard(
             )
             Spacer(modifier = Modifier.width(15.dp))
             if (languageSelection) {
-                LabeledOutlinedRadioButtonGroup(
-                    modifier = Modifier,
-                    label = +i18n.str.settings.languages.language + ":",
-                    forceLabelUnclipped = false,
-                    options = ExerciseSelectionIntent.languageSelectionOptions,
-                    optionTransform = @Composable { +it },
-                    selected = language,
-                    onSelectionChange = setLanguage,
-                    shape = shape
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(+i18n.str.settings.languages.language + ":")
+                    Spacer(modifier = Modifier.width(15.dp))
+                    OutlinedRadioButtonGroup(
+                        modifier = Modifier.fillMaxWidth(0.6f),
+                        options = ExerciseSelectionIntent.languageSelectionOptions,
+                        optionTransform = @Composable { +it },
+                        selected = language,
+                        onSelectionChange = setLanguage,
+                        shape = shape
+                    )
+                }
             }
         }
     }
@@ -305,7 +321,7 @@ private fun TextModeSubCard(
 @ExperimentalAnimationApi
 @Composable
 private fun CustomDurationInput(selectionIntent: ExerciseSelectionIntent, setSelectionIndex: () -> Unit) {
-    val (customDuration, setCustomDuration) = remember { selectionIntent.customDurationSelection }
+    val (customDuration, setCustomDuration) = selectionIntent.customDurationSelection
     val hasError = remember(customDuration) {
         val dur = customDuration.toDoubleOrNull()
         dur == null || dur <= 0.0
@@ -345,7 +361,7 @@ private fun ExerciseModeSubCard(
     ) {
         Text(text = descriptionText)
         Spacer(modifier = Modifier.height(25.dp))
-        val (duration, setDuration) = remember { selectionIntent.durationSelection }
+        val (duration, setDuration) = selectionIntent.durationSelection
         Row {
             val roundedCornerDp = 15.dp
             val shape = RoundedCornerShape(

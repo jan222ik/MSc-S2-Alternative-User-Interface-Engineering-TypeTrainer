@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
+import ui.util.i18n.LocalTranslationI18N
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 import kotlin.math.roundToInt
@@ -47,17 +48,21 @@ fun GoalComposeScreen() {
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = +RequiresTranslationI18N("What makes a good goal ?"),
+                    text = +LocalTranslationI18N("What makes a good goal ?", "Was macht ein gutes Ziel aus ?"),
                     style = MaterialTheme.typography.h4
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 32.dp),
-                    text = +RequiresTranslationI18N(
+                    text = +LocalTranslationI18N(
                         """Think about what you want to achieve, and commit to it.
                         | To maintain motivation a goal should be tangible. 
                         | Thus, the goals need to be specific, measurable, attainable, 
                         | relevant and time-bound. (SMART- Goals)""".trimMargin().replace("\n", "")
-                    ),
+                    ,
+                        """Überlege dir, was du erreichen willst, und bleib dran.
+                        | Um motiviert zu bleiben, sollte ein Ziel realistisch sein. 
+                        | Deshalb sollten Ziele spezifisch, messbar, erreichbar, 
+                        | relevant und zeitlich limitiert sein. (SMART- Goals)""".trimMargin().replace("\n", "")),
                     style = MaterialTheme.typography.h5
                 )
             }
@@ -69,16 +74,19 @@ fun GoalComposeScreen() {
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = +RequiresTranslationI18N("Your Goal in Words:"),
+                    text = +LocalTranslationI18N("Your Goal in Words:", "Dein Ziel in Worten:"),
                     style = MaterialTheme.typography.h4,
                     color = MaterialTheme.colors.primary
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 32.dp),
-                    text = +RequiresTranslationI18N(
+                    text = +LocalTranslationI18N(
                         """Your Goal of type ‘IncreaseTyping Speed’ provides you with a speed progress tracking.
                             | The Goal is to increase your speed by ‘1’ Words
-                            |  per Minute within the next  7 Days.""".trimMargin().replace("\n", "")
+                            |  per Minute within the next  7 Days.""".trimMargin().replace("\n", ""),
+                        """Dein Ziel vom Typ ‘Geschwindigkeit erhöhen’ bietet eine Geschwindigkeitsfortschrittsverfolgung.
+                            | Das Ziel ist, deine Geschwindigkeit um ‘1‘ Wort
+                            |  pro Minute in den nächsten 7 Tage zu erhöhen.""".trimMargin().replace("\n", "")
                     ),
                     style = MaterialTheme.typography.h5
                 )
@@ -92,7 +100,7 @@ fun GoalComposeScreen() {
                 }
             ) {
                 Text(
-                    text = +RequiresTranslationI18N("Create Goal"),
+                    text = +LocalTranslationI18N("Create Goal", "Ziel erstellen"),
                     style = MaterialTheme.typography.h4
                 )
             }

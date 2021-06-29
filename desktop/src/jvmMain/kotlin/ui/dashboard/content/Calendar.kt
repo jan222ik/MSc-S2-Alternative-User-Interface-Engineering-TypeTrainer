@@ -23,12 +23,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import ui.dashboard.StreakAPI
 import ui.util.i18n.LanguageAmbient
 import ui.util.i18n.i18n
 import java.time.LocalDate
 
 @Composable
+@HasDoc
 fun CalendarWeek(from: LocalDate, maxDate: LocalDate, mod: Modifier, practiceDays: List<LocalDate>): LocalDate {
     var runningDate = from
     if (from.dayOfMonth == 1){
@@ -59,6 +61,7 @@ fun CalendarWeek(from: LocalDate, maxDate: LocalDate, mod: Modifier, practiceDay
 }
 
 @Composable
+@HasDoc
 fun StreakCalendar() {
     val streakApi = StreakAPI()
     val practises = streakApi.getPractisesThisMonth()
@@ -86,6 +89,7 @@ fun StreakCalendar() {
 }
 
 @Composable
+@HasDoc
 fun WeekDayHeader(mod: Modifier){
     val weekdays = remember(LanguageAmbient.current.language) {
         i18n.str.dashboard.weeklyChart.daysOfWeek.resolve().split(" ")
@@ -100,6 +104,7 @@ fun WeekDayHeader(mod: Modifier){
 }
 
 @Composable
+@HasDoc
 fun Day(modifier: Modifier, day: Int, practised: Boolean) {
     var borderWidth = 1.dp
     var fontWeight = FontWeight.Normal

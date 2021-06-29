@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import com.github.jan222ik.common.HasDoc
 import kotlin.math.max
 
 /**
@@ -20,6 +21,7 @@ import kotlin.math.max
  * @param bottom Lambda for bottom composable content
  */
 @Composable
+@HasDoc
 fun CustomLayoutHeightWithCenterSpace(
     modifier: Modifier = Modifier,
     centralPadding: Dp,

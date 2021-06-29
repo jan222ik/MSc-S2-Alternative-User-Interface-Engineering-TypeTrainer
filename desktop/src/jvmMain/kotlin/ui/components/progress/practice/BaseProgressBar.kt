@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
+import com.github.jan222ik.common.HasDoc
 import kotlin.math.min
 
 /**
@@ -38,6 +39,7 @@ import kotlin.math.min
  * @param backgroundColor defines the color of the background of the progress bar
  */
 @Composable
+@HasDoc
 fun BaseProgressBar(
     modifier: Modifier = Modifier,
     value: Float,

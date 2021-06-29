@@ -11,7 +11,9 @@ import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.github.jan222ik.common.HasDoc
 
+@HasDoc
 @Composable
 internal fun SettingsBtn(onAction: () -> Unit) {
     Icon(

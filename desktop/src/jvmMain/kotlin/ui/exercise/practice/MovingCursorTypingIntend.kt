@@ -15,19 +15,35 @@ import textgen.error.CharEvaluation
 import textgen.error.ExerciseEvaluation
 import textgen.error.TextEvaluation
 import ui.exercise.AbstractTypingOptions
+import ui.exercise.ExerciseMode
+import util.FingerMatcher
 import util.RandomUtil
 import java.time.LocalDateTime
 import kotlin.concurrent.fixedRateTimer
 
 class MovingCursorTypingIntend(
-    typingOptions: AbstractTypingOptions
-) : PracticeIntendImpl(typingOptions = typingOptions), ITextDisplayPracticeIntend {
+    typingOptions: AbstractTypingOptions,
+    fingerMatcher: FingerMatcher?
+) : PracticeIntendImpl(typingOptions = typingOptions, fingerMatcher = fingerMatcher), ITextDisplayPracticeIntend {
 
     override val exerciseEvaluation = ExerciseEvaluation(options = typingOptions)
     lateinit var textEvaluation: TextEvaluation
 
     override val result: ExerciseEvaluation
-        get() = exerciseEvaluation
+        get() = when (typingOptions.exerciseMode) {
+            ExerciseMode.NoTimelimit -> exerciseEvaluation
+                .copy(
+                    texts = exerciseEvaluation.texts.map { text ->
+                        text.copy(chars =
+                            text.chars.map {
+                                it.copy(timeRemaining = Long.MAX_VALUE - it.timeRemaining)
+                            }.toMutableList()
+                        )
+                    }.toMutableList(),
+                    options = exerciseEvaluation.options.copyOptions(durationMillis = Long.MAX_VALUE - timerStateFlow.value)
+                )
+            ExerciseMode.Timelimit -> exerciseEvaluation
+        }
 
 
     override fun update() {
@@ -61,12 +77,27 @@ class MovingCursorTypingIntend(
         println("Char: $char - Current Expected: $currentChar")
         if (char == currentChar) {
             _currentIsError.compareAndSet(expect = true, update = false)
-            textEvaluation.chars.add(
+            val res = if (hasFingerTracking) {
+                val checkFingerForChar = checkFingerForChar(char = char.toString())
+                if (checkFingerForChar == null) {
+                    CharEvaluation.Correct(
+                        timeRemaining = timerStateFlow.value,
+                        expected = inTextIndex.dec()
+                    )
+                } else {
+                    CharEvaluation.FingerError(
+                        timeRemaining = timerStateFlow.value,
+                        expected = inTextIndex.dec(),
+                        fingerUsed = checkFingerForChar
+                    )
+                }
+            } else {
                 CharEvaluation.Correct(
                     timeRemaining = timerStateFlow.value,
                     expected = inTextIndex.dec()
                 )
-            )
+            }
+            textEvaluation.chars.add(res)
             inTextIndex++
             _textTypedIndex.emit(inTextIndex)
             println("inTextIndex = $inTextIndex endOfTextIndex = $endOfTextIndex")
@@ -99,12 +130,19 @@ class MovingCursorTypingIntend(
     }
 
     override fun onTimerFinished() {
+        val eval = when (typingOptions.exerciseMode) {
+            ExerciseMode.NoTimelimit -> exerciseEvaluation
+                .copy(
+                    options = exerciseEvaluation.options.copyOptions(durationMillis = Long.MAX_VALUE - timerStateFlow.value)
+                )
+            ExerciseMode.Timelimit -> exerciseEvaluation
+        }
         transaction {
             DbHistoryDAO.new {
                 timestamp = LocalDateTime.now()
                 dataJson = ExposedBlob(
                     Json{serializersModule = DatabaseFactory.serializer}
-                        .encodeToString(exerciseEvaluation)
+                        .encodeToString(eval)
                         .toByteArray()
                 )
             }

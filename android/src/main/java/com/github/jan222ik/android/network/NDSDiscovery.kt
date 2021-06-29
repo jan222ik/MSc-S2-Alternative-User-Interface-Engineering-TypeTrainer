@@ -1,28 +1,40 @@
 package com.github.jan222ik.android.network
 
-import android.content.Context.WIFI_SERVICE
-import android.net.wifi.WifiManager
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import com.github.jan222ik.common.network.NDService
-import io.ktor.utils.io.core.ByteOrder
-import java.math.BigInteger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.net.Inet4Address
 import java.net.InetAddress
-import java.net.UnknownHostException
+import java.net.NetworkInterface
+import java.net.SocketException
+import java.util.*
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
 import javax.jmdns.ServiceListener
 
+
 object NDSDiscovery {
     @Composable
-    fun start(callback: (ip: String) -> Unit) {
-        val jmdns = JmDNS.create(getLocalWifiIpAddress(), NDService.SERVICE_NAME)
-        jmdns.addServiceListener(
-            NDService.SERVICE_TYPE,
-            ConnectionListener(callback) {
-                jmdns.unregisterAllServices()
-                jmdns.close()
-            })
+    fun start(callback: (ip: String) -> Unit): Boolean {
+        val localAddresses = getLocalIpAddresses()
+
+        if (localAddresses.isNotEmpty()) {
+            localAddresses.forEach { address ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val jmdns = JmDNS.create(address, NDService.SERVICE_NAME)
+                    jmdns.addServiceListener(
+                        NDService.SERVICE_TYPE,
+                        ConnectionListener(callback) {
+                            jmdns.unregisterAllServices()
+                            jmdns.close()
+                        })
+                }
+            }
+            return true
+        }
+        return false
     }
 
     private class ConnectionListener(externCallback: (ip: String) -> Unit, stopCall: () -> Unit) : ServiceListener {
@@ -41,18 +53,22 @@ object NDSDiscovery {
         }
     }
 
-    @Composable
-    fun getLocalWifiIpAddress(): InetAddress? {
-        val wifiManager = LocalContext.current.getSystemService(WIFI_SERVICE) as WifiManager
-        var ipAddress = wifiManager.connectionInfo.ipAddress
-        if (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN) {
-            ipAddress = Integer.reverseBytes(ipAddress)
+    private fun getLocalIpAddresses(): List<InetAddress> {
+        val ipList = mutableListOf<InetAddress>()
+        try {
+            val en: Enumeration<NetworkInterface> = NetworkInterface.getNetworkInterfaces()
+            while (en.hasMoreElements()) {
+                val enumIpAddr: Enumeration<InetAddress> = en.nextElement().inetAddresses
+                while (enumIpAddr.hasMoreElements()) {
+                    val inetAddress: InetAddress = enumIpAddr.nextElement()
+                    if (!inetAddress.isLoopbackAddress && inetAddress is Inet4Address) {
+                        ipList.add(inetAddress)
+                    }
+                }
+            }
+        } catch (ex: SocketException) {
+            System.err.println(ex)
         }
-        val ipByteArray: ByteArray = BigInteger.valueOf(ipAddress.toLong()).toByteArray()
-        return try {
-            InetAddress.getByAddress(ipByteArray)
-        } catch (ex: UnknownHostException) {
-            null
-        }
+        return ipList
     }
 }

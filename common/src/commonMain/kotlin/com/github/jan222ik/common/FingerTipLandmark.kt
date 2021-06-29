@@ -1,5 +1,6 @@
 package com.github.jan222ik.common
 
+import androidx.compose.ui.geometry.Offset
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,6 +13,7 @@ class FingerTipLandmark(
     override fun toString(): String {
         return "FingerTipLandmark(finger=$finger, x=$x, y=$y, z=$z)"
     }
+
 }
 
 @Serializable

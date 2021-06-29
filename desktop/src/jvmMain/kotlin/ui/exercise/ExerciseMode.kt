@@ -5,9 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class ExerciseMode {
     @Serializable
-    object Speed : ExerciseMode()
-    @Serializable
-    object Accuracy : ExerciseMode()
+    object Timelimit : ExerciseMode()
     @Serializable
     object NoTimelimit : ExerciseMode()
 }

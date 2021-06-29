@@ -4,7 +4,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.github.jan222ik.common.HasDoc
 
+@HasDoc
 @Composable
 fun TypeTrainerTheme(content: @Composable () -> Unit) {
     val dark = darkColors(

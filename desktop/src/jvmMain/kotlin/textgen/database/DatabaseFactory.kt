@@ -64,12 +64,8 @@ object DatabaseFactory {
         }
         polymorphic(baseClass = ExerciseMode::class) {
             subclass(
-                subclass = ExerciseMode.Accuracy::class,
-                serializer = ExerciseMode.Accuracy.serializer()
-            )
-            subclass(
-                subclass = ExerciseMode.Speed::class,
-                serializer = ExerciseMode.Speed.serializer()
+                subclass = ExerciseMode.Timelimit::class,
+                serializer = ExerciseMode.Timelimit.serializer()
             )
             subclass(
                 subclass = ExerciseMode.NoTimelimit::class,

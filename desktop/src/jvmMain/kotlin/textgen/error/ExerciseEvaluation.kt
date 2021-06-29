@@ -1,10 +1,12 @@
 package textgen.error
 
+import com.github.jan222ik.common.FingerEnum
 import com.github.jan222ik.compose_mpp_charts.core.data.DataPoint
-import kotlinx.serialization.SerialName
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ui.exercise.AbstractTypingOptions
+import util.FingerUsed
 
 @Serializable
 data class ExerciseEvaluation(
@@ -12,6 +14,34 @@ data class ExerciseEvaluation(
     val options: AbstractTypingOptions
 ) {
     // Use @Transient if sth has a backing field and should not be serialized
+
+    val falseCharsTypedCase: Int by lazy {
+        texts
+            .flatMap { txt ->
+                txt.chars
+                    .filterIsInstance<CharEvaluation.TypingError>()
+                    .onEach { it.getExpectedChar(txt.text) }
+            }
+            .let { errors ->
+                errors
+                    .groupBy { it.expectedChar }
+                    .entries
+                    .map { entry: Map.Entry<Char?, List<CharEvaluation.TypingError>> ->
+                        entry.value.count {
+                            entry.key?.equals(it.actual, ignoreCase = true) ?: false
+                        }
+                    }
+            }.sum()
+    }
+
+    val falseCharsTypedWhitespace: Int by lazy {
+        texts
+            .flatMap { txt ->
+                txt.chars
+                    .filterIsInstance<CharEvaluation.TypingError>()
+                    .onEach { it.getExpectedChar(txt.text) }
+            }.count { it.expectedChar?.isWhitespace() ?: false }
+    }
 
     val totalCharsTyped: Int by lazy {
         texts.sumBy { it.chars.size }
@@ -33,6 +63,10 @@ data class ExerciseEvaluation(
         wordsTyped / options.durationMillis.div(1000f)
     }
 
+    val cps: Float by lazy {
+        totalCharsTyped / options.durationMillis.div(1000f)
+    }
+
     val timesBetweenKeyStrokes: List<DataPoint> by lazy {
         val times = texts.map { it.chars.map { c -> c.timeRemaining } }.flatten()
         var prev: Long = options.durationMillis
@@ -48,7 +82,7 @@ data class ExerciseEvaluation(
     }
 
     val shortestTimeTweenStrokes: Float? by lazy {
-        timesBetweenKeyStrokes.minByOrNull { it.y.takeUnless { it == 0f } ?: Float.MAX_VALUE  }?.y
+        timesBetweenKeyStrokes.minByOrNull { it.y.takeUnless { it == 0f } ?: Float.MAX_VALUE }?.y
     }
 
     val averageTimeTweenStrokes: Float? by lazy {
@@ -71,7 +105,7 @@ data class ExerciseEvaluation(
                     .groupBy { it.expectedChar }
                     .entries
                     .sortedByDescending { it.value.size }
-                    .mapIndexed{index: Int, entry: Map.Entry<Char?, List<CharEvaluation.TypingError>> ->
+                    .mapIndexed { index: Int, entry: Map.Entry<Char?, List<CharEvaluation.TypingError>> ->
                         ChartErrorKey(
                             idx = index,
                             char = entry.key.toString(),
@@ -83,16 +117,42 @@ data class ExerciseEvaluation(
 
     }
 
+    val errorRateOfFingers: List<FingerErrorKey> by lazy {
+        texts
+            .flatMap { txt ->
+                txt.chars
+                    .filterIsInstance<CharEvaluation.FingerError>()
+                    .onEach { it.getExpectedChar(txt.text) }
+            }
+            .let { errors ->
+                errors
+                    .groupBy { it.fingerUsed?.expected }
+                    .entries
+                    .sortedByDescending { it.value.size }
+                    .mapIndexed { index: Int, entry: Map.Entry<FingerEnum?, List<CharEvaluation.FingerError>> ->
+                        FingerErrorKey(
+                            idx = index,
+                            amount = entry.value.size,
+                            sum = errors.size,
+                            finger = entry.key
+                        )
+                    }
+            }
+        listOf()
+    }
+
     val falseCharsTyped
         get() = totalCharsTyped - correctCharsTyped
 
     val totalErrors
-        get() = falseCharsTyped + falseKeyStrokes
+        get() = falseCharsTyped + falseKeyFingerStrokes
 
     val totalAccuracy
         get() = 1f - (totalErrors / totalCharsTyped.toFloat())
 
-    val falseKeyStrokes: Int by lazy { 0 }
+    val falseKeyFingerStrokes: Int by lazy {
+        texts.sumBy { it.chars.filterIsInstance<CharEvaluation.FingerError>().size }
+    }
 }
 
 @Serializable
@@ -101,6 +161,18 @@ data class ChartErrorKey(
     val char: String,
     val amount: Int,
     val sum: Int
+) {
+    @Transient
+    val dataPoint = DataPoint(idx.toFloat(), amount.toFloat().div(sum.toFloat()).times(100f))
+}
+
+@Serializable
+data class FingerErrorKey(
+    val idx: Int,
+    val amount: Int,
+    val sum: Int,
+    @Contextual
+    val finger: FingerEnum?,
 ) {
     @Transient
     val dataPoint = DataPoint(idx.toFloat(), amount.toFloat().div(sum.toFloat()).times(100f))
@@ -122,6 +194,8 @@ sealed class CharEvaluation {
         override val timeRemaining: Long,
         override val expected: Int
     ) : CharEvaluation() {
+        override fun copy(timeRemaining: Long): CharEvaluation = Correct(timeRemaining, expected)
+
         override fun toString(): String {
             return "CharEvaluation.Correct[time: $timeRemaining, expected: $expected]"
         }
@@ -142,8 +216,25 @@ sealed class CharEvaluation {
         override val expected: Int,
         val actual: Char
     ) : CharEvaluation() {
+        override fun copy(timeRemaining: Long) = TypingError(timeRemaining, expected, actual)
+
+
         override fun toString(): String {
             return "CharEvaluation.TypingError[time: $timeRemaining, expected: $expected, actual: $actual]"
+        }
+    }
+
+    @Serializable
+    class FingerError(
+        override val timeRemaining: Long,
+        override val expected: Int,
+        val fingerUsed: FingerUsed? = null
+    ) : CharEvaluation() {
+        override fun copy(timeRemaining: Long) = FingerError(timeRemaining, expected, fingerUsed)
+
+
+        override fun toString(): String {
+            return "CharEvaluation.FingerError[time: $timeRemaining, expected: $expected, fingerUsed: $fingerUsed]"
         }
     }
 
@@ -155,4 +246,6 @@ sealed class CharEvaluation {
         expectedChar = c
         return c
     }
+
+    abstract fun copy(timeRemaining: Long): CharEvaluation
 }

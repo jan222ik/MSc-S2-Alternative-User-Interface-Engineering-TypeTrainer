@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -16,10 +17,14 @@ import textgen.generators.impl.RandomKnownTextOptions
 import textgen.generators.impl.RandomKnownWordGenerator
 import textgen.generators.impl.RandomKnownWordOptions
 import ui.exercise.AbstractTypingOptions
+import ui.exercise.ExerciseMode
+import util.FingerMatcher
+import util.FingerUsed
 
 
 abstract class PracticeIntendImpl(
-    final override val typingOptions: AbstractTypingOptions
+    final override val typingOptions: AbstractTypingOptions,
+    private val fingerMatcher: FingerMatcher?
 ) : IPracticeIntend, IDebugPracticeIntend {
     private val generator: ContinuousGenerator
     private var typingClockJob: Job? = null
@@ -84,10 +89,22 @@ abstract class PracticeIntendImpl(
 
     abstract fun onNextText()
 
+    var firstText = 0
+
     override suspend fun nextText() {
-        val generateSegment = generator.generateSegment()
-        _textStateFlow.value = generateSegment
-        onNextText()
+        if (firstText == 0 || typingOptions.exerciseMode == ExerciseMode.Timelimit) {
+            val generateSegment = generator.generateSegment()
+            _textStateFlow.value = generateSegment
+            onNextText()
+            firstText = 1
+        } else {
+            if (firstText == 1) {
+                _typingClockStateStateFlow.emit(IPracticeIntend.TypingClockState.FINISHED)
+                typingClockJob?.cancelAndJoin()
+                //onTimerFinished()
+                firstText = 2
+            }
+        }
     }
 
     abstract fun update()
@@ -114,5 +131,12 @@ abstract class PracticeIntendImpl(
 
     override suspend fun forceNextText() {
         _textStateFlow.emit(generator.generateSegment())
+    }
+
+    override val hasFingerTracking: Boolean
+        get() = fingerMatcher != null
+
+    override fun checkFingerForChar(char: String): FingerUsed? {
+        return fingerMatcher?.matchFingerOverKey(char)
     }
 }

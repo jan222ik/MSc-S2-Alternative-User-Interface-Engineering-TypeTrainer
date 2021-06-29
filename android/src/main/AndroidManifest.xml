@@ -26,7 +26,7 @@
         </activity>
         <activity android:name="com.github.jan222ik.android.HandTrackingActivity"
                   android:exported="true"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="landscape"/>
 
     </application>
 </manifest>
