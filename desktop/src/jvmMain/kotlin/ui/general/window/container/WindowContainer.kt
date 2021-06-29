@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import ui.general.window.container.impl.WCHeader
 
+@HasDoc
 @Composable
 fun WindowContainer(
     background: Color = MaterialTheme.colors.background,

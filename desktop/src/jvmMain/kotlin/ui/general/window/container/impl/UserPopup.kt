@@ -30,10 +30,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import ui.util.i18n.LocalTranslationI18N
 import ui.util.i18n.i18n
 
+@HasDoc
 @Composable
 internal fun UserPopup(
     height: Dp,

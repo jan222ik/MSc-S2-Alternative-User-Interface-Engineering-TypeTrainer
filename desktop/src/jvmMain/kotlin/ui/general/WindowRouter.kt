@@ -4,6 +4,7 @@ package ui.general
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.util.router.BaseRouter
 import com.github.jan222ik.common.ui.util.router.Router
 import ui.dashboard.ApplicationRoutes
@@ -11,6 +12,7 @@ import ui.dashboard.ApplicationRoutes
 val WindowRouterAmbient =
     compositionLocalOf<Router<ApplicationRoutes>> { error("No active router found!") }
 
+@HasDoc
 @Composable
 fun WindowRouter(
     initialRoute: ApplicationRoutes,

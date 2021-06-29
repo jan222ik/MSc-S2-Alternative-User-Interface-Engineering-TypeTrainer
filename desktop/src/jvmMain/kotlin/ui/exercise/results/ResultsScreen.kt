@@ -5,12 +5,14 @@ package ui.exercise.results
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import com.github.jan222ik.common.HasDoc
 import textgen.error.ExerciseEvaluation
 import ui.exercise.results.analysis.AnalysisScreen
 import ui.exercise.results.overview.ResultsOverview
 import ui.exercise.results.timeline.ResultsTimeline
 
 @OptIn(ExperimentalFoundationApi::class)
+@HasDoc
 @Composable
 fun ResultsScreen(
     exerciseEvaluation: ExerciseEvaluation,

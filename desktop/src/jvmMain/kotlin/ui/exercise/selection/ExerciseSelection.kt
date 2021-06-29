@@ -36,6 +36,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.components.outlined_radio_button.LabeledOutlinedRadioButtonGroup
 import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
@@ -44,6 +45,7 @@ import ui.general.WindowRouterAmbient
 import ui.util.i18n.i18n
 import ui.util.span_parse.parseForSpans
 
+@HasDoc
 @ExperimentalAnimationApi
 @Composable
 fun ExerciseSelection(selectionIntentO: ExerciseSelectionIntent = ExerciseSelectionIntent(null)) {

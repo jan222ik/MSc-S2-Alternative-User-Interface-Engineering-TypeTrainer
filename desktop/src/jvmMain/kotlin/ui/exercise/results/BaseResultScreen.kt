@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.util.router.BaseRouter
 import com.github.jan222ik.common.ui.util.router.Router
 import ui.components.outlined_radio_button.OutlinedRadioButtonGroup
@@ -34,6 +35,7 @@ import ui.util.i18n.i18n
 
 val ResultsSubRouterAmbient = compositionLocalOf<Router<ResultsRoutes>> { error("No active router found!") }
 
+@HasDoc
 @Composable
 fun BaseResultScreen(
     resultsRoutes: ResultsRoutes,

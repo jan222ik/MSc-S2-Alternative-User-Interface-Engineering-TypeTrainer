@@ -7,6 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.github.jan222ik.common.HasDoc
 
 
 val LanguageAmbient = compositionLocalOf<AppLangConfig> { error("No language definition found!") }
@@ -17,6 +18,7 @@ val LanguageAmbient = compositionLocalOf<AppLangConfig> { error("No language def
  * @param languageDefault defines the default language
  * @param content Lambda for composable content
  */
+@HasDoc
 @Composable
 fun LanguageConfiguration(
     languageDefault: LanguageDefinition = LanguageDefinition.English,

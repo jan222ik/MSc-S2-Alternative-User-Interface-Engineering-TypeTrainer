@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
+import com.github.jan222ik.common.HasDoc
 import ui.components.outlined_radio_button.internal.OptionText
 import ui.components.outlined_radio_button.internal.VDivider
 
@@ -39,6 +40,7 @@ import ui.components.outlined_radio_button.internal.VDivider
  * @param optionTextPadding defines the padding of the option's text
  * @param labelProvider Optional lambda to provide a label on the start side of the component inside the border
  */
+@HasDoc
 @Composable
 fun <T> OutlinedRadioButtonGroup(
     modifier: Modifier = Modifier,

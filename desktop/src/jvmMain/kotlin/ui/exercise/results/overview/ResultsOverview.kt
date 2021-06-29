@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import textgen.error.ExerciseEvaluation
 import textgen.generators.impl.RandomCharOptions
@@ -44,6 +45,7 @@ import ui.util.i18n.LocalTranslationI18N
 import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 
+@HasDoc
 @Composable
 fun ColumnScope.ResultsOverview(intent: ResultIntent, exerciseEvaluation: ExerciseEvaluation, isStandalone: Boolean) {
     Row(

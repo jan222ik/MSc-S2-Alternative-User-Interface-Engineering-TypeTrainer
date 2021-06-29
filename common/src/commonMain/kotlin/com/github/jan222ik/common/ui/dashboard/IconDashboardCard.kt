@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import kotlin.math.max
 
 /**
@@ -30,6 +31,7 @@ import kotlin.math.max
  * @param text lambda for composable content defining the text
  * @param icon lambda for composable content defining the icon
  */
+@HasDoc
 @Composable
 fun IconDashboardCard(
     modifier: Modifier = Modifier,

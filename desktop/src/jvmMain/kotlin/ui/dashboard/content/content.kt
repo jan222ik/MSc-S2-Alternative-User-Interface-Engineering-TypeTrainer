@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.common.ui.util.router.Router
 import kotlinx.coroutines.GlobalScope
@@ -135,6 +136,7 @@ fun DashStartBtnGroup(router: Router<ApplicationRoutes>) {
     }
 }
 
+@HasDoc
 @Composable
 fun DashboardContent(
     initStatsIntent: DashboardStatsIntent? = null

@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.compose_mpp_charts.core.graph.canvas.Chart
 import com.github.jan222ik.compose_mpp_charts.core.graph.dsl.ChartLabelSlot
@@ -48,6 +49,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
+@HasDoc
 @OptIn(ExperimentalUnsignedTypes::class)
 @Composable
 fun LastWeeksChart(statsIntent: DashboardStatsIntent) {

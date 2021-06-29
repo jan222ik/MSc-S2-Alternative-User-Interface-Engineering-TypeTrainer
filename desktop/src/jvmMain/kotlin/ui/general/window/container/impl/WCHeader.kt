@@ -35,10 +35,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import ui.dashboard.ApplicationRoutes
 import ui.general.WindowRouterAmbient
 import ui.util.debug.ifDebugCompose
 
+@HasDoc
 @Composable
 internal fun WCHeader(
     height: Dp,

@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.dto.MobileStatsData
 import com.github.jan222ik.common.dto.SHARED_STATS_PREF_KEY
 import com.github.jan222ik.common.ui.components.Logo
@@ -55,6 +56,7 @@ import kotlinx.serialization.json.Json
 import kotlin.math.max
 import kotlin.math.min
 
+@HasDoc
 @Composable
 fun MobileMenu(activity: Activity, lostConnection: Boolean = false) {
     val data: MobileStatsData? = activity

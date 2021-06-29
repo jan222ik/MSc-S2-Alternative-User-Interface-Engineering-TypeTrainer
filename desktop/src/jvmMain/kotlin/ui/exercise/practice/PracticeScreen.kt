@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import textgen.generators.impl.RandomKnownWordOptions
@@ -55,6 +56,7 @@ import ui.util.debug.ifDebugCompose
 import ui.util.i18n.LanguageDefinition
 import util.FingerMatcher
 
+@HasDoc
 @Composable
 fun PracticeScreen(typingOptions: AbstractTypingOptions, fingerMatcher: FingerMatcher?) {
     val intend = remember(typingOptions) {
