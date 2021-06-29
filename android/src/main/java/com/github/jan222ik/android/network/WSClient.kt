@@ -3,6 +3,7 @@ package com.github.jan222ik.android.network
 import android.content.SharedPreferences
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.github.jan222ik.common.HandLandmark
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.dto.SHARED_STATS_PREF_KEY
 import com.github.jan222ik.common.network.ServerConfig
 import com.github.jan222ik.common.ui.router.MobileRoutes
@@ -25,6 +26,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.encodeToByteArray
 
+@HasDoc
 object WSClient {
     val landmarks = MutableStateFlow(listOf<HandLandmark>())
     lateinit var url: String

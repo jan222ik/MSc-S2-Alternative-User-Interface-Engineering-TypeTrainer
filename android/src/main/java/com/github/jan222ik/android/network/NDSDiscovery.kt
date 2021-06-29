@@ -1,6 +1,7 @@
 package com.github.jan222ik.android.network
 
 import androidx.compose.runtime.Composable
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.network.NDService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -14,7 +15,7 @@ import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
 import javax.jmdns.ServiceListener
 
-
+@HasDoc
 object NDSDiscovery {
     @Composable
     fun start(callback: (ip: String) -> Unit): Boolean {
