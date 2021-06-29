@@ -44,6 +44,7 @@ object KeyboardUtil {
 
     /* http://www.keyboard-layout-editor.com/#/ */
     /* !ATTENTION! Space will be "" -> therefore change file to contain "Space" instead! */
+    @Deprecated("RelativeKeyboard should be used instead")
     fun readKeyboard(): Keyboard {
         val keyboardLines =
             "keyboards/keyboard-relevant-layout_iso-105_de.json".getResourceAsFile()!!.readLinesAndClose()
@@ -275,8 +276,6 @@ class FingerMatcher(
                 // Right Control
                 nativeKeyEvt.keyCode == 17 && nativeKeyEvt.keyLocation == java.awt.event.KeyEvent.KEY_LOCATION_RIGHT -> {
                     if (mulSyncStep.value == 1) {
-                        // TODO Save Location or something
-                        // TODO IF OTHER STEPS MOVE TO LAST STEP
                         topLeft = escPoints.minByOrNull { it.x }
                         if (topLeft == null) {
                             mulSyncStep.value = 1

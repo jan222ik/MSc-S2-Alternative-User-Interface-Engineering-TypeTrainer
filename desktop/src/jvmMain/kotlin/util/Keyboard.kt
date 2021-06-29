@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent.VK_SHIFT
 import java.awt.event.KeyEvent.VK_SPACE
 import java.awt.event.KeyEvent.VK_TAB
 
+@Deprecated("Use RelativeKeyboard in KeyboardUtils instead")
 class Keyboard {
     companion object {
         private const val EMPTY_KEY = "~|~"
