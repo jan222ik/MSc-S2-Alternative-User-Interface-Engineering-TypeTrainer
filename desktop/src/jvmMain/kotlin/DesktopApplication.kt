@@ -86,7 +86,11 @@ object DesktopApplication {
     @KtorExperimentalAPI
     fun start() {
         val initSize = IntSize(width = 1920, height = 1080)
-        val icon = ImageIO.read(this::class.java.getResourceAsStream("/LogoWithBackground.png"))
+        val icon = try {
+           ImageIO.read(this::class.java.getResourceAsStream("/LogoWithBackground.png"))
+        } catch (_:Throwable) {
+            null
+        }
         println("icon = ${icon}")
         Window(
             size = initSize,
