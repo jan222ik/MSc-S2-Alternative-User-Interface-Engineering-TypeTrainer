@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import boofcv.alg.fiducial.qrcode.QrCodeEncoder
 import boofcv.alg.fiducial.qrcode.QrCodeGeneratorImage
 import boofcv.kotlin.asBufferedImage
+import com.github.jan222ik.common.HasDoc
 import org.jetbrains.skija.IRect
 import util.ImageUtils.bitmapFromByteArray
 import util.NetworkUtils
@@ -17,6 +18,7 @@ import java.awt.image.BufferedImage
 
 
 @Composable
+@HasDoc
 fun QRCode(link: String = NetworkUtils.getAddress()) {
     val qr = QrCodeEncoder().addAutomatic(link).fixate()
     val gen = QrCodeGeneratorImage(15).render(qr)

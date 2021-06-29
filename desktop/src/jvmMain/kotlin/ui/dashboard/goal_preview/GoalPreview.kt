@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import kotlinx.coroutines.launch
@@ -48,6 +49,7 @@ import ui.util.i18n.LanguageConfiguration
 import ui.util.i18n.i18n
 
 @Composable
+@HasDoc
 fun DashboardGoalsPreviewCard(goalIntend: GoalIntend = GoalIntend()) {
     BaseDashboardCard {
         Column {

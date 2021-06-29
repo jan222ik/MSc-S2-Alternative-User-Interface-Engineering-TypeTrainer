@@ -1,5 +1,6 @@
 package textgen.generators.impl
 
+import com.github.jan222ik.common.HasDoc
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import textgen.generators.ContinuousGenerator
@@ -10,6 +11,7 @@ import util.RandomUtil
 import java.io.InputStream
 import java.nio.charset.Charset
 
+@HasDoc
 object RandomKnownWordGenerator : IGenerator<RandomKnownWordOptions> {
 
     private fun InputStream.readLinesAndClose(charset: Charset = Charsets.UTF_8): List<String> {
@@ -42,6 +44,7 @@ object RandomKnownWordGenerator : IGenerator<RandomKnownWordOptions> {
 
 @Serializable
 @SerialName("RandomKnownWordOptions")
+@HasDoc
 data class RandomKnownWordOptions(
     override val seed: Long,
     val delimiter: String = " ",

@@ -1,5 +1,6 @@
 package textgen.generators.impl
 
+import com.github.jan222ik.common.HasDoc
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.select
@@ -13,6 +14,7 @@ import textgen.generators.IGenerator
 import ui.util.i18n.LanguageDefinition
 import util.RandomUtil
 
+@HasDoc
 object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
 
     private var fullText: String? = null
@@ -61,6 +63,7 @@ object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
 
 @Serializable
 @SerialName("RandomKnownTextOptions")
+@HasDoc
 data class RandomKnownTextOptions(
     override val seed: Long,
     val language: LanguageDefinition
