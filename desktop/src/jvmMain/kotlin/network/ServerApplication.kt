@@ -1,5 +1,6 @@
 package network
 
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.network.ServerConfig
 import io.ktor.application.Application
 import io.ktor.application.ApplicationCallPipeline
@@ -28,6 +29,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.consumeEach
 import java.time.Duration
 
+@HasDoc
 class ServerApplication(private val server: Server) {
 
     @KtorExperimentalAPI

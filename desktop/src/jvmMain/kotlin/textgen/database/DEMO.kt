@@ -1,5 +1,6 @@
 package textgen.database
 
+import com.github.jan222ik.common.HasDoc
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
@@ -17,6 +18,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.random.Random
 
+@HasDoc
 object DEMO {
     val demoOptions = TypingOptions(
         generatorOptions = RandomKnownWordOptions(

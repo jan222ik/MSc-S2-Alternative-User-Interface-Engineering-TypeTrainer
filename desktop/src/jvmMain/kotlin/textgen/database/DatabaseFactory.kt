@@ -2,6 +2,7 @@ package textgen.database
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
+import com.github.jan222ik.common.HasDoc
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.serialization.decodeFromString
@@ -30,6 +31,7 @@ import ui.exercise.TypingOptions
 import ui.util.i18n.LanguageDefinition
 import java.io.File
 
+@HasDoc
 object DatabaseFactory {
     val serializer: SerializersModule = SerializersModule {
         polymorphic(baseClass = AbstractTypingOptions::class) {

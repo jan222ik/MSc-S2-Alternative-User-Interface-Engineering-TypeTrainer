@@ -3,6 +3,7 @@ package network
 import com.github.jan222ik.common.FingerEnum
 import com.github.jan222ik.common.FingerTipLandmark
 import com.github.jan222ik.common.HandLandmark
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.dto.MobileStatsData
 import com.github.jan222ik.common.dto.toPointDTO
 import com.github.jan222ik.compose_mpp_charts.core.data.DataPoint
@@ -27,6 +28,7 @@ import textgen.database.DatabaseFactory
 import ui.dashboard.content.DashboardStatsIntent
 import kotlin.concurrent.fixedRateTimer
 
+@HasDoc
 class Server {
     private var _connection: String? = null
 
