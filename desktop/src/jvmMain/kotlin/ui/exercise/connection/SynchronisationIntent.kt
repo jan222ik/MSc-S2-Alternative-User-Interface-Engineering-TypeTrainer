@@ -2,8 +2,6 @@ package ui.exercise.connection
 
 import androidx.compose.runtime.State
 import androidx.compose.ui.input.key.KeyEvent
-import com.github.jan222ik.common.HandLandmark
-import kotlinx.coroutines.channels.ReceiveChannel
 import util.FingerMatcher
 
 

@@ -1,5 +1,6 @@
 package network
 
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.network.NDService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +14,7 @@ enum class NDSState {
     STARTING, STARTED
 }
 
+@HasDoc
 object NDSServer {
     private var stopping: Boolean = false
     lateinit var coroutineScope: CoroutineScope

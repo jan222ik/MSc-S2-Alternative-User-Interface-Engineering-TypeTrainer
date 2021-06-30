@@ -41,6 +41,4 @@ internal data class RouterImpl<T>(
             }
         )
     }
-
-
 }
