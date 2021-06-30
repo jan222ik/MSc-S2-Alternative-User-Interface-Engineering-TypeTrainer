@@ -34,7 +34,6 @@ import ui.dashboard.ApplicationRoutes
 import ui.exercise.AbstractTypingOptions
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.LocalTranslationI18N
-import ui.util.i18n.RequiresTranslationI18N
 import ui.util.i18n.i18n
 import ui.util.span_parse.parseForSpans
 import util.FingerMatcher

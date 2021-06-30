@@ -1,7 +1,13 @@
 package ui.camera
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -11,11 +17,12 @@ import androidx.compose.ui.graphics.imageFromResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import ui.util.i18n.i18n
 import ui.util.span_parse.parseForSpans
 
-
+@HasDoc
 @Composable
 fun CameraSetupScreen() {
     Box(
@@ -36,7 +43,8 @@ fun CameraSetupScreen() {
 
                 Column {
                     val mod = Modifier.padding(start = 12.dp)
-                    val boldHighlightSpan = SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
+                    val boldHighlightSpan =
+                        SpanStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
                     Text(
                         text = +i18n.str.camera.setup.instruction_header,
                         style = MaterialTheme.typography.body1
@@ -62,9 +70,6 @@ fun CameraSetupScreen() {
                     contentDescription = "Illustration for Camera Setup"
                 )
             }
-
-
         }
-
     }
 }

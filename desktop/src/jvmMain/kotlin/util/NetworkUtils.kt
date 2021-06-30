@@ -1,8 +1,10 @@
 package util
 
+import com.github.jan222ik.common.HasDoc
 import java.net.InetAddress
 import java.net.NetworkInterface
 
+@HasDoc
 object NetworkUtils {
 
     fun getAllAddresses(): List<InetAddress> {
