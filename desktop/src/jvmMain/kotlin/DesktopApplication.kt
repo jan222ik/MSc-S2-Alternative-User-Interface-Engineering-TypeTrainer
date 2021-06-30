@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -38,7 +37,6 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.network.ServerConfig
@@ -87,8 +85,8 @@ object DesktopApplication {
     fun start() {
         val initSize = IntSize(width = 1920, height = 1080)
         val icon = try {
-           ImageIO.read(this::class.java.getResourceAsStream("/LogoWithBackground.png"))
-        } catch (_:Throwable) {
+            ImageIO.read(this::class.java.getResourceAsStream("/logoRounded.png"))
+        } catch (_: Throwable) {
             null
         }
         println("icon = ${icon}")
@@ -144,9 +142,11 @@ object DesktopApplication {
                                                 typingOptions = current.trainingOptions,
                                                 fingerMatcher = current.fingerMatcher
                                             )
+
                                             if (current.trainingOptions.isCameraEnabled) {
                                                 FingerCanvas(server = server, fingerMatcher = current.fingerMatcher)
                                             }
+
                                         }
                                         is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
                                             current.exerciseResults,
