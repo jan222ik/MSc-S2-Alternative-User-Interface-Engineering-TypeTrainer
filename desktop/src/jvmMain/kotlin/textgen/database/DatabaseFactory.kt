@@ -100,7 +100,26 @@ object DatabaseFactory {
         val missingTables = transaction {
             listOf(DbHistorys, DbTextsEnglish, DbTextsGerman).any { !it.exists() }
         }
-        //require(missingTables) { "The current setup is missing tables in the database" }
+        if (missingTables) {
+            println("Generating Tables")
+            transaction {
+                SchemaUtils.drop(DbHistorys, DbTextsEnglish, DbTextsGerman)
+                SchemaUtils.create(DbHistorys)
+                SchemaUtils.create(DbTextsEnglish)
+                SchemaUtils.create(DbTextsGerman)
+
+                val spEng = "src/jvmMain/resources/literature_eng.csv"
+                val spGer = "src/jvmMain/resources/literature_ger.csv"
+                val fileEng = File("desktop/$spEng").takeIf { it.exists() } ?: File(spEng)
+                val fileGer = File("desktop/$spGer").takeIf { it.exists() } ?: File(spGer)
+
+                println("Eng exists: " + fileEng.exists() + " " + fileEng.absolutePath)
+                println("Ger exists: " + fileGer.exists() + " " + fileEng.absolutePath)
+
+                readTextsFromFile(file = fileEng, table = DbTextsEnglish)
+                readTextsFromFile(file = fileGer, table = DbTextsGerman)
+            }
+        }
     }
 
     fun stop() {
