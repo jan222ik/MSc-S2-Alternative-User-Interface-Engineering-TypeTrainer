@@ -3,6 +3,19 @@ package com.github.jan222ik.desktop.textgen.database
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.jan222ik.common.HasDoc
+import com.github.jan222ik.desktop.textgen.database.schema.DbTexts
+import com.github.jan222ik.desktop.textgen.database.schema.DbTextsEnglish
+import com.github.jan222ik.desktop.textgen.database.schema.DbTextsGerman
+import com.github.jan222ik.desktop.textgen.database.schema.UserSettings
+import com.github.jan222ik.desktop.textgen.error.ExerciseEvaluation
+import com.github.jan222ik.desktop.textgen.generators.AbstractGeneratorOptions
+import com.github.jan222ik.desktop.textgen.generators.impl.RandomCharOptions
+import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownTextOptions
+import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownWordOptions
+import com.github.jan222ik.desktop.ui.exercise.AbstractTypingOptions
+import com.github.jan222ik.desktop.ui.exercise.ExerciseMode
+import com.github.jan222ik.desktop.ui.exercise.TypingOptions
+import com.github.jan222ik.desktop.ui.util.i18n.LanguageDefinition
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.serialization.decodeFromString
@@ -17,23 +30,8 @@ import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import com.github.jan222ik.desktop.textgen.database.schema.DbTexts
-import com.github.jan222ik.desktop.textgen.database.schema.DbTextsEnglish
-import com.github.jan222ik.desktop.textgen.database.schema.DbTextsGerman
-import com.github.jan222ik.desktop.textgen.error.ExerciseEvaluation
-import com.github.jan222ik.desktop.textgen.generators.AbstractGeneratorOptions
-import com.github.jan222ik.desktop.textgen.generators.impl.RandomCharOptions
-import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownTextOptions
-import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownWordOptions
-import com.github.jan222ik.desktop.ui.exercise.AbstractTypingOptions
-import com.github.jan222ik.desktop.ui.exercise.ExerciseMode
-import com.github.jan222ik.desktop.ui.exercise.TypingOptions
-import com.github.jan222ik.desktop.ui.util.i18n.LanguageDefinition
 import java.io.File
 import java.io.InputStream
-import java.nio.charset.Charset
-import java.nio.file.Paths
-import javax.imageio.ImageIO
 
 @HasDoc
 object DatabaseFactory {
@@ -82,35 +80,27 @@ object DatabaseFactory {
 
     var dataSource: HikariDataSource? = null
 
-    fun init() {
-        dataSource = hikari()
-        Database.connect(dataSource!!)
-        transaction {
-            SchemaUtils.drop(DbHistorys, DbTextsEnglish, DbTextsGerman)
-            SchemaUtils.create(DbHistorys)
-            SchemaUtils.create(DbTextsEnglish)
-            SchemaUtils.create(DbTextsGerman)
-
-            val fileEng = File("desktop/src/jvmMain/resources/literature_eng.csv")
-            readTextsFromFile(file = fileEng, table = DbTextsEnglish)
-            val fileGer = File("desktop/src/jvmMain/resources/literature_ger.csv")
-            readTextsFromFile(file = fileGer, table = DbTextsGerman)
-        }
-    }
-
     fun start() {
         dataSource = hikari()
         Database.connect(dataSource!!)
         val missingTables = transaction {
-            listOf(DbHistorys, DbTextsEnglish, DbTextsGerman).any { !it.exists() }
+            listOf(DbHistorys, DbTextsEnglish, DbTextsGerman, UserSettings).any { !it.exists() }
         }
         if (missingTables) {
             println("Generating Tables")
             transaction {
-                SchemaUtils.drop(DbHistorys, DbTextsEnglish, DbTextsGerman)
+                SchemaUtils.drop(DbHistorys, DbTextsEnglish, DbTextsGerman, UserSettings)
                 SchemaUtils.create(DbHistorys)
                 SchemaUtils.create(DbTextsEnglish)
                 SchemaUtils.create(DbTextsGerman)
+                SchemaUtils.create(UserSettings)
+
+                transaction {
+                    UserSettings.insert {
+                        it[id] = UserSettings.CONST_ID
+                        it[locale] = "eng"
+                    }
+                }
 
                 try {
                     this::class.java.getResourceAsStream("/literature_eng.csv")

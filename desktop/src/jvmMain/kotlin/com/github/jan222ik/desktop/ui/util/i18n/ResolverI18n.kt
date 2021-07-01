@@ -1,5 +1,8 @@
 package com.github.jan222ik.desktop.ui.util.i18n
 
+import com.github.jan222ik.desktop.textgen.database.schema.UserSettings
+import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import java.util.*
 
 object ResolverI18n {
@@ -15,6 +18,19 @@ object ResolverI18n {
         if (languageDefinition == currentLang) return
         currentLang = languageDefinition
         currentLangBuild = languageDefinition.buildMap()
+        transaction {
+            UserSettings.update(
+                where = {
+                    UserSettings.id eq UserSettings.CONST_ID
+                },
+                body = {
+                    it[locale] = when (languageDefinition) {
+                        LanguageDefinition.English -> "eng"
+                        LanguageDefinition.German -> "ger"
+                    }
+                }
+            )
+        }
     }
 
     private fun LanguageDefinition.buildMap(): ResourceBundle {

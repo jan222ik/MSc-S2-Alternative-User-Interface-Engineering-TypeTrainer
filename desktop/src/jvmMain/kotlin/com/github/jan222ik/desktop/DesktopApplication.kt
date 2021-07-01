@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 import com.github.jan222ik.desktop.network.Server
 import com.github.jan222ik.desktop.network.ServerApplication
 import com.github.jan222ik.desktop.textgen.database.DatabaseFactory
+import com.github.jan222ik.desktop.textgen.database.schema.UserSettings
 import com.github.jan222ik.desktop.ui.camera.CameraSetupScreen
 import com.github.jan222ik.desktop.ui.components.AnimatedLogo
 import com.github.jan222ik.desktop.ui.connection.ConnectionScreen
@@ -74,9 +75,12 @@ import com.github.jan222ik.desktop.ui.history.HistoryScreen
 import com.github.jan222ik.desktop.ui.util.debug.Debug
 import com.github.jan222ik.desktop.ui.util.debug.DebugWithAllRoutes
 import com.github.jan222ik.desktop.ui.util.i18n.LanguageConfiguration
+import com.github.jan222ik.desktop.ui.util.i18n.LanguageDefinition
 import com.github.jan222ik.desktop.util.FingerMatcher
 import com.github.jan222ik.desktop.util.KeyboardUtil
 import com.github.jan222ik.desktop.util.RelativeKey
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.transaction
 import javax.imageio.ImageIO
 
 @ExperimentalAnimationApi
@@ -100,8 +104,8 @@ object DesktopApplication {
             icon = icon
         ) {
             TypeTrainerTheme {
-                StartupApplication { server ->
-                    LanguageConfiguration {
+                StartupApplication { server, lang ->
+                    LanguageConfiguration(lang) {
                         WindowRouter(
                             initialRoute = ApplicationRoutes.Dashboard
                         ) { current, router ->
@@ -177,8 +181,9 @@ object DesktopApplication {
     @ExperimentalCoroutinesApi
     @KtorExperimentalAPI
     @Composable
-    fun StartupApplication(afterStartUp: @Composable (server: Server) -> Unit) {
+    fun StartupApplication(afterStartUp: @Composable (server: Server, lang: LanguageDefinition) -> Unit) {
         val server = remember { Server() }
+        val lang = remember { mutableStateOf<LanguageDefinition>(LanguageDefinition.English) }
         val startUpScope = rememberCoroutineScope()
         val loadingStateFlow = remember { MutableStateFlow<StartUpLoading>(StartUpLoading.START) }
         val localError = remember { mutableStateOf<Throwable?>(null) }
@@ -190,6 +195,17 @@ object DesktopApplication {
                     //DatabaseFactory.init()
                     //DEMO.demoTrainingEntries()
                     DatabaseFactory.start()
+                    transaction {
+                        UserSettings.select {
+                            UserSettings.id eq UserSettings.CONST_ID
+                        }
+                            .single()
+                            .let { lang.value = when (it[UserSettings.locale]) {
+                                "ger" -> LanguageDefinition.German
+                                else -> LanguageDefinition.English
+                            } }
+
+                    }
                     loadingStateFlow.emit(StartUpLoading.NETWORK)
                     engine = embeddedServer(Netty, port = ServerConfig.PORT) {
                         ServerApplication(server).apply { create() }
@@ -255,7 +271,7 @@ object DesktopApplication {
                         StartUpLoading.DATABASE -> Text(text = "Spinning up database.", style = style)
                         StartUpLoading.DONE -> {
                             if (animOnce.value) {
-                                afterStartUp.invoke(server)
+                                afterStartUp.invoke(server, lang.value)
                             }
                         }
                         StartUpLoading.ERROR -> {
