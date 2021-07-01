@@ -136,17 +136,30 @@ fun MobileMenu(activity: Activity, lostConnection: Boolean = false) {
                                 .height(IntrinsicSize.Min)
                         ) {
                             Column {
-                                Text(text = "Weeks Stats")
+                                val isMockData = remember { mutableStateOf(false) }
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                ) {
+                                    Text(text = "Weeks Stats")
+                                    Text(
+                                        text = "[Mock Data]",
+                                        style = MaterialTheme.typography.overline.copy(Color.Gray)
+                                    )
+                                }
                                 val dateLabels = remember { "M T W T F S S".split(" ") }
                                 val lineChartData = remember {
-                                    mutableStateOf(
-                                        listOf(
-                                            DataPoint(0f, 100f),
-                                            DataPoint(1f, 113f),
-                                            DataPoint(2f, 109f),
-                                            DataPoint(3f, 112f),
-                                        )
+                                    val mockData = listOf(
+                                        DataPoint(0f, 100f),
+                                        DataPoint(1f, 113f),
+                                        DataPoint(2f, 109f),
+                                        DataPoint(3f, 112f),
                                     )
+                                    val actualData = data
+                                        ?.weeklyDataPoints
+                                        ?.map { it.toDataPoint() }
+                                        ?.also { isMockData.value = false }
+                                    mutableStateOf(actualData ?: mockData.also { isMockData.value = true })
                                 }
                                 val maxViewport = remember(lineChartData.value) {
                                     val d = lineChartData.value
