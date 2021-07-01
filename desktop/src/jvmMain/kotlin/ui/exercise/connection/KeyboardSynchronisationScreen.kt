@@ -27,6 +27,7 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import kotlinx.coroutines.time.delay
 import network.Server
@@ -44,6 +45,7 @@ import java.time.temporal.ChronoUnit
  * Screen for Keyboard location in camera view.
  * @param trainingOptions [AbstractTypingOptions] to be used for the exercise.
  */
+@HasDoc
 @Composable
 fun KeyboardSynchronisationScreen(
     trainingOptions: AbstractTypingOptions,
@@ -72,6 +74,7 @@ fun KeyboardSynchronisationScreen(
     )
 }
 
+@HasDoc
 @Composable
 private fun KeyboardSynchronisationScreenContent(
     synchronisationIntent: SynchronisationIntent

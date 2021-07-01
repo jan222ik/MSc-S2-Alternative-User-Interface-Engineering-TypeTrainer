@@ -2,6 +2,7 @@ package ui.exercise.connection
 
 import androidx.compose.runtime.State
 import androidx.compose.ui.input.key.KeyEvent
+import com.github.jan222ik.common.HasDoc
 import util.FingerMatcher
 
 
@@ -11,6 +12,7 @@ import util.FingerMatcher
  * @param onFinishSync Callback provided by the UI to navigate to the next screen.
  * @property step [State] providing feedback for the UI at which step the synchronisation is.
  */
+@HasDoc
 class SynchronisationIntent(
     private val onFinishSync: () -> Unit,
     private val fingerMatcher: FingerMatcher

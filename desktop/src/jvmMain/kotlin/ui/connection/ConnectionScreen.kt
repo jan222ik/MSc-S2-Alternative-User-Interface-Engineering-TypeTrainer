@@ -15,6 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ import ui.exercise.AbstractTypingOptions
 import ui.general.WindowRouterAmbient
 import ui.util.i18n.i18n
 
+@HasDoc
 @Composable
 fun ConnectionScreen(server: Server, trainingOptions: AbstractTypingOptions) {
     val hasConnection = server.connectionStatus.collectAsState()
