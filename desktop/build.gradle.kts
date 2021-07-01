@@ -89,10 +89,11 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.github.jan222ik.desktop.Main"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.Exe)
             packageName = "TypeTrainer"
+            includeAllModules = true
         }
     }
 }

@@ -1,8 +1,10 @@
 package textgen.generators.impl
 
+import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownWordGenerator
+import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownWordOptions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import ui.util.i18n.LanguageDefinition
+import com.github.jan222ik.desktop.ui.util.i18n.LanguageDefinition
 
 internal class RandomKnownWordGeneratorTest {
 

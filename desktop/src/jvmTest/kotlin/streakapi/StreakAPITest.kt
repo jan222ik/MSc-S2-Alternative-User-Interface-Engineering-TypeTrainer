@@ -1,7 +1,7 @@
 package streakapi
 
 import org.junit.jupiter.api.Test
-import ui.dashboard.StreakAPI
+import com.github.jan222ik.desktop.ui.dashboard.StreakAPI
 import java.time.LocalDate
 import kotlin.test.assertEquals
 
