@@ -1,4 +1,5 @@
 @file:Suppress("FunctionName")
+@file:JvmName("MainKt")
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi

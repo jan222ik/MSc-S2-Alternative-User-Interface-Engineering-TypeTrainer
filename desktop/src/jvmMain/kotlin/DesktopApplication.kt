@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -65,6 +66,7 @@ import ui.exercise.selection.ExerciseSelection
 import ui.exercise.selection.ExerciseSelectionIntent
 import ui.general.WindowRouter
 import ui.general.window.container.WindowContainer
+import ui.general.window.container.impl.CloseBtn
 import ui.goals.GoalComposeScreen
 import ui.history.HistoryScreen
 import ui.util.debug.Debug
@@ -177,18 +179,24 @@ object DesktopApplication {
         val server = remember { Server() }
         val startUpScope = rememberCoroutineScope()
         val loadingStateFlow = remember { MutableStateFlow<StartUpLoading>(StartUpLoading.START) }
+        val localError = remember { mutableStateOf<Throwable?>(null) }
         DisposableEffect(server) {
             var engine: NettyApplicationEngine? = null
             startUpScope.launch(Dispatchers.IO) {
-                loadingStateFlow.emit(StartUpLoading.DATABASE)
-                //DatabaseFactory.init()
-                //DEMO.demoTrainingEntries()
-                DatabaseFactory.start()
-                loadingStateFlow.emit(StartUpLoading.NETWORK)
-                engine = embeddedServer(Netty, port = ServerConfig.PORT) {
-                    ServerApplication(server).apply { create() }
-                }.start(wait = false)
-                loadingStateFlow.emit(StartUpLoading.DONE)
+                try {
+                    loadingStateFlow.emit(StartUpLoading.DATABASE)
+                    //DatabaseFactory.init()
+                    //DEMO.demoTrainingEntries()
+                    DatabaseFactory.start()
+                    loadingStateFlow.emit(StartUpLoading.NETWORK)
+                    engine = embeddedServer(Netty, port = ServerConfig.PORT) {
+                        ServerApplication(server).apply { create() }
+                    }.start(wait = false)
+                    loadingStateFlow.emit(StartUpLoading.DONE)
+                } catch (t: Throwable) {
+                    localError.value = t
+                    loadingStateFlow.emit(StartUpLoading.ERROR)
+                }
             }
             onDispose {
                 engine?.stop(0, 0)
@@ -221,6 +229,11 @@ object DesktopApplication {
                 modifier = Modifier.scale(1f),
                 contentAlignment = Alignment.TopStart
             ) {
+                Box(
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    CloseBtn(window::close)
+                }
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -233,14 +246,37 @@ object DesktopApplication {
                             )
                         }
                     }
+                    val style = MaterialTheme.typography.h5
                     when (loading.value) {
-                        StartUpLoading.START -> Text("Typetrainer is starting.")
-                        StartUpLoading.NETWORK -> Text("Starting the servers.")
-                        StartUpLoading.DATABASE -> Text("Spinning up database.")
+                        StartUpLoading.START -> Text(text = "Typetrainer is starting.", style = style)
+                        StartUpLoading.NETWORK -> Text(text = "Starting the servers.", style = style)
+                        StartUpLoading.DATABASE -> Text(text = "Spinning up database.", style = style)
                         StartUpLoading.DONE -> {
                             if (animOnce.value) {
                                 afterStartUp.invoke(server)
                             }
+                        }
+                        StartUpLoading.ERROR -> {
+
+                            Column {
+                                Text(
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                    text = "The application could not be opened due to an error.",
+                                    style = style.copy(color = MaterialTheme.colors.error)
+                                )
+                                val showError = remember { mutableStateOf(false) }
+                                TextButton(
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                    onClick = { showError.value = !showError.value }
+                                ) {
+                                    val text = if (showError.value) "Hide" else "Show"
+                                    Text("$text Error")
+                                }
+                                if (showError.value) {
+                                    Text(text = localError.value?.stackTraceToString() ?: "No stack trace available!")
+                                }
+                            }
+
                         }
                     }
                 }
@@ -248,8 +284,9 @@ object DesktopApplication {
         }
     }
 
+
     enum class StartUpLoading {
-        START, NETWORK, DATABASE, DONE
+        START, NETWORK, DATABASE, DONE, ERROR
     }
 
     @Composable

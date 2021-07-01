@@ -46,7 +46,7 @@ internal fun MaximizeBtn(
 }
 
 @Composable
-internal fun CloseBtn(
+fun CloseBtn(
     onAction: () -> Unit
 ) {
     //val (onHover, setOnHover) = remember { mutableStateOf(false) }
