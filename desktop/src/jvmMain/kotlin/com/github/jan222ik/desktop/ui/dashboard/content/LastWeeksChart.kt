@@ -111,7 +111,6 @@ fun LastWeeksChart(statsIntent: DashboardStatsIntent) {
                     )
                 }
                 val pointColor = MaterialTheme.colors.primary
-                val bgColor = MaterialTheme.colors.background
                 val lineColor = pointColor.copy(alpha = 0.6f)
                 Chart(
                     modifier = Modifier.padding(vertical = 16.dp),
