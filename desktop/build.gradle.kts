@@ -94,6 +94,16 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.Exe)
             packageName = "TypeTrainer"
             includeAllModules = true
+
+            macOS {
+                iconFile.set(project.file("../dist_icons/logoRounded.icns"))
+            }
+            windows {
+                iconFile.set(project.file("../dist_icons/logoRounded.ico"))
+            }
+            linux {
+                iconFile.set(project.file("../dist_icons/logoRounded.png"))
+            }
         }
     }
 }
