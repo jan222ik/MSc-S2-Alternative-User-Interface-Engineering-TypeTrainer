@@ -138,7 +138,6 @@ data class ExerciseEvaluation(
                         )
                     }
             }
-        listOf()
     }
 
     val falseCharsTyped
