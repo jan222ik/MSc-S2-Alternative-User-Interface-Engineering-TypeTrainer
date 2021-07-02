@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 import com.github.jan222ik.desktop.textgen.database.DEMO
 import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownTextGenerator
 import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownTextOptions
-import textgen.database.DatabaseFactory
+import com.github.jan222ik.desktop.textgen.database.DatabaseFactory
 import com.github.jan222ik.desktop.ui.util.i18n.LanguageDefinition
 import kotlin.test.BeforeTest
 
@@ -13,7 +13,7 @@ internal class RandomKnownTextGeneratorTest {
 
     @BeforeTest
     fun beforeEach() {
-        DatabaseFactory.init()
+        DatabaseFactory.start()
         DEMO.demoTrainingEntries()
     }
 
