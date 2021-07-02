@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.Path
 import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import com.github.jan222ik.common.HasDoc
 
 const val logo_part1: String = "M84.6406 45.9688H52.7188V134H35.0703V45.9688H3.42969V31.625H84.6406V45.9688Z"
 val logo_part1_color = Color.White
@@ -19,7 +20,7 @@ const val logo_part2: String = "M34.4218 150.263L66.3416 150.624L67.338 62.5986L
         "150.824L115.628 151.182L115.465 165.525L34.2594 164.606L34.4218 150.263Z"
 val logo_part2_color = Color(0xFFC4C4C4)
 
-
+@HasDoc
 @Composable
 fun Logo(modifier: Modifier = Modifier) {
     val part1 = remember { addPathNodes(logo_part1) }

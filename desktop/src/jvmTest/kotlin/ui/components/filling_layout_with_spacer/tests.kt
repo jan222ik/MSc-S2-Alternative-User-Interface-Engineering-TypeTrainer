@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
+import com.github.jan222ik.desktop.ui.components.filling_layout_with_spacer.CustomLayoutHeightWithCenterSpace
+import com.github.jan222ik.desktop.ui.components.filling_layout_with_spacer.CustomLayoutWidthWithCenterSpace
 
 fun main() {
     `Width - Test`()

@@ -1,0 +1,46 @@
+@file:Suppress("FunctionName")
+
+package com.github.jan222ik.desktop.ui.components.progress.practice
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Timer
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun CountDownProgressBar(
+    modifier: Modifier = Modifier,
+    value: Float,
+    max: Float,
+    trackColor: Color = MaterialTheme.colors.surface,
+    backgroundColor: Color = MaterialTheme.colors.primary
+) {
+    BaseProgressBar(
+        modifier = modifier,
+        value = value,
+        max = max,
+        movingRow = {
+            Icon(
+                modifier = Modifier.padding(horizontal = 5.dp),
+                imageVector = Icons.Filled.Timer,
+                contentDescription = null,
+                tint = MaterialTheme.colors.onPrimary
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = 5.dp),
+                text = max.minus(value).toInt().coerceAtLeast(0).toString() + "s",
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colors.onSurface
+            )
+        },
+        trackColor = trackColor,
+        backgroundColor = backgroundColor
+    )
+}

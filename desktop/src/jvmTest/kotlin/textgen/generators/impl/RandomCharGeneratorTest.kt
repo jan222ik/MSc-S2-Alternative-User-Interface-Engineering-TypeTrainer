@@ -1,8 +1,10 @@
 package textgen.generators.impl
 
+import com.github.jan222ik.desktop.textgen.generators.impl.RandomCharGenerator
+import com.github.jan222ik.desktop.textgen.generators.impl.RandomCharOptions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import util.weightedAt
+import com.github.jan222ik.desktop.util.weightedAt
 
 class RandomCharGeneratorTest {
 

@@ -1656,8 +1656,8 @@ Frank
 Franken
 Frankfurt
 Frankfurt am
-Frankfurt am Main
-Frankfurt/Main
+Frankfurt am com.github.jan222ik.desktop.Main
+Frankfurt/com.github.jan222ik.desktop.Main
 Frankfurter
 Frankreich
 Frankreichs
@@ -2955,7 +2955,7 @@ Magistrat
 Mai
 Mailand
 Mailänder
-Main
+com.github.jan222ik.desktop.Main
 Mainz
 Mainzer
 Major

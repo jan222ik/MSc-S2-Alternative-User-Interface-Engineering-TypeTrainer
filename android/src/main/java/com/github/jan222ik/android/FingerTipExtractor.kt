@@ -5,11 +5,13 @@ import com.github.jan222ik.android.network.WSClient
 import com.github.jan222ik.common.FingerEnum
 import com.github.jan222ik.common.FingerTipLandmark
 import com.github.jan222ik.common.HandLandmark
+import com.github.jan222ik.common.HasDoc
 import com.google.mediapipe.formats.proto.LandmarkProto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@HasDoc
 class FingerTipExtractor {
     companion object {
         private const val THUMB_TIP = 4

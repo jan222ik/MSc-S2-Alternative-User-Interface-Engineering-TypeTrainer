@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.github.jan222ik"
-version = "1.0"
+version = "1.0.0"
 
 kotlin {
     jvm {
@@ -89,10 +89,21 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.github.jan222ik.desktop.Main"
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Deb)
-            packageName = "jvm"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "TypeTrainer"
+            includeAllModules = true
+
+            macOS {
+                iconFile.set(project.file("../dist_icons/logoRounded.icns"))
+            }
+            windows {
+                iconFile.set(project.file("../dist_icons/logoRounded.ico"))
+            }
+            linux {
+                iconFile.set(project.file("../dist_icons/logoRounded.png"))
+            }
         }
     }
 }

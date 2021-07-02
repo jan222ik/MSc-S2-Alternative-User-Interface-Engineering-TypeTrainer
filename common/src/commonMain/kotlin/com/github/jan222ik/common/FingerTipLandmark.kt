@@ -2,6 +2,7 @@ package com.github.jan222ik.common
 
 import kotlinx.serialization.Serializable
 
+@HasDoc
 @Serializable
 class FingerTipLandmark(
     val finger: FingerEnum,
@@ -12,9 +13,5 @@ class FingerTipLandmark(
     override fun toString(): String {
         return "FingerTipLandmark(finger=$finger, x=$x, y=$y, z=$z)"
     }
-}
 
-@Serializable
-enum class FingerEnum {
-    NONE, INDEX, MIDDLE, RING, PINKY, THUMB
 }

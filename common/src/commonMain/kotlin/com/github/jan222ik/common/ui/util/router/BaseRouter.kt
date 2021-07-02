@@ -7,6 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.github.jan222ik.common.HasDoc
 
 /**
  * The base router enables updating the UI by switching the current route.
@@ -17,6 +18,7 @@ import androidx.compose.runtime.remember
  * @param routeDefinition Lambda with parameters of the current route and router for composable content
  */
 @Composable
+@HasDoc
 fun <T> BaseRouter(
     initialRoute: T,
     ambient: ProvidableCompositionLocal<Router<T>>,

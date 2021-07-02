@@ -7,8 +7,10 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.github.jan222ik.common.HasDoc
 import com.google.mediapipe.components.CameraHelper.CameraFacing
 import com.google.mediapipe.components.CameraXPreviewHelper
 import com.google.mediapipe.components.ExternalTextureConverter
@@ -20,6 +22,7 @@ import com.google.mediapipe.framework.Packet
 import com.google.mediapipe.framework.PacketGetter
 import com.google.mediapipe.glutil.EglManager
 
+@HasDoc
 class HandTrackingActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "HandTrackingActivity"
@@ -66,6 +69,7 @@ class HandTrackingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(contentViewLayoutResId)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         previewDisplayView = SurfaceView(this)
         setupPreviewDisplayView()
@@ -165,7 +169,7 @@ class HandTrackingActivity : AppCompatActivity() {
         // based on the size of the SurfaceView that contains the display.
         val viewSize = computeViewSize(width, height)
         val displaySize = cameraHelper!!.computeDisplaySizeFromViewSize(viewSize)
-        val isCameraRotated = cameraHelper!!.isCameraRotated
+        val isCameraRotated = !cameraHelper!!.isCameraRotated
 
         // Connect the converter to the camera-preview frames as its input (via
         // previewFrameTexture), and configure the output width and height as the computed
