@@ -1,17 +1,32 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
+$dokka.location:com.github.jan222ik.common.dto////PointingToDeclaration/common/com.github.jan222ik.common.dto/index.html
+$dokka.location:com.github.jan222ik.common.dto//SHARED_STATS_PREF_KEY/#/PointingToDeclaration/common/com.github.jan222ik.common.dto/-s-h-a-r-e-d_-s-t-a-t-s_-p-r-e-f_-k-e-y.html
+$dokka.location:com.github.jan222ik.common.dto//toPointDTO/com.github.jan222ik.compose_mpp_charts.core.data.DataPoint#/PointingToDeclaration/common/com.github.jan222ik.common.dto/to-point-d-t-o.html
+$dokka.location:com.github.jan222ik.common.dto/MobileStatsData///PointingToDeclaration/common/com.github.jan222ik.common.dto/-mobile-stats-data/index.html
+$dokka.location:com.github.jan222ik.common.dto/MobileStatsData/MobileStatsData/#kotlin.collections.List[com.github.jan222ik.common.dto.PointDTO]#kotlin.Int#kotlin.Int/PointingToDeclaration/common/com.github.jan222ik.common.dto/-mobile-stats-data/-mobile-stats-data.html
+$dokka.location:com.github.jan222ik.common.dto/MobileStatsData/streak/#/PointingToDeclaration/common/com.github.jan222ik.common.dto/-mobile-stats-data/streak.html
+$dokka.location:com.github.jan222ik.common.dto/MobileStatsData/totalExercises/#/PointingToDeclaration/common/com.github.jan222ik.common.dto/-mobile-stats-data/total-exercises.html
+$dokka.location:com.github.jan222ik.common.dto/MobileStatsData/weeklyDataPoints/#/PointingToDeclaration/common/com.github.jan222ik.common.dto/-mobile-stats-data/weekly-data-points.html
+$dokka.location:com.github.jan222ik.common.dto/PointDTO///PointingToDeclaration/common/com.github.jan222ik.common.dto/-point-d-t-o/index.html
+$dokka.location:com.github.jan222ik.common.dto/PointDTO/PointDTO/#kotlin.Float#kotlin.Float/PointingToDeclaration/common/com.github.jan222ik.common.dto/-point-d-t-o/-point-d-t-o.html
+$dokka.location:com.github.jan222ik.common.dto/PointDTO/toDataPoint/#/PointingToDeclaration/common/com.github.jan222ik.common.dto/-point-d-t-o/to-data-point.html
+$dokka.location:com.github.jan222ik.common.dto/PointDTO/x/#/PointingToDeclaration/common/com.github.jan222ik.common.dto/-point-d-t-o/x.html
+$dokka.location:com.github.jan222ik.common.dto/PointDTO/y/#/PointingToDeclaration/common/com.github.jan222ik.common.dto/-point-d-t-o/y.html
 $dokka.location:com.github.jan222ik.common.network////PointingToDeclaration/common/com.github.jan222ik.common.network/index.html
 $dokka.location:com.github.jan222ik.common.network/NDService///PointingToDeclaration/common/com.github.jan222ik.common.network/-n-d-service/index.html
 $dokka.location:com.github.jan222ik.common.network/NDService/SERVICE_NAME/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-n-d-service/-s-e-r-v-i-c-e_-n-a-m-e.html
 $dokka.location:com.github.jan222ik.common.network/NDService/SERVICE_TYPE/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-n-d-service/-s-e-r-v-i-c-e_-t-y-p-e.html
 $dokka.location:com.github.jan222ik.common.network/ServerConfig///PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/index.html
 $dokka.location:com.github.jan222ik.common.network/ServerConfig/PORT/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/-p-o-r-t.html
-$dokka.location:com.github.jan222ik.common.network/ServerConfig/PROTOCOL_TEST/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/-p-r-o-t-o-c-o-l_-t-e-s-t.html
+$dokka.location:com.github.jan222ik.common.network/ServerConfig/PROTOCOL_HTTP/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/-p-r-o-t-o-c-o-l_-h-t-t-p.html
 $dokka.location:com.github.jan222ik.common.network/ServerConfig/PROTOCOL_WEBSOCKET/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/-p-r-o-t-o-c-o-l_-w-e-b-s-o-c-k-e-t.html
+$dokka.location:com.github.jan222ik.common.network/ServerConfig/ROUTE_FETCH_WEEKLY/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/-r-o-u-t-e_-f-e-t-c-h_-w-e-e-k-l-y.html
 $dokka.location:com.github.jan222ik.common.network/ServerConfig/ROUTE_TEST/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/-r-o-u-t-e_-t-e-s-t.html
 $dokka.location:com.github.jan222ik.common.network/ServerConfig/ROUTE_WEBSOCKET/#/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/-r-o-u-t-e_-w-e-b-s-o-c-k-e-t.html
 $dokka.location:com.github.jan222ik.common.network/ServerConfig/getTestUrl/#kotlin.String/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/get-test-url.html
 $dokka.location:com.github.jan222ik.common.network/ServerConfig/getWebsocketUrl/#kotlin.String/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/get-websocket-url.html
+$dokka.location:com.github.jan222ik.common.network/ServerConfig/getWeeklyUrl/#kotlin.String/PointingToDeclaration/common/com.github.jan222ik.common.network/-server-config/get-weekly-url.html
 $dokka.location:com.github.jan222ik.common.ui.components////PointingToDeclaration/common/com.github.jan222ik.common.ui.components/index.html
 $dokka.location:com.github.jan222ik.common.ui.components//Logo/#androidx.compose.ui.Modifier/PointingToDeclaration/common/com.github.jan222ik.common.ui.components/-logo.html
 $dokka.location:com.github.jan222ik.common.ui.components//TypeTrainerTheme/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/common/com.github.jan222ik.common.ui.components/-type-trainer-theme.html
@@ -26,8 +41,9 @@ $dokka.location:com.github.jan222ik.common.ui.router////PointingToDeclaration/c
 $dokka.location:com.github.jan222ik.common.ui.router//MobileRouter/#com.github.jan222ik.common.ui.router.MobileRoutes#kotlin.Function2[com.github.jan222ik.common.ui.router.MobileRoutes,com.github.jan222ik.common.ui.util.router.Router[com.github.jan222ik.common.ui.router.MobileRoutes],kotlin.Unit]/PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-mobile-router.html
 $dokka.location:com.github.jan222ik.common.ui.router//MobileRouterAmbient/#/PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-mobile-router-ambient.html
 $dokka.location:com.github.jan222ik.common.ui.router/Connection///PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-connection/index.html
-$dokka.location:com.github.jan222ik.common.ui.router/Connection/Connection/#kotlin.Boolean/PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-connection/-connection.html
+$dokka.location:com.github.jan222ik.common.ui.router/Connection/Connection/#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-connection/-connection.html
 $dokka.location:com.github.jan222ik.common.ui.router/Connection/canConnect/#/PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-connection/can-connect.html
+$dokka.location:com.github.jan222ik.common.ui.router/Connection/lostConnection/#/PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-connection/lost-connection.html
 $dokka.location:com.github.jan222ik.common.ui.router/MobileRoutes.AppBenefits///PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-mobile-routes/-app-benefits/index.html
 $dokka.location:com.github.jan222ik.common.ui.router/MobileRoutes.CameraSetup///PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-mobile-routes/-camera-setup/index.html
 $dokka.location:com.github.jan222ik.common.ui.router/MobileRoutes.Exercise///PointingToDeclaration/common/com.github.jan222ik.common.ui.router/-mobile-routes/-exercise/index.html
@@ -57,7 +73,7 @@ $dokka.location:com.github.jan222ik.common.ui.util.router/RouterImpl/setRoot/#Ty
 $dokka.location:com.github.jan222ik.common.ui.util.router/RouterImpl/setRouter/#/PointingToDeclaration/common/com.github.jan222ik.common.ui.util.router/-router-impl/set-router.html
 $dokka.location:com.github.jan222ik.common.ui////PointingToDeclaration/common/com.github.jan222ik.common.ui/index.html
 $dokka.location:com.github.jan222ik.common.ui//EFabWithBackground/#kotlin.Function0[kotlin.Unit]#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/common/com.github.jan222ik.common.ui/-e-fab-with-background.html
-$dokka.location:com.github.jan222ik.common.ui//MobileMenu/#/PointingToDeclaration/common/com.github.jan222ik.common.ui/-mobile-menu.html
+$dokka.location:com.github.jan222ik.common.ui//MobileMenu/#android.app.Activity#kotlin.Boolean/PointingToDeclaration/common/com.github.jan222ik.common.ui/-mobile-menu.html
 $dokka.location:com.github.jan222ik.common.ui//Square/#androidx.compose.ui.Modifier#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/common/com.github.jan222ik.common.ui/-square.html
 $dokka.location:com.github.jan222ik.common.ui//Wave/androidx.compose.foundation.layout.BoxScope#androidx.compose.ui.unit.Dp/PointingToDeclaration/common/com.github.jan222ik.common.ui/-wave.html
 $dokka.location:com.github.jan222ik.common.ui//getPlatformName/#/PointingToDeclaration/common/com.github.jan222ik.common.ui/get-platform-name.html
@@ -81,7 +97,10 @@ $dokka.location:com.github.jan222ik.common/HandLandmark///PointingToDeclaration/
 $dokka.location:com.github.jan222ik.common/HandLandmark/HandLandmark/#/PointingToDeclaration/common/com.github.jan222ik.common/-hand-landmark/-hand-landmark.html
 $dokka.location:com.github.jan222ik.common/HandLandmark/fingerLandmarks/#/PointingToDeclaration/common/com.github.jan222ik.common/-hand-landmark/finger-landmarks.html
 $dokka.location:com.github.jan222ik.common/HandLandmark/toString/#/PointingToDeclaration/common/com.github.jan222ik.common/-hand-landmark/to-string.html
+$dokka.location:com.github.jan222ik.common/HasDoc///PointingToDeclaration/common/com.github.jan222ik.common/-has-doc/index.html
+$dokka.location:com.github.jan222ik.common/HasDoc/HasDoc/#/PointingToDeclaration/common/com.github.jan222ik.common/-has-doc/-has-doc.html
 com.github.jan222ik.common
+com.github.jan222ik.common.dto
 com.github.jan222ik.common.network
 com.github.jan222ik.common.ui
 com.github.jan222ik.common.ui.components
