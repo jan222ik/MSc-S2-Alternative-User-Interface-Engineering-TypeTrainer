@@ -3,7 +3,6 @@
 package com.github.jan222ik.desktop.ui.general.window.container
 
 
-import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.HasDoc
+import com.github.jan222ik.desktop.LocalFrameWindow
 import com.github.jan222ik.desktop.ui.general.window.container.impl.WCHeader
 
 @HasDoc
@@ -29,8 +29,8 @@ fun WindowContainer(
     container: @Composable () -> Unit
 ) {
     // Update the title of the Windows Window
-    val appWindow = LocalAppWindow.current
-    remember(title) { appWindow.setTitle(title) }
+    val window = LocalFrameWindow.current
+    remember(title) { window.window.title = title }
     // Create Container
     Surface(color = background) {
         Column(modifier = Modifier.fillMaxSize()) {

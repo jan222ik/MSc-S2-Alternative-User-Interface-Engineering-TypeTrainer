@@ -12,10 +12,10 @@ buildscript {
         //classpath("com.android.tools.build:gradle:4.0.2")
 
         // __LATEST_COMPOSE_RELEASE_VERSION__
-        classpath("org.jetbrains.compose:compose-gradle-plugin:0.4.0-build180")
-        classpath("com.android.tools.build:gradle:4.0.1")
+        classpath("org.jetbrains.compose:compose-gradle-plugin:1.0.0-alpha4-build331")
+        classpath("com.android.tools.build:gradle:4.1.3")
         // __KOTLIN_COMPOSE_VERSION__
-        classpath(kotlin("gradle-plugin", version = "1.4.32"))
+        classpath(kotlin("gradle-plugin", version = "1.5.30"))
 
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.4.32")
     }
@@ -27,6 +27,7 @@ version = "1.0"
 allprojects {
     repositories {
         jcenter()
+        google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven { url = uri("https://jitpack.io") }

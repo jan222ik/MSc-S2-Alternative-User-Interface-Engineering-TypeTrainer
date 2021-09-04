@@ -4,7 +4,6 @@ package com.github.jan222ik.desktop
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -19,13 +18,16 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
@@ -37,11 +39,17 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.toComposeBitmap
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeysSet
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.ApplicationScope
+import androidx.compose.ui.window.FrameWindowScope
+import androidx.compose.ui.window.WindowSize
+import androidx.compose.ui.window.WindowState
+import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import com.github.jan222ik.common.network.ServerConfig
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import io.ktor.server.engine.embeddedServer
@@ -81,91 +89,121 @@ import com.github.jan222ik.desktop.util.KeyboardUtil
 import com.github.jan222ik.desktop.util.RelativeKey
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
 import javax.imageio.ImageIO
+
+val LocalFrameWindow = compositionLocalOf<FrameWindowScope> {
+    error("CompositionLocal FrameWindowScope not provided")
+}
+val LocalApplication = compositionLocalOf<ApplicationScope> {
+    error("CompositionLocal ApplicationScope not provided")
+}
+val LocalWindowState = compositionLocalOf<WindowState> {
+    error("CompositionLocal WindowState not provided")
+}
 
 @ExperimentalAnimationApi
 object DesktopApplication {
 
+    @ExperimentalComposeUiApi
     @ExperimentalCoroutinesApi
     @ExperimentalFoundationApi
     @ExperimentalStdlibApi
     @KtorExperimentalAPI
     fun start() {
-        val initSize = IntSize(width = 1920, height = 1080)
+        val initSize = WindowSize(width = 1920.dp, height = 1080.dp)
         val icon = try {
             ImageIO.read(this::class.java.getResourceAsStream("/logoRounded.png"))
         } catch (_: Throwable) {
             null
         }
-        println("icon = ${icon}")
-        Window(
-            size = initSize,
-            undecorated = !Debug.isDebug,
-            icon = icon
-        ) {
-            TypeTrainerTheme {
-                StartupApplication { server, lang ->
-                    LanguageConfiguration(lang) {
-                        WindowRouter(
-                            initialRoute = ApplicationRoutes.Dashboard
-                        ) { current, router ->
-                            val window = LocalAppWindow.current
-                            LaunchedEffect(window, current) {
-                                window.apply {
-                                    keyboard.setShortcut(Key.CtrlRight) {
-                                        router.navTo(ApplicationRoutes.Debug)
-                                    }
-                                    if (current is ApplicationRoutes.Exercise.Training) {
-                                        keyboard.removeShortcut(KeysSet(Key.CtrlLeft))
-                                    } else {
-                                        keyboard.setShortcut(Key.CtrlLeft, router::back)
-                                    }
-                                }
-                            }
-                            WindowContainer(
-                                title = router.current.title.observedString(router)
-                            ) {
-                                Crossfade(current) { current ->
-                                    when (current) {
-                                        ApplicationRoutes.Debug -> DebugWithAllRoutes()
-                                        ApplicationRoutes.Dashboard -> DashboardContent()
-                                        ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
-                                        is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
-                                        is ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection(
-                                            ExerciseSelectionIntent(current.initData)
-                                        )
-                                        is ApplicationRoutes.Exercise.Connection.SetupConnection ->
-                                            ConnectionScreen(
-                                                server = server,
-                                                trainingOptions = current.trainingOptions
-                                            )
-                                        is ApplicationRoutes.Exercise.Connection.SetupInstructions -> CameraSetupScreen()
-                                        is ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation -> KeyboardSynchronisationScreen(
-                                            trainingOptions = current.trainingOptions,
-                                            server = server
-                                        )
-                                        is ApplicationRoutes.Exercise.Training -> {
-                                            PracticeScreen(
-                                                typingOptions = current.trainingOptions,
-                                                fingerMatcher = current.fingerMatcher
-                                            )
+        application {
+            println("icon = ${icon}")
+            val state = rememberWindowState(size = initSize)
+            androidx.compose.ui.window.Window(
+                undecorated = !Debug.isDebug,
+                state = state,
+                icon = icon?.let { BitmapPainter(it.toComposeBitmap())},
+                onCloseRequest = ::exitApplication
+            ) {
+                CompositionLocalProvider(
+                    LocalFrameWindow provides this@Window,
+                    LocalApplication provides this@application,
+                    LocalWindowState provides state
+                ) {
+                    TypeTrainerTheme {
+                        StartupApplication { server, lang ->
+                            LanguageConfiguration(lang) {
+                                WindowRouter(
+                                    initialRoute = ApplicationRoutes.Dashboard
+                                ) { current, router ->
+                                    LaunchedEffect(window, current) {
+                                        window.apply {
+                                            addKeyListener(object : KeyListener {
+                                                override fun keyTyped(e: KeyEvent?) {}
+                                                override fun keyPressed(e: KeyEvent?) {
+                                                    if (e?.keyCode?.toLong() == Key.CtrlRight.keyCode) {
+                                                        router.navTo(ApplicationRoutes.Debug)
+                                                    }
+                                                    if (e?.keyCode?.toLong() == Key.CtrlLeft.keyCode) {
+                                                        if (current !is ApplicationRoutes.Exercise.Training) {
+                                                            router.back()
+                                                        }
+                                                    }
+                                                }
 
-                                            if (current.trainingOptions.isCameraEnabled) {
-                                                FingerCanvas(server = server, fingerMatcher = current.fingerMatcher)
-                                            }
+                                                override fun keyReleased(e: KeyEvent?) {}
 
+                                            })
                                         }
-                                        is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
-                                            current.exerciseResults,
-                                            current.initialPage
-                                        )
-                                        ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.Goals.Compose -> GoalComposeScreen()
-                                        ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.History -> HistoryScreen()
-                                        ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
+                                    }
+                                    WindowContainer(
+                                        title = router.current.title.observedString(router)
+                                    ) {
+                                        Crossfade(current) { current ->
+                                            when (current) {
+                                                ApplicationRoutes.Debug -> DebugWithAllRoutes()
+                                                ApplicationRoutes.Dashboard -> DashboardContent()
+                                                ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
+                                                ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
+                                                is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
+                                                is ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection(
+                                                    ExerciseSelectionIntent(current.initData)
+                                                )
+                                                is ApplicationRoutes.Exercise.Connection.SetupConnection ->
+                                                    ConnectionScreen(
+                                                        server = server,
+                                                        trainingOptions = current.trainingOptions
+                                                    )
+                                                is ApplicationRoutes.Exercise.Connection.SetupInstructions -> CameraSetupScreen()
+                                                is ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation -> KeyboardSynchronisationScreen(
+                                                    trainingOptions = current.trainingOptions,
+                                                    server = server
+                                                )
+                                                is ApplicationRoutes.Exercise.Training -> {
+                                                    PracticeScreen(
+                                                        typingOptions = current.trainingOptions,
+                                                        fingerMatcher = current.fingerMatcher
+                                                    )
+
+                                                    if (current.trainingOptions.isCameraEnabled) {
+                                                        FingerCanvas(server = server, fingerMatcher = current.fingerMatcher)
+                                                    }
+
+                                                }
+                                                is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
+                                                    current.exerciseResults,
+                                                    current.initialPage
+                                                )
+                                                ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
+                                                ApplicationRoutes.Goals.Compose -> GoalComposeScreen()
+                                                ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
+                                                ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
+                                                ApplicationRoutes.History -> HistoryScreen()
+                                                ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -223,22 +261,8 @@ object DesktopApplication {
         }
         val loading = loadingStateFlow.collectAsState()
         val animOnce = remember { mutableStateOf(false) }
-        val window = LocalAppWindow.current
-        DisposableEffect(window, animOnce.value) {
-            val keySet = KeysSet(Key.E)
-            val keyboard = window.keyboard
-            if (animOnce.value) {
-                keyboard.removeShortcut(keySet)
-            } else {
-                keyboard.setShortcut(keySet) {
-                    animOnce.component2()(true)
-                    println("Skip Animation must run once to end!")
-                }
-            }
-            onDispose {
-                keyboard.removeShortcut(keySet)
-            }
-        }
+
+        val application = LocalApplication.current
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
@@ -250,7 +274,7 @@ object DesktopApplication {
                 Box(
                     modifier = Modifier.align(Alignment.TopEnd)
                 ) {
-                    CloseBtn(window::close)
+                    CloseBtn(application::exitApplication)
                 }
                 Column(
                     modifier = Modifier.fillMaxSize(),

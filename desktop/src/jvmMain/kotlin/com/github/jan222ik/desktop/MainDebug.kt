@@ -2,10 +2,12 @@ package com.github.jan222ik.desktop
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.ui.ExperimentalComposeUiApi
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.github.jan222ik.desktop.ui.util.debug.ifDebug
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @KtorExperimentalAPI
 @ExperimentalCoroutinesApi

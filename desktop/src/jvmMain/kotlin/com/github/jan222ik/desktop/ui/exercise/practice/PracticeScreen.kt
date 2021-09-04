@@ -2,7 +2,6 @@
 
 package com.github.jan222ik.desktop.ui.exercise.practice
 
-import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -35,12 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
+import com.github.jan222ik.desktop.LocalWindowState
 import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownWordOptions
 import com.github.jan222ik.desktop.ui.components.progress.practice.CountDownProgressBar
 import com.github.jan222ik.desktop.ui.components.progress.practice.ProgressionProgressBar
@@ -76,19 +75,15 @@ fun PracticeScreen(typingOptions: AbstractTypingOptions, fingerMatcher: FingerMa
             intend.cancelRunningJobs()
         }
     }
-    val localWindow = LocalAppWindow.current
-
+    val localWindowState = LocalWindowState.current
     ifDebugCompose {
         DisposableEffect(intend) {
             var closeWindow: (() -> Unit)? = null
             PracticeScreenDebuggable(
                 intend = intend as IDebugPracticeIntend,
-                parentWindowLocation = IntOffset(localWindow.x, localWindow.y),
-                parentWindowWidth = localWindow.width,
-                parentWindowHeight = localWindow.height,
+                parentWindowState = localWindowState,
                 windowClose = {
                     closeWindow = it
-                    localWindow.events.onClose = it
                 }
             )
 
