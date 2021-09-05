@@ -89,7 +89,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "com.github.jan222ik.desktop.Main"
+        mainClass = "com.github.jan222ik.desktop.MainDebug"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.Exe)
             packageName = "TypeTrainer"

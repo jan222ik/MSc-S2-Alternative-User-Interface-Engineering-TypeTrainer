@@ -77,20 +77,12 @@ fun PracticeScreen(typingOptions: AbstractTypingOptions, fingerMatcher: FingerMa
     }
     val localWindowState = LocalWindowState.current
     ifDebugCompose {
-        DisposableEffect(intend) {
-            var closeWindow: (() -> Unit)? = null
-            PracticeScreenDebuggable(
-                intend = intend as IDebugPracticeIntend,
-                parentWindowState = localWindowState,
-                windowClose = {
-                    closeWindow = it
-                }
-            )
-
-            onDispose {
-                closeWindow?.invoke()
-            }
-        }
+        val isOpen = remember { mutableStateOf(true) }
+        PracticeScreenDebuggable(
+            intend = intend as IDebugPracticeIntend,
+            parentWindowState = localWindowState,
+            isOpen = isOpen
+        )
     }
     PracticeScreenContent(intend)
 }

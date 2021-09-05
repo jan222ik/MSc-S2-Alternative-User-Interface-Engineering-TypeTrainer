@@ -2,7 +2,6 @@
 
 package com.github.jan222ik.desktop.ui.exercise.practice
 
-import androidx.compose.desktop.Window
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -18,247 +17,243 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowSize
 import androidx.compose.ui.window.WindowState
-import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
-import com.github.tehras.charts.line.LineChart
-import com.github.tehras.charts.line.LineChartData
-import kotlinx.coroutines.launch
 import com.github.jan222ik.desktop.textgen.error.CharEvaluation
 import com.github.jan222ik.desktop.ui.exercise.result.TypingErrorTreeMap
+import com.github.tehras.charts.line.LineChart
+import com.github.tehras.charts.line.LineChartData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+@Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
 @OptIn(ExperimentalFoundationApi::class)
+@Composable
 fun PracticeScreenDebuggable(
     intend: IDebugPracticeIntend,
+    isOpen: MutableState<Boolean>,
     parentWindowState: WindowState,
-    windowClose: (() -> Unit) -> Unit
 ) {
     val pPos = parentWindowState.position
     val pSize = parentWindowState.size
-    application {
-        val state = rememberWindowState(
-            size = WindowSize(width = 400.dp, height = pSize.height),
-            position = WindowPosition(pPos.x + pSize.width, pPos.y + pSize.height)
-        )
-        androidx.compose.ui.window.Window(
-            title = "PracticeScreenDebuggable",
-            state = state,
-            onCloseRequest = ::exitApplication
-        ) {
 
-            windowClose.invoke {
-                try {
-                    this.window.defaultCloseOperation
-                } catch (e: IllegalStateException) {
-
-                }
-            }
-            TypeTrainerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.surface
+    val state = rememberWindowState(
+        size = WindowSize(width = 400.dp, height = pSize.height),
+        position = WindowPosition(pPos.x + pSize.width, pPos.y)
+    )
+    androidx.compose.ui.window.Window(
+        title = "PracticeScreenDebuggable",
+        state = state,
+        onCloseRequest = { isOpen.value = false }
+    ) {
+        TypeTrainerTheme {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colors.surface
+            ) {
+                val scope = rememberCoroutineScope()
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    val scope = rememberCoroutineScope()
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        stickyHeader {
-                            Surface(
-                                modifier = Modifier.fillMaxSize(),
-                                color = MaterialTheme.colors.surface
-                            ) {
-                                Text(text = "Options:")
+                    stickyHeader {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.surface
+                        ) {
+                            Text(text = "Options:")
+                        }
+                    }
+                    item {
+                        BaseDashboardCard {
+                            Column {
+                                Row {
+                                    Text("DurationMillis: ")
+                                    Text(text = intend.typingOptions.durationMillis.toString())
+                                }
+                                Row {
+                                    Text("Type: ")
+                                    Text(text = intend.typingOptions.exerciseMode.toString())
+                                }
                             }
                         }
-                        item {
-                            BaseDashboardCard {
+                    }
+                    stickyHeader {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.surface
+                        ) {
+                            Text(text = "Clock:")
+                        }
+                    }
+                    item {
+                        BaseDashboardCard {
+                            Column {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text("Actions:")
+                                    OutlinedButton(
+                                        onClick = intend::start
+                                    ) {
+                                        Text("Start Timer")
+                                    }
+                                    OutlinedButton(
+                                        onClick = {
+                                            intend.modifyRemainingTimeByAmount(5000)
+                                        }
+                                    ) {
+                                        Text("+5s")
+                                    }
+                                    OutlinedButton(
+                                        onClick = {
+                                            intend.modifyRemainingTimeByAmount(-5000)
+                                        }
+                                    ) {
+                                        Text("-5s")
+                                    }
+                                }
+                                Row {
+                                    val clock = intend.typingClockStateStateFlow.collectAsState()
+                                    Text("State: ")
+                                    Text(text = clock.value.toString())
+                                }
+
+                                val timer = intend.timerStateFlow.collectAsState()
+                                Row {
+                                    Text("Time: ")
+                                    Text(text = timer.value.toString())
+                                }
+                                val timerUpdateCycles = intend.timerUpdateCycleCountStateFlow.collectAsState()
+                                val timeRem = (intend.typingOptions.durationMillis - timer.value).coerceAtLeast(1)
                                 Column {
                                     Row {
-                                        Text("DurationMillis: ")
-                                        Text(text = intend.typingOptions.durationMillis.toString())
+                                        Text("Update Cycles: ")
+                                        Text(text = timerUpdateCycles.value.toString())
                                     }
-                                    Row {
-                                        Text("Type: ")
-                                        Text(text = intend.typingOptions.exerciseMode.toString())
+                                    Text(text = "Average Cycles:" + ("".takeUnless { intend.timeSkip.value }
+                                        ?: " [Values not accurate due to time skip]"))
+                                    Column(modifier = Modifier.padding(start = 8.dp)) {
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        ) {
+                                            Text(text = "cycles / ms:")
+                                            Text(
+                                                text = timerUpdateCycles.value.div(timeRem.toFloat()).toString()
+                                            )
+                                        }
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        ) {
+                                            Text(text = "cycles / ns:")
+                                            Text(
+                                                text = timerUpdateCycles.value.div(timeRem)
+                                                    .div(1000f).toString()
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                        stickyHeader {
-                            Surface(
-                                modifier = Modifier.fillMaxSize(),
-                                color = MaterialTheme.colors.surface
-                            ) {
-                                Text(text = "Clock:")
-                            }
+                    }
+                    stickyHeader {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.surface
+                        ) {
+                            Text(text = "Generator:")
                         }
-                        item {
-                            BaseDashboardCard {
-                                Column {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    }
+                    item {
+                        val scopeForceNextText = rememberCoroutineScope()
+                        BaseDashboardCard {
+                            Column {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text("Actions:")
+                                    OutlinedButton(
+                                        onClick = { scopeForceNextText.launch(Dispatchers.IO) { intend.forceNextText() } }
                                     ) {
-                                        Text("Actions:")
-                                        OutlinedButton(
-                                            onClick = intend::start
-                                        ) {
-                                            Text("Start Timer")
-                                        }
-                                        OutlinedButton(
-                                            onClick = {
-                                                intend.modifyRemainingTimeByAmount(5000)
-                                            }
-                                        ) {
-                                            Text("+5s")
-                                        }
-                                        OutlinedButton(
-                                            onClick = {
-                                                intend.modifyRemainingTimeByAmount(-5000)
-                                            }
-                                        ) {
-                                            Text("-5s")
-                                        }
-                                    }
-                                    Row {
-                                        val clock = intend.typingClockStateStateFlow.collectAsState()
-                                        Text("State: ")
-                                        Text(text = clock.value.toString())
+                                        Text("Force next text")
                                     }
 
-                                    val timer = intend.timerStateFlow.collectAsState()
-                                    Row {
-                                        Text("Time: ")
-                                        Text(text = timer.value.toString())
-                                    }
-                                    val timerUpdateCycles = intend.timerUpdateCycleCountStateFlow.collectAsState()
-                                    val timeRem = (intend.typingOptions.durationMillis - timer.value).coerceAtLeast(1)
-                                    Column {
-                                        Row {
-                                            Text("Update Cycles: ")
-                                            Text(text = timerUpdateCycles.value.toString())
-                                        }
-                                        Text(text = "Average Cycles:" + ("".takeUnless { intend.timeSkip.value }
-                                            ?: " [Values not accurate due to time skip]"))
-                                        Column(modifier = Modifier.padding(start = 8.dp)) {
-                                            Row(
-                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                            ) {
-                                                Text(text = "cycles / ms:")
-                                                Text(
-                                                    text = timerUpdateCycles.value.div(timeRem.toFloat()).toString()
-                                                )
-                                            }
-                                            Row(
-                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                            ) {
-                                                Text(text = "cycles / ns:")
-                                                Text(
-                                                    text = timerUpdateCycles.value.div(timeRem)
-                                                        .div(1000f).toString()
-                                                )
-                                            }
-                                        }
-                                    }
+                                }
+                                Row {
+                                    val textFlow = intend.textStateFlow.collectAsState()
+                                    Text("Text Length: ")
+                                    Text(text = textFlow.value.length.toString())
                                 }
                             }
                         }
-                        stickyHeader {
-                            Surface(
-                                modifier = Modifier.fillMaxSize(),
-                                color = MaterialTheme.colors.surface
-                            ) {
-                                Text(text = "Generator:")
-                            }
+                    }
+                    stickyHeader {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.surface
+                        ) {
+                            Text(text = "UI:")
                         }
-                        item {
-                            val scope = rememberCoroutineScope()
-                            BaseDashboardCard {
-                                Column {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    }
+                    item {
+                        BaseDashboardCard {
+                            Column {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text("Actions:")
+                                    OutlinedButton(
+                                        onClick = { intend._isCameraEnabled.value = !intend.isCameraEnabled.value }
                                     ) {
-                                        Text("Actions:")
-                                        OutlinedButton(
-                                            onClick = { scope.launch { intend.forceNextText() } }
-                                        ) {
-                                            Text("Force next text")
-                                        }
+                                        Text("Toggle CameraPreview")
+                                    }
 
-                                    }
-                                    Row {
-                                        val textFlow = intend.textStateFlow.collectAsState()
-                                        Text("Text Length: ")
-                                        Text(text = textFlow.value.length.toString())
-                                    }
                                 }
                             }
                         }
-                        stickyHeader {
-                            Surface(
-                                modifier = Modifier.fillMaxSize(),
-                                color = MaterialTheme.colors.surface
-                            ) {
-                                Text(text = "UI:")
-                            }
+                    }
+                    stickyHeader {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.surface
+                        ) {
+                            Text(text = "Typing:")
                         }
-                        item {
-                            BaseDashboardCard {
-                                Column {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        Text("Actions:")
-                                        OutlinedButton(
-                                            onClick = { intend._isCameraEnabled.value = !intend.isCameraEnabled.value }
+                    }
+                    item {
+                        val (isStarted, setStarted) = remember { mutableStateOf(false) }
+                        BaseDashboardCard {
+                            Column {
+                                val (periodMs, setPeriodMs) = remember { mutableStateOf("30") }
+                                val clockState = intend.typingClockStateStateFlow.collectAsState()
+                                if (clockState.value == IPracticeIntend.TypingClockState.FINISHED) {
+                                    println(intend.exerciseEvaluation)
+                                    val lineChartWindowOpen = remember { mutableStateOf(true) }
+                                    if (lineChartWindowOpen.value) {
+                                        androidx.compose.ui.window.Window(
+                                            onCloseRequest = { lineChartWindowOpen.value = false }
                                         ) {
-                                            Text("Toggle CameraPreview")
-                                        }
-
-                                    }
-                                }
-                            }
-                        }
-                        stickyHeader {
-                            Surface(
-                                modifier = Modifier.fillMaxSize(),
-                                color = MaterialTheme.colors.surface
-                            ) {
-                                Text(text = "Typing:")
-                            }
-                        }
-                        item {
-                            val (isStarted, setStarted) = remember { mutableStateOf(false) }
-                            BaseDashboardCard {
-                                Column {
-                                    val (periodMs, setPeriodMs) = remember { mutableStateOf("30") }
-                                    val clockState = intend.typingClockStateStateFlow.collectAsState()
-                                    if (clockState.value == IPracticeIntend.TypingClockState.FINISHED) {
-                                        val movingCursorTypingIntend = intend
-                                        println(movingCursorTypingIntend.exerciseEvaluation)
-                                        Window {
                                             val data = LineChartData(
-                                                points = movingCursorTypingIntend.exerciseEvaluation.texts.map {
-                                                    it.chars
+                                                points = intend.exerciseEvaluation.texts.map { eval ->
+                                                    eval.chars
                                                         .filterIsInstance<CharEvaluation.TypingError>()
                                                         .map {
                                                             LineChartData.Point(
@@ -283,10 +278,15 @@ fun PracticeScreenDebuggable(
                                                 )
                                             }
                                         }
-                                        Window {
+                                    }
+                                    val treeMapWindowOpen = remember { mutableStateOf(true) }
+                                    if (treeMapWindowOpen.value) {
+                                        androidx.compose.ui.window.Window(
+                                            onCloseRequest = { treeMapWindowOpen.value = false }
+                                        ) {
                                             Column {
-                                                val list = movingCursorTypingIntend.exerciseEvaluation.texts
-                                                println("list = ${list}")
+                                                val list = intend.exerciseEvaluation.texts
+                                                println("list = $list")
                                                 TypingErrorTreeMap(
                                                     modifier = Modifier.fillMaxSize(),
                                                     list = list
@@ -294,37 +294,37 @@ fun PracticeScreenDebuggable(
                                             }
                                         }
                                     }
+                                }
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    if (!isStarted) {
+                                        Text("Period[ms]")
+                                        TextField(
+                                            value = periodMs,
+                                            onValueChange = setPeriodMs
+                                        )
+                                    } else {
+                                        Text("Period ${1f.div(periodMs.toLong().div(1000f))}Hz")
+                                    }
+                                }
+                                if (!isStarted) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
-                                        if (!isStarted) {
-                                            Text("Period[ms]")
-                                            TextField(
-                                                value = periodMs,
-                                                onValueChange = setPeriodMs
-                                            )
-                                        } else {
-                                            Text("Period ${1f.div(periodMs.toLong().div(1000f))}Hz")
-                                        }
-                                    }
-                                    if (!isStarted) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                        ) {
-                                            OutlinedButton(
-                                                enabled = clockState.value != IPracticeIntend.TypingClockState.FINISHED,
-                                                onClick = {
-                                                    scope.launch {
-                                                        intend.start()
-                                                        intend.startConstantSpeedTypeDemo(periodMs.toLong())
-                                                    }
-                                                    setStarted(true)
+                                        OutlinedButton(
+                                            enabled = clockState.value != IPracticeIntend.TypingClockState.FINISHED,
+                                            onClick = {
+                                                scope.launch(Dispatchers.IO) {
+                                                    intend.start()
+                                                    intend.startConstantSpeedTypeDemo(periodMs.toLong())
                                                 }
-                                            ) {
-                                                Text("Start")
+                                                setStarted(true)
                                             }
+                                        ) {
+                                            Text("Start")
                                         }
                                     }
                                 }
