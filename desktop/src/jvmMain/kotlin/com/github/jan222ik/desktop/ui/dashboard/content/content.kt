@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -38,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.common.ui.util.router.Router
-import kotlinx.coroutines.GlobalScope
 import com.github.jan222ik.desktop.ui.dashboard.ApplicationRoutes
 import com.github.jan222ik.desktop.ui.dashboard.HoverIconDashboardCard
 import com.github.jan222ik.desktop.ui.dashboard.StreakAPI
@@ -141,8 +141,9 @@ fun DashStartBtnGroup(router: Router<ApplicationRoutes>) {
 fun DashboardContent(
     initStatsIntent: DashboardStatsIntent? = null
 ) {
+    val scope = rememberCoroutineScope()
     val statsIntent =
-        remember(initStatsIntent) { initStatsIntent ?: DashboardStatsIntent().apply { init(GlobalScope) } }
+        remember(initStatsIntent) { initStatsIntent ?: DashboardStatsIntent().apply { init(scope) } }
     val router = WindowRouterAmbient.current
     val density = LocalDensity.current
     Layout(
