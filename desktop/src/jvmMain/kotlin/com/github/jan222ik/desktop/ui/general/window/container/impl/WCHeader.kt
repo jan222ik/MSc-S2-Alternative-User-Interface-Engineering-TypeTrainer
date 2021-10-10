@@ -24,6 +24,9 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Adb
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Quiz
+import androidx.compose.material.icons.filled.Science
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +42,7 @@ import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.desktop.ui.dashboard.ApplicationRoutes
 import com.github.jan222ik.desktop.ui.general.WindowRouterAmbient
 import com.github.jan222ik.desktop.ui.util.debug.ifDebugCompose
+import ui.general.window.container.impl.UxTestSettings
 
 @HasDoc
 @Composable
@@ -113,8 +117,10 @@ private fun BoxScope.EndGroup(
     ) {
         val (showSettings, setShowSettings) = remember { mutableStateOf(false) }
         val (showUser, setShowUser) = remember { mutableStateOf(false) }
+        val (showUXTestSettings, setShowUXTestSettings) = remember { mutableStateOf(false) }
         val onDismissRequestSettings = { setShowSettings(false) }
         val onDismissRequestUser = { setShowUser(false) }
+        val onDismissRequestUXTestSettings = { setShowUXTestSettings(false) }
         if (showSettings) {
             QuickSettingsPopup(
                 height = height,
@@ -129,6 +135,13 @@ private fun BoxScope.EndGroup(
                 onDismissRequest = onDismissRequestUser
             )
         }
+        if (showUXTestSettings) {
+            UxTestSettings(
+                height = height,
+                windowControlsGroupPadding = windowControlsGroupPadding,
+                onDismissRequest = onDismissRequestUXTestSettings
+            )
+        }
         ifDebugCompose {
             val router = WindowRouterAmbient.current
             Icon(
@@ -140,12 +153,23 @@ private fun BoxScope.EndGroup(
                 tint = Color.Gray
             )
         }
+        UxTestSettingsBtn(onAction = { setShowUXTestSettings(showUXTestSettings.not()) })
         CurrentUser(onAction = { setShowUser(true) })
         SettingsBtn(onAction = { setShowSettings(showSettings.not()) })
         MinimizeBtn(onAction = appWindow::minimize)
         MaximizeBtn(onAction = { if (appWindow.isMaximized) appWindow.restore() else appWindow.maximize() })
         CloseBtn(onAction = appWindow::close)
     }
+}
+
+@Composable
+private fun UxTestSettingsBtn(onAction: () -> Unit) {
+    Icon(
+        modifier = Modifier.clickable(onClick = onAction),
+        //imageVector = Icons.Filled.Quiz,
+        imageVector = Icons.Filled.Science,
+        contentDescription = "Open Settings"
+    )
 }
 
 @Composable

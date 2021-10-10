@@ -19,6 +19,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -90,7 +91,7 @@ object DesktopApplication {
     @ExperimentalFoundationApi
     @ExperimentalStdlibApi
     @KtorExperimentalAPI
-    fun start() {
+    fun start(initIsUxTest: Boolean = true) {
         val initSize = IntSize(width = 1920, height = 1080)
         val icon = try {
             ImageIO.read(this::class.java.getResourceAsStream("/logoRounded.png"))
@@ -103,69 +104,75 @@ object DesktopApplication {
             undecorated = !Debug.isDebug,
             icon = icon
         ) {
-            TypeTrainerTheme {
-                StartupApplication { server, lang ->
-                    LanguageConfiguration(lang) {
-                        WindowRouter(
-                            initialRoute = ApplicationRoutes.Dashboard
-                        ) { current, router ->
-                            val window = LocalAppWindow.current
-                            LaunchedEffect(window, current) {
-                                window.apply {
-                                    keyboard.setShortcut(Key.CtrlRight) {
-                                        router.navTo(ApplicationRoutes.Debug)
-                                    }
-                                    if (current is ApplicationRoutes.Exercise.Training) {
-                                        keyboard.removeShortcut(KeysSet(Key.CtrlLeft))
-                                    } else {
-                                        keyboard.setShortcut(Key.CtrlLeft, router::back)
+            val isUxTest = mutableStateOf(initIsUxTest)
+            CompositionLocalProvider(
+                UXTest.LocalIsUXTest provides isUxTest,
+                UXTest.LocalUXTestRun provides mutableStateOf(UXTest.TestRun(variant = 0, step = 0))
+            ) {
+                TypeTrainerTheme {
+                    StartupApplication { server, lang ->
+                        LanguageConfiguration(lang) {
+                            WindowRouter(
+                                initialRoute = ApplicationRoutes.Dashboard
+                            ) { current, router ->
+                                val window = LocalAppWindow.current
+                                LaunchedEffect(window, current) {
+                                    window.apply {
+                                        keyboard.setShortcut(Key.CtrlRight) {
+                                            router.navTo(ApplicationRoutes.Debug)
+                                        }
+                                        if (current is ApplicationRoutes.Exercise.Training) {
+                                            keyboard.removeShortcut(KeysSet(Key.CtrlLeft))
+                                        } else {
+                                            keyboard.setShortcut(Key.CtrlLeft, router::back)
+                                        }
                                     }
                                 }
-                            }
-                            WindowContainer(
-                                title = router.current.title.observedString(router)
-                            ) {
-                                Crossfade(current) { current ->
-                                    when (current) {
-                                        ApplicationRoutes.Debug -> DebugWithAllRoutes()
-                                        ApplicationRoutes.Dashboard -> DashboardContent()
-                                        ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
-                                        is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
-                                        is ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection(
-                                            ExerciseSelectionIntent(current.initData)
-                                        )
-                                        is ApplicationRoutes.Exercise.Connection.SetupConnection ->
-                                            ConnectionScreen(
-                                                server = server,
-                                                trainingOptions = current.trainingOptions
+                                WindowContainer(
+                                    title = router.current.title.observedString(router)
+                                ) {
+                                    Crossfade(current) { current ->
+                                        when (current) {
+                                            ApplicationRoutes.Debug -> DebugWithAllRoutes()
+                                            ApplicationRoutes.Dashboard -> if (isUxTest.value) UXTest.Screen() else DashboardContent()
+                                            ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
+                                            ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
+                                            is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)
+                                            is ApplicationRoutes.Exercise.ExerciseSelection -> ExerciseSelection(
+                                                ExerciseSelectionIntent(current.initData)
                                             )
-                                        is ApplicationRoutes.Exercise.Connection.SetupInstructions -> CameraSetupScreen()
-                                        is ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation -> KeyboardSynchronisationScreen(
-                                            trainingOptions = current.trainingOptions,
-                                            server = server
-                                        )
-                                        is ApplicationRoutes.Exercise.Training -> {
-                                            PracticeScreen(
-                                                typingOptions = current.trainingOptions,
-                                                fingerMatcher = current.fingerMatcher
+                                            is ApplicationRoutes.Exercise.Connection.SetupConnection ->
+                                                ConnectionScreen(
+                                                    server = server,
+                                                    trainingOptions = current.trainingOptions
+                                                )
+                                            is ApplicationRoutes.Exercise.Connection.SetupInstructions -> CameraSetupScreen()
+                                            is ApplicationRoutes.Exercise.Connection.KeyboardSynchronisation -> KeyboardSynchronisationScreen(
+                                                trainingOptions = current.trainingOptions,
+                                                server = server
                                             )
+                                            is ApplicationRoutes.Exercise.Training -> {
+                                                PracticeScreen(
+                                                    typingOptions = current.trainingOptions,
+                                                    fingerMatcher = current.fingerMatcher
+                                                )
 
-                                            if (current.trainingOptions.isCameraEnabled) {
-                                                FingerCanvas(server = server, fingerMatcher = current.fingerMatcher)
+                                                if (current.trainingOptions.isCameraEnabled) {
+                                                    FingerCanvas(server = server, fingerMatcher = current.fingerMatcher)
+                                                }
+
                                             }
-
+                                            is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
+                                                current.exerciseResults,
+                                                current.initialPage
+                                            )
+                                            ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
+                                            ApplicationRoutes.Goals.Compose -> GoalComposeScreen()
+                                            ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
+                                            ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
+                                            ApplicationRoutes.History -> HistoryScreen()
+                                            ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
                                         }
-                                        is ApplicationRoutes.Exercise.ExerciseResults -> ResultsScreen(
-                                            current.exerciseResults,
-                                            current.initialPage
-                                        )
-                                        ApplicationRoutes.Goals.Overview -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.Goals.Compose -> GoalComposeScreen()
-                                        ApplicationRoutes.Achievements -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.Competitions.Overview -> Text("Missing Screen: " + +current.title)
-                                        ApplicationRoutes.History -> HistoryScreen()
-                                        ApplicationRoutes.AppBenefits -> Text("Missing Screen: " + +current.title)
                                     }
                                 }
                             }
