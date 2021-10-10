@@ -2,6 +2,7 @@
 
 package com.github.jan222ik.desktop.ui.exercise.practice
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +43,7 @@ import androidx.compose.ui.window.Popup
 import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
+import com.github.jan222ik.desktop.UXTest
 import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownWordOptions
 import com.github.jan222ik.desktop.ui.components.progress.practice.CountDownProgressBar
 import com.github.jan222ik.desktop.ui.components.progress.practice.ProgressionProgressBar
@@ -100,11 +103,16 @@ fun PracticeScreen(typingOptions: AbstractTypingOptions, fingerMatcher: FingerMa
     PracticeScreenContent(intend)
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
     val max = intend.typingOptions.durationMillis.div(1000).toFloat()
     val clockState = intend.typingClockStateStateFlow.collectAsState()
     if (clockState.value == IPracticeIntend.TypingClockState.FINISHED) {
+        val testRun = UXTest.LocalUXTestRun.current
+        LaunchedEffect(Unit) {
+            testRun.value = testRun.value.copy(step = testRun.value.step.inc())
+        }
         Popup {
             Surface(
                 modifier = Modifier

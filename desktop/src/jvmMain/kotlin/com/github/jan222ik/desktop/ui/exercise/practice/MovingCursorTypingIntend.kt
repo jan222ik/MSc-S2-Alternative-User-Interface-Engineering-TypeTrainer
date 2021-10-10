@@ -1,5 +1,6 @@
 package com.github.jan222ik.desktop.ui.exercise.practice
 
+import com.github.jan222ik.desktop.UXTest
 import com.github.jan222ik.desktop.textgen.database.DatabaseFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
