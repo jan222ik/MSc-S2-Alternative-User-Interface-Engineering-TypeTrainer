@@ -8,6 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -70,7 +71,7 @@ fun MovingCursorTyping(intend: ITextDisplayPracticeIntend) {
                 }
             }
         }
-        Text(text = annotatedString, style = MaterialTheme.typography.h6)
+        Text(text = annotatedString, style = MaterialTheme.typography.h6, fontFamily = LocalTextStyle.current.fontFamily)
         if (!isFocused.value) {
             TypingSetup(intend)
         }

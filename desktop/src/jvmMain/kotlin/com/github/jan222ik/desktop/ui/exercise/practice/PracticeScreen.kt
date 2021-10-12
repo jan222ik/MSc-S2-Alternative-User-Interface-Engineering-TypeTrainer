@@ -19,6 +19,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -36,6 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalFontLoader
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -45,6 +48,7 @@ import com.github.jan222ik.common.ui.components.TypeTrainerTheme
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.desktop.UXTest
 import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownWordOptions
+import com.github.jan222ik.desktop.ui.Fonts
 import com.github.jan222ik.desktop.ui.components.progress.practice.CountDownProgressBar
 import com.github.jan222ik.desktop.ui.components.progress.practice.ProgressionProgressBar
 import com.github.jan222ik.desktop.ui.dashboard.ApplicationRoutes
@@ -193,9 +197,11 @@ private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
             Column(
                 modifier = Modifier.align(Alignment.Center).fillMaxSize()
             ) {
-                when (intend) {
-                    is MovingCursorTypingIntend -> MovingCursorTyping(intend)
-                    is MovingTextTypingIntend -> MovingTextTyping(intend)
+                ProvideTextStyle(TextStyle(fontFamily = Fonts.monofont)) {
+                    when (intend) {
+                        is MovingCursorTypingIntend -> MovingCursorTyping(intend)
+                        is MovingTextTypingIntend -> MovingTextTyping(intend)
+                    }
                 }
             }
         }
