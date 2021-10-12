@@ -109,9 +109,16 @@ private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
     val max = intend.typingOptions.durationMillis.div(1000).toFloat()
     val clockState = intend.typingClockStateStateFlow.collectAsState()
     if (clockState.value == IPracticeIntend.TypingClockState.FINISHED) {
+        val router = WindowRouterAmbient.current
+
+        val isTestRun = UXTest.LocalIsUXTest.current
         val testRun = UXTest.LocalUXTestRun.current
-        LaunchedEffect(Unit) {
-            testRun.value = testRun.value.copy(step = testRun.value.step.inc())
+
+        if (isTestRun.value) {
+            LaunchedEffect(Unit) {
+                testRun.value = testRun.value.copy(step = testRun.value.step.inc())
+                router.setRoot(ApplicationRoutes.Dashboard)
+            }
         }
         Popup {
             Surface(
@@ -120,7 +127,6 @@ private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
                     .background(MaterialTheme.colors.surface.copy(alpha = 0.8f))
             ) {
                 Box {
-                    val router = WindowRouterAmbient.current
                     Column(
                         modifier = Modifier.align(Alignment.Center)
                     ) {

@@ -42,6 +42,7 @@ import com.github.jan222ik.common.HasDoc
 import com.github.jan222ik.desktop.ui.dashboard.ApplicationRoutes
 import com.github.jan222ik.desktop.ui.general.WindowRouterAmbient
 import com.github.jan222ik.desktop.ui.util.debug.ifDebugCompose
+import com.github.jan222ik.desktop.ui.util.i18n.LocalTranslationI18N
 import ui.general.window.container.impl.UxTestSettings
 
 @HasDoc
@@ -182,8 +183,11 @@ private fun CurrentUser(onAction: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Icon(imageVector = Icons.Filled.Person, contentDescription = null)
-            val user = System.getProperty("user") ?: "Unknown User"
-            Text(text = user)
+            val user = System.getProperty("user")
+            Text(text = user ?: +LocalTranslationI18N(
+                eng = "Unknown User",
+                ger = "Unbekannt"
+            ))
         }
     }
 }

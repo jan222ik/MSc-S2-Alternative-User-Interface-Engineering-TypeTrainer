@@ -163,7 +163,7 @@ object UXTest {
             style = MaterialTheme.typography.h3
         )
         Row(
-            modifier = Modifier.fillMaxHeight(0.9f)
+            modifier = Modifier.weight(1f)//.fillMaxHeight(0.9f)
         ) {
             BoxWithConstraints {
                 ProgressIndicator(
@@ -263,7 +263,8 @@ object UXTest {
                                     .align(Alignment.CenterVertically),
                                 visible = it.nr.dec() == uxTest.step,
                                 enter = fadeIn() + expandHorizontally(animationSpec = tween(durationMillis = 1000, delayMillis = 100)),
-                                exit = fadeOut() + shrinkHorizontally(animationSpec = tween(durationMillis = 1000, delayMillis = 100))
+                                exit = fadeOut(animationSpec = tween(durationMillis = 1000, delayMillis = 100))
+                                        + shrinkHorizontally(animationSpec = tween(durationMillis = 1000, delayMillis = 100))
                             ) {
                                 val router = WindowRouterAmbient.current
                                 Button(
@@ -274,7 +275,10 @@ object UXTest {
                                         )
                                     }
                                 ) {
-                                    Text("Start Step")
+                                    Text(
+                                        text = +LocalTranslationI18N(eng = "Start Step", ger = "Schritt starten"),
+                                        style = MaterialTheme.typography.h5
+                                    )
                                 }
                             }
                         }
@@ -292,23 +296,14 @@ object UXTest {
                 }
             }
         }
-        val current = LocalUXTestRun.current
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 modifier = Modifier.align(Alignment.CenterStart),
-                text = "Timestamp: ${uxTest.start}",
+                text = +LocalTranslationI18N(eng = "Timestamp", ger = "Zeitstempel") + ": ${uxTest.start}",
                 color = Color.LightGray.copy(alpha = 0.8f)
             )
-            Button(
-                modifier = Modifier.align(Alignment.CenterEnd),
-                onClick = {
-                    current.value = current.value.copy(step = uxTest.step.inc().rem(variant.size))
-                }
-            ) {
-                Text("Test")
-            }
         }
     }
 

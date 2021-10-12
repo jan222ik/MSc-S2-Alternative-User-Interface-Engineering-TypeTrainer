@@ -25,13 +25,14 @@ object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
             LanguageDefinition.English -> DbTextsEnglish
             LanguageDefinition.German -> DbTextsGerman
         }
-        val entries = transaction { table.selectAll().count() }
-        val randomNextText = RandomUtil.nextIntInRemBoundAsClosure(options.seed, entries.toInt())
+        val ids = transaction { table.slice(table.id).selectAll().toList().map { it[table.id] }}
+        println("Text ids = ${ids}")
+        val randomNextText = RandomUtil.nextIntInRemBoundAsClosure(options.seed, ids.size)
         return ContinuousGenerator {
             return@ContinuousGenerator transaction {
                 if (fullText.isNullOrEmpty()) {
                     fullText = table.select {
-                        (table.id eq randomNextText())
+                        (table.id eq ids[randomNextText()])
                     }.single()[table.content]
                 }
                 val displayText = StringBuilder()
