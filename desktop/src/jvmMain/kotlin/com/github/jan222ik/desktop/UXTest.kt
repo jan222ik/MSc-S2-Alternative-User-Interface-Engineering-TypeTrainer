@@ -5,9 +5,7 @@ package com.github.jan222ik.desktop
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -86,16 +84,16 @@ object UXTest {
 
     private val text1 = RandomKnownTextOptions(seed = 1L, language = LanguageDefinition.German)
     private val text2 = RandomKnownTextOptions(seed = 2L, language = LanguageDefinition.German)
-    private val text3 = RandomKnownTextOptions(seed = 3L, language = LanguageDefinition.German)
+    //private val text3 = RandomKnownTextOptions(seed = 3L, language = LanguageDefinition.German)
 
     private val words1 =
         RandomKnownWordOptions(seed = 1L, language = LanguageDefinition.German, minimalSegmentLength = 350)
     private val words2 =
         RandomKnownWordOptions(seed = 2L, language = LanguageDefinition.German, minimalSegmentLength = 350)
-    private val words3 =
-        RandomKnownWordOptions(seed = 3L, language = LanguageDefinition.German, minimalSegmentLength = 350)
+    //private val words3 =
+    //    RandomKnownWordOptions(seed = 3L, language = LanguageDefinition.German, minimalSegmentLength = 350)
 
-    val variant1 = listOf(
+    private val variant1 = listOf(
         Step(nr = 1, generatorOptions = text1, type = TypingType.MovingText),
         Step(nr = 2, generatorOptions = words1, type = TypingType.MovingCursor),
         Step(nr = 3, generatorOptions = text2, type = TypingType.MovingText),
@@ -109,7 +107,7 @@ object UXTest {
         Step(nr = 4, generatorOptions = words2, type = TypingType.MovingText)
     )
 
-    fun startStep(step: Step, router: Router<ApplicationRoutes>) {
+    private fun startStep(step: Step, router: Router<ApplicationRoutes>) {
         val trainingOptions = TypingOptions(
             generatorOptions = step.generatorOptions,
             durationMillis = 60_000,
