@@ -12,11 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.jan222ik.desktop.ui.exercise.practice.IPracticeIntend
 import com.github.jan222ik.desktop.ui.util.i18n.i18n
 
 @Composable
-fun BoxScope.TypingSetup(intent: IPracticeIntend) {
+fun BoxScope.TypingSetup() {
     Box(
         modifier = Modifier
             .matchParentSize()

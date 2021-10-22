@@ -12,6 +12,7 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,6 +25,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.unit.sp
 import com.github.jan222ik.desktop.ui.exercise.practice.ITextDisplayPracticeIntend
 
 @Composable
@@ -71,9 +73,21 @@ fun MovingCursorTyping(intend: ITextDisplayPracticeIntend) {
                 }
             }
         }
-        Text(text = annotatedString, style = MaterialTheme.typography.h6, fontFamily = LocalTextStyle.current.fontFamily)
+        Text(
+            modifier = Modifier.fillMaxSize(),
+            text = annotatedString,
+            style = MaterialTheme.typography.h5.copy(
+                lineHeight = 21.sp,
+                fontFamily = LocalTextStyle.current.fontFamily
+            ),
+        )
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
+
         if (!isFocused.value) {
-            TypingSetup(intend)
+            TypingSetup()
         }
     }
 }

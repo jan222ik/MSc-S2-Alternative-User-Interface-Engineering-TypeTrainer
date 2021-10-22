@@ -13,7 +13,7 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -21,16 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.isFocused
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import com.github.jan222ik.desktop.ui.exercise.practice.IPracticeIntend
 import com.github.jan222ik.desktop.ui.exercise.practice.ITextDisplayPracticeIntend
 
 @Composable
@@ -48,11 +44,6 @@ fun MovingTextTyping(intend: ITextDisplayPracticeIntend) {
             }
             .focusRequester(focusRequester)
             .focusable(interactionSource = interactionSource)
-            .onFocusChanged {
-                if (it.isFocused) {
-
-                }
-            }
             .onKeyEvent {
                 if (it.type == KeyEventType.KeyDown) {
                     handleInput(intend, scope, clockState.value, it)
@@ -107,12 +98,12 @@ fun MovingTextTyping(intend: ITextDisplayPracticeIntend) {
             )
         }
 
-        DisposableEffect(Unit) {
-            focusRequester.captureFocus()
-            onDispose { }
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
         }
 
-        if (clockState.value == IPracticeIntend.TypingClockState.PREVIEW)
-            TypingSetup(intend)
+        if (!isFocused.value) {
+            TypingSetup()
+        }
     }
 }
