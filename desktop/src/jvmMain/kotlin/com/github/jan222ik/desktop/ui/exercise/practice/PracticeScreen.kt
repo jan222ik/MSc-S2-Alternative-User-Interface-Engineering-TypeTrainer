@@ -66,7 +66,7 @@ import com.github.jan222ik.desktop.util.FingerMatcher
 @HasDoc
 @Composable
 fun PracticeScreen(typingOptions: AbstractTypingOptions, fingerMatcher: FingerMatcher?) {
-    val intend = remember(typingOptions) {
+    val intend = remember(typingOptions, typingOptions.generatorOptions) {
         when (typingOptions.typingType) {
             TypingType.MovingCursor -> MovingCursorTypingIntend(
                 typingOptions = typingOptions,

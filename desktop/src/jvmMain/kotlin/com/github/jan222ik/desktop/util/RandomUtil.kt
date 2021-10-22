@@ -7,7 +7,7 @@ object RandomUtil {
     fun nextIntInRemBoundAsClosure(seed: Long, rem: Int): () -> Int {
         val rnd = Random(seed);
         return {
-            abs(rnd.nextInt().rem(rem))
+            abs(rnd.nextInt()).rem(rem)
         }
 
     }

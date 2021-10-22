@@ -6,6 +6,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.desktop.LocalAppWindow
 import androidx.compose.desktop.Window
+import androidx.compose.desktop.WindowEvents
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -99,10 +100,17 @@ object DesktopApplication {
             null
         }
         println("icon = ${icon}")
+        val windowEvents = WindowEvents(
+            onClose = {
+                // Save
+                println("On Close")
+            }
+        )
         Window(
             size = initSize,
             undecorated = !Debug.isDebug,
-            icon = icon
+            icon = icon,
+            events = windowEvents
         ) {
             val isUxTest = mutableStateOf(initIsUxTest)
             CompositionLocalProvider(
