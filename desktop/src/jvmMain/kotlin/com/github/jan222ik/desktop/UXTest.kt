@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.jan222ik.common.ui.dashboard.BaseDashboardCard
 import com.github.jan222ik.common.ui.util.router.Router
+import com.github.jan222ik.desktop.textgen.database.ExportExcelUtil
 import com.github.jan222ik.desktop.textgen.generators.AbstractGeneratorOptions
 import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownTextOptions
 import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownWordOptions
@@ -56,19 +57,29 @@ import com.github.jan222ik.desktop.ui.exercise.TypingType
 import com.github.jan222ik.desktop.ui.general.WindowRouterAmbient
 import com.github.jan222ik.desktop.ui.util.i18n.LanguageDefinition
 import com.github.jan222ik.desktop.ui.util.i18n.LocalTranslationI18N
+import org.apache.poi.ss.usermodel.Workbook
+import java.io.File
 import java.time.LocalDateTime
 
-@ExperimentalAnimationApi
+
+@OptIn(ExperimentalAnimationApi::class)
 object UXTest {
 
     val LocalIsUXTest = compositionLocalOf { mutableStateOf(false) }
-    val LocalUXTestRun = compositionLocalOf { mutableStateOf(TestRun(variant = 0, step = 0)) }
+    val LocalUXTestRun = compositionLocalOf { mutableStateOf(TestRun(variant = 0, step = 0, testDirPath = System.getProperty("user.home").plus("\\uxtest"))) }
 
     data class TestRun(
         val start: LocalDateTime = LocalDateTime.now(),
         val variant: Int,
-        val step: Int
-    )
+        val step: Int,
+        private val testDirPath: String
+    ) {
+        val workbook: Workbook
+            get() = ExportExcelUtil.createWorkbook()
+
+        val fileNameGen: File
+            get() = File("$testDirPath\\run-${start.toString().replace(":", "-")}-step-$step-variant-$variant.xlsx")
+    }
 
     interface TestRunStep {
         val nr: Int

@@ -1,5 +1,7 @@
 package com.github.jan222ik.desktop.ui.exercise.practice
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import com.github.jan222ik.desktop.UXTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,10 +23,15 @@ import com.github.jan222ik.desktop.util.RandomUtil
 import java.time.LocalDateTime
 import kotlin.concurrent.fixedRateTimer
 
-class MovingTextTypingIntend(
+class MovingTextTypingIntend @OptIn(ExperimentalAnimationApi::class) constructor(
     typingOptions: AbstractTypingOptions,
-    fingerMatcher: FingerMatcher?
-) : PracticeIntendImpl(typingOptions = typingOptions, fingerMatcher), ITextDisplayPracticeIntend {
+    fingerMatcher: FingerMatcher?,
+    testRun: UXTest.TestRun?
+) : PracticeIntendImpl(
+    typingOptions = typingOptions,
+    fingerMatcher = fingerMatcher,
+    testRun = testRun
+), ITextDisplayPracticeIntend {
 
     override val exerciseEvaluation = ExerciseEvaluation(options = typingOptions)
     lateinit var textEvaluation: TextEvaluation
@@ -140,6 +147,7 @@ class MovingTextTypingIntend(
                 )
             }
         }
+        this.writeRun2Workbook(eval)
     }
 
     override suspend fun startConstantSpeedTypeDemo(period: Long) {

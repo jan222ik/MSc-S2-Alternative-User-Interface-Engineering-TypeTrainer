@@ -1,5 +1,6 @@
 package com.github.jan222ik.desktop.ui.exercise.practice
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import com.github.jan222ik.desktop.UXTest
 import com.github.jan222ik.desktop.textgen.database.DatabaseFactory
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +13,7 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.transaction
 import com.github.jan222ik.desktop.textgen.database.DbHistoryDAO
+import com.github.jan222ik.desktop.textgen.database.ExportExcelUtil
 import com.github.jan222ik.desktop.textgen.error.CharEvaluation
 import com.github.jan222ik.desktop.textgen.error.ExerciseEvaluation
 import com.github.jan222ik.desktop.textgen.error.TextEvaluation
@@ -19,13 +21,19 @@ import com.github.jan222ik.desktop.ui.exercise.AbstractTypingOptions
 import com.github.jan222ik.desktop.ui.exercise.ExerciseMode
 import com.github.jan222ik.desktop.util.FingerMatcher
 import com.github.jan222ik.desktop.util.RandomUtil
+import org.apache.poi.ss.usermodel.Workbook
 import java.time.LocalDateTime
 import kotlin.concurrent.fixedRateTimer
 
-class MovingCursorTypingIntend(
+class MovingCursorTypingIntend @OptIn(ExperimentalAnimationApi::class) constructor(
     typingOptions: AbstractTypingOptions,
-    fingerMatcher: FingerMatcher?
-) : PracticeIntendImpl(typingOptions = typingOptions, fingerMatcher = fingerMatcher), ITextDisplayPracticeIntend {
+    fingerMatcher: FingerMatcher?,
+    testRun: UXTest.TestRun?
+) : PracticeIntendImpl(
+    typingOptions = typingOptions,
+    fingerMatcher = fingerMatcher,
+    testRun = testRun,
+), ITextDisplayPracticeIntend {
 
     override val exerciseEvaluation = ExerciseEvaluation(options = typingOptions)
     lateinit var textEvaluation: TextEvaluation
@@ -148,6 +156,7 @@ class MovingCursorTypingIntend(
                 )
             }
         }
+        writeRun2Workbook(eval)
     }
 
     override suspend fun startConstantSpeedTypeDemo(period: Long) {

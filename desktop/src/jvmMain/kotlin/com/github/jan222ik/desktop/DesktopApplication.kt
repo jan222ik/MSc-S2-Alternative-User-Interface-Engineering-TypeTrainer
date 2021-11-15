@@ -115,7 +115,7 @@ object DesktopApplication {
             val isUxTest = mutableStateOf(initIsUxTest)
             CompositionLocalProvider(
                 UXTest.LocalIsUXTest provides isUxTest,
-                UXTest.LocalUXTestRun provides mutableStateOf(UXTest.TestRun(variant = 0, step = 0))
+                UXTest.LocalUXTestRun provides mutableStateOf(UXTest.TestRun(variant = 0, step = 0, testDirPath = System.getProperty("user.home").plus("\\uxtest")))
             ) {
                 TypeTrainerTheme {
                     StartupApplication { server, lang ->

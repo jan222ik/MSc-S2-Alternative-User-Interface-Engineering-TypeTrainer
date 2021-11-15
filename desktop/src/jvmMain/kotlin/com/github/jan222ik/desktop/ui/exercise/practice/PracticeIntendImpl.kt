@@ -1,7 +1,11 @@
 package com.github.jan222ik.desktop.ui.exercise.practice
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.github.jan222ik.desktop.UXTest
+import com.github.jan222ik.desktop.textgen.database.ExportExcelUtil
+import com.github.jan222ik.desktop.textgen.error.ExerciseEvaluation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -20,11 +24,15 @@ import com.github.jan222ik.desktop.ui.exercise.AbstractTypingOptions
 import com.github.jan222ik.desktop.ui.exercise.ExerciseMode
 import com.github.jan222ik.desktop.util.FingerMatcher
 import com.github.jan222ik.desktop.util.FingerUsed
+import java.io.File
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 
-abstract class PracticeIntendImpl(
+abstract class PracticeIntendImpl @OptIn(ExperimentalAnimationApi::class) constructor(
     final override val typingOptions: AbstractTypingOptions,
-    private val fingerMatcher: FingerMatcher?
+    private val fingerMatcher: FingerMatcher?,
+    val testRun: UXTest.TestRun?
 ) : IPracticeIntend, IDebugPracticeIntend {
     private val generator: ContinuousGenerator
     private var typingClockJob: Job? = null
@@ -60,6 +68,17 @@ abstract class PracticeIntendImpl(
     private val isDebug = System.getProperty("debug") == "true"
 
     abstract fun onTimerFinished()
+
+    fun writeRun2Workbook(exerciseEvaluation: ExerciseEvaluation) {
+        testRun?.workbook?.let { work ->
+            ExportExcelUtil.run2Sheet(
+                workbook = work,
+                localDateTime = LocalDateTime.now().minus(typingOptions.durationMillis, ChronoUnit.MILLIS),
+                exerciseEvaluation = exerciseEvaluation
+            )
+            ExportExcelUtil.save(file = testRun.fileNameGen, workbook = work)
+        }
+    }
 
     override fun start() {
         if (typingClockJob != null) return // Return if job is already assigned, could be invoked multiple times from UI.

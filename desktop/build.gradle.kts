@@ -71,6 +71,12 @@ kotlin {
 
                 // CSV
                 implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
+
+                // Excel
+                //Apache POI for excel
+                //implementation("com.github.SUPERCILEX.poi-android:poi:3.17")
+
+                implementation("org.apache.poi:poi-ooxml:3.17")
             }
         }
         val jvmTest by getting {
@@ -89,7 +95,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "com.github.jan222ik.desktop.Main"
+        mainClass = "com.github.jan222ik.desktop.MainDebug"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.Exe)
             packageName = "TypeTrainer"

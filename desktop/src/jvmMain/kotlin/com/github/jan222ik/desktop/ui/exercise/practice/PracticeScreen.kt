@@ -63,18 +63,22 @@ import com.github.jan222ik.desktop.ui.util.debug.ifDebugCompose
 import com.github.jan222ik.desktop.ui.util.i18n.LanguageDefinition
 import com.github.jan222ik.desktop.util.FingerMatcher
 
+@ExperimentalAnimationApi
 @HasDoc
 @Composable
 fun PracticeScreen(typingOptions: AbstractTypingOptions, fingerMatcher: FingerMatcher?) {
+    val testRun = UXTest.LocalUXTestRun.current
     val intend = remember(typingOptions, typingOptions.generatorOptions) {
         when (typingOptions.typingType) {
             TypingType.MovingCursor -> MovingCursorTypingIntend(
                 typingOptions = typingOptions,
-                fingerMatcher = fingerMatcher
+                fingerMatcher = fingerMatcher,
+                testRun = testRun.value
             )
             TypingType.MovingText -> MovingTextTypingIntend(
                 typingOptions = typingOptions,
-                fingerMatcher = fingerMatcher
+                fingerMatcher = fingerMatcher,
+                testRun = testRun.value
             )
         }
     }
@@ -267,6 +271,7 @@ private fun VideoFeedLive() { //placeholder for actual live feed
     }
 }
 
+@ExperimentalAnimationApi
 fun main() {
     Window {
         TypeTrainerTheme {
