@@ -17,9 +17,6 @@ import com.github.jan222ik.desktop.util.RandomUtil
 @HasDoc
 object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
 
-    private var fullText: String? = null
-    private var firstExec = true
-
     override fun create(options: RandomKnownTextOptions): ContinuousGenerator {
         val table = when (options.language) {
             LanguageDefinition.English -> DbTextsEnglish
@@ -29,6 +26,8 @@ object RandomKnownTextGenerator : IGenerator<RandomKnownTextOptions> {
         println("Text ids = ${ids}")
         val randomNextText = RandomUtil.nextIntInRemBoundAsClosure(options.seed, ids.size)
         return ContinuousGenerator {
+            var fullText: String? = null
+            var firstExec = true
             return@ContinuousGenerator transaction {
                 if (fullText.isNullOrEmpty()) {
                     fullText = table.select {
