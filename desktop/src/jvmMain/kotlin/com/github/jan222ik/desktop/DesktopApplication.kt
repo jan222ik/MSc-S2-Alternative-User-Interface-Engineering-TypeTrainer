@@ -121,8 +121,9 @@ object DesktopApplication {
                     StartupApplication { server, lang ->
                         LanguageConfiguration(lang) {
                             WindowRouter(
-                                initialRoute = ApplicationRoutes.Dashboard
+                                initialRoute = ApplicationRoutes.Dashboard()
                             ) { current, router ->
+                                println("current route = $current")
                                 val window = LocalAppWindow.current
                                 LaunchedEffect(window, current) {
                                     window.apply {
@@ -142,7 +143,7 @@ object DesktopApplication {
                                     Crossfade(current) { current ->
                                         when (current) {
                                             ApplicationRoutes.Debug -> DebugWithAllRoutes()
-                                            ApplicationRoutes.Dashboard -> if (isUxTest.value) UXTest.Screen() else DashboardContent()
+                                            is ApplicationRoutes.Dashboard -> if (isUxTest.value) UXTest.Screen() else DashboardContent()
                                             ApplicationRoutes.Settings -> Text("Missing Screen: " + +current.title)
                                             ApplicationRoutes.User.Login -> Text("Missing Screen: " + +current.title)
                                             is ApplicationRoutes.User.AccountManagement -> Text("Missing Screen: " + +current.title)

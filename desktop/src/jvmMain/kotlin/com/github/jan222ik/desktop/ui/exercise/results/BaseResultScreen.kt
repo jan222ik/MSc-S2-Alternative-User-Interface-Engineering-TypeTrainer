@@ -79,7 +79,7 @@ fun BaseResultScreen(
                     Row(modifier = Modifier.padding(bottom = 16.dp, top = 32.dp)) {
                         ExtendedFloatingActionButton(
                             onClick = {
-                                globalRouter.setRoot(ApplicationRoutes.Dashboard)
+                                globalRouter.setRoot(ApplicationRoutes.Dashboard())
                             },
                             text = {
                                 Text(text = +i18n.str.exercise.results.base.returnToDashboard)

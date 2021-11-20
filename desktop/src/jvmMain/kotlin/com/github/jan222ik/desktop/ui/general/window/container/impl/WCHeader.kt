@@ -24,9 +24,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Adb
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.filled.Science
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +41,9 @@ import com.github.jan222ik.desktop.ui.dashboard.ApplicationRoutes
 import com.github.jan222ik.desktop.ui.general.WindowRouterAmbient
 import com.github.jan222ik.desktop.ui.util.debug.ifDebugCompose
 import com.github.jan222ik.desktop.ui.util.i18n.LocalTranslationI18N
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ui.general.window.container.impl.UxTestSettings
 
 @HasDoc
@@ -64,6 +65,13 @@ internal fun WCHeader(
         BackBtn(
             enableBackBtn = router.hasBackDestination(),
             onBackBtnAction = router::back,
+            onResetDashboardScreen = {
+                router.setRoot(ApplicationRoutes.Debug)
+                GlobalScope.launch {
+                    delay(2000)
+                    router.setRoot(ApplicationRoutes.Dashboard())
+                }
+            },
             backHoverBtnText = router.previous?.current?.title?.observedString(router)?.let { "To $it" } ?: "",
             height = height,
             surface = surface
@@ -184,10 +192,12 @@ private fun CurrentUser(onAction: () -> Unit) {
         ) {
             Icon(imageVector = Icons.Filled.Person, contentDescription = null)
             val user = System.getProperty("user")
-            Text(text = user ?: +LocalTranslationI18N(
-                eng = "Unknown User",
-                ger = "Unbekannt"
-            ))
+            Text(
+                text = user ?: +LocalTranslationI18N(
+                    eng = "Unknown User",
+                    ger = "Unbekannt"
+                )
+            )
         }
     }
 }

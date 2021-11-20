@@ -27,7 +27,7 @@ fun DebugWithAllRoutes() {
         }
         items(getDebugPaths(ApplicationRoutes::class)) {
             when (it.objectInstance) {
-                ApplicationRoutes.Dashboard,
+                ApplicationRoutes.Dashboard(),
                 ApplicationRoutes.Settings,
                 ApplicationRoutes.User.Login,
                     //ApplicationRoutes.Exercise.Connection.QRCode,

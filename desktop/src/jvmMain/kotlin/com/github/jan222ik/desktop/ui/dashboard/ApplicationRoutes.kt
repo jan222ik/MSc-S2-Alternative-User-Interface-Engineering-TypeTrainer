@@ -1,16 +1,18 @@
 package com.github.jan222ik.desktop.ui.dashboard
 
 import com.github.jan222ik.desktop.textgen.error.ExerciseEvaluation
+import com.github.jan222ik.desktop.textgen.generators.impl.RandomKnownTextOptions
 import com.github.jan222ik.desktop.ui.exercise.AbstractTypingOptions
 import com.github.jan222ik.desktop.ui.exercise.results.ResultsRoutes
 import com.github.jan222ik.desktop.ui.util.i18n.KeyI18N
 import com.github.jan222ik.desktop.ui.util.i18n.LocalTranslationI18N
 import com.github.jan222ik.desktop.ui.util.i18n.i18n
 import com.github.jan222ik.desktop.util.FingerMatcher
+import kotlin.random.Random
 
 sealed class ApplicationRoutes(val title: KeyI18N) {
 
-    object Dashboard : ApplicationRoutes(title = i18n.str.navigation.self.dashboard)
+    data class Dashboard(val id: Int = Random.nextInt()) : ApplicationRoutes(title = i18n.str.navigation.self.dashboard)
 
     object Settings : ApplicationRoutes(title = i18n.str.navigation.self.settings)
 

@@ -125,7 +125,7 @@ private fun PracticeScreenContent(intend: ITextDisplayPracticeIntend) {
         if (isTestRun.value) {
             LaunchedEffect(Unit) {
                 testRun.value = testRun.value.copy(step = testRun.value.step.inc())
-                router.setRoot(ApplicationRoutes.Dashboard)
+                router.setRoot(ApplicationRoutes.Dashboard())
             }
         }
         Popup {

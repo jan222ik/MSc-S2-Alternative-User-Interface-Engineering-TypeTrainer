@@ -95,7 +95,7 @@ fun GoalComposeScreen() {
             Button(
                 onClick = {
                     // TODO Create goal and open it instead of dashboard
-                    router.navTo(ApplicationRoutes.Dashboard)
+                    router.navTo(ApplicationRoutes.Dashboard())
                 }
             ) {
                 Text(

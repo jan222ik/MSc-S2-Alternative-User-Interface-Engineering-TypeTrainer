@@ -42,6 +42,7 @@ internal fun BackBtn(
     height: Dp,
     enableBackBtn: Boolean,
     onBackBtnAction: () -> Unit,
+    onResetDashboardScreen: () -> Unit,
     backHoverBtnText: String,
     surface: Color,
 ) {
@@ -68,7 +69,11 @@ internal fun BackBtn(
                     Text(text = backHoverBtnText)
                 }
             } else {
-                Icon(imageVector = Icons.Filled.Dashboard, contentDescription = null)
+                Icon(
+                    modifier = Modifier.clickable(onClick = onResetDashboardScreen),
+                    imageVector = Icons.Filled.Dashboard,
+                    contentDescription = null
+                )
             }
         }
     }
